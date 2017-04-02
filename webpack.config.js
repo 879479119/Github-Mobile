@@ -8,17 +8,24 @@ const prodConfig = require('./config/webpack.prod.config')
 
 let commonConfig = {
 	entry: {
-		main: "./src/index.js",
+		main: [
+			"./src/app.jsx",
+			'webpack/hot/only-dev-server',
+			'webpack-dev-server/client?http://0.0.0.0:8888',
+		],
+		vendor: ['react', 'redux', 'react-dom', 'react-router']
 	},
 	output: {
 		path: __dirname + '/dist/',
-		filename: "[name].bundle.[hash].js"
+		filename: "[name].bundle.[hash].js",
+		// publicPath: 'http://0.0.0.0:8888/dist/'
 	},
 	module: {
 		rules:[
 			{
-				test: /\.(jsx)$/,
+				test: /\.(jsx|js)$/,
 				loader: 'babel-loader',
+				exclude: /node_modules/
 			},
 			{
 				test: /\.ejs$/,
@@ -42,12 +49,12 @@ let commonConfig = {
 		]
 	},
 	resolve: {
-		extensions: ['js', 'jsx', 'scss'],
+		extensions: [" ", ".webpack.js", ".web.js", ".js", ".json", ".jsx"],
 		alias: {
-			common: "lib/common",
-			Store: "",
-			Action: "",
-			Reducer: ""
+			// common: "lib/common",
+			// Store: "",
+			// Action: "",
+			// Reducer: ""
 		}
 	},
 	plugins: [
@@ -63,6 +70,9 @@ let commonConfig = {
 			options: {
 				postcss: [autoprefixer({browsers:['last 2 versions']})]
 			}
+		}),
+		new webpack.optimize.CommonsChunkPlugin({
+			name: 'vendor'
 		})
 	]
 }

@@ -6,6 +6,7 @@ module.exports = {
 		port: 8888,
 		inline: true,
 		hot: true,
+		// publicPath: 'http://0.0.0.0:8888/dist/'
 	},
 	plugins: [
 		new webpack.HotModuleReplacementPlugin(),

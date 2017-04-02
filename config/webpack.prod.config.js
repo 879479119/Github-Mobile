@@ -8,5 +8,13 @@ module.exports = {
 				NODE_ENV: '"production"'
 			}
 		}),
+		new webpack.optimize.UglifyJsPlugin({
+			output: {
+				comments: false,
+			},
+			compress: {
+				warnings: false
+			}
+		}),
 	]
 }
