@@ -18,7 +18,6 @@ let commonConfig = {
 	output: {
 		path: __dirname + '/dist/',
 		filename: "[name].bundle.[hash].js",
-		// publicPath: 'http://0.0.0.0:8888/dist/'
 	},
 	module: {
 		rules:[
