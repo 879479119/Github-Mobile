@@ -11,10 +11,3 @@ export default class Home extends Component{
 		)
 	}
 }
-//
-// connect(
-// 	state=>({
-// 		a: state.common.a
-// 	}),
-// 	{ changeA }
-// )
