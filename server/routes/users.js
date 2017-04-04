@@ -4,7 +4,7 @@ var fetch = require('node-fetch');
 var Promise = require('bluebird');
 var log = require('../helper/logger');
 
-router.post('/register', function (req, res) {
+router.post('/register', function (req, respond) {
 	var github = global.github,
 		code = req.body.code
 
@@ -19,40 +19,55 @@ router.post('/register', function (req, res) {
 		body: "client_id="+global.config.clientID+"&client_secret="+global.config.clientSecret+"&code="+code
 	})
 		.then(res => res.json())
-		Promise.resolve()
 		.then(res=>{
 			/**
 			 * authenticate is sync operation
 			 */
+			var token = res.access_token
+
+			if(token === undefined){
+				respond.send("ERROR")
+				Promise.reject("undefined token")
+			}
+
 			github.authenticate({
 				type: "oauth",
-				token: res.access_token
+				token: token
 			})
 
 			return new Promise(function (resolve, reject) {
 				github.users.get({
 				},function (err, res) {
 					if(err) reject(err)
-					resolve(res)
+					resolve({res:res,token:token})
 				});
 			})
-		}).then(function (res) {
-			// console.log(JSON.stringify(res, null, 2))
+		}).then(function (obj) {
+			console.log(JSON.stringify(obj.res, null, 2))
+			var key = Date.now()
 			global.connection.query("INSERT INTO t_user VALUES (NULL,?,?,?,?)",
-				[1,2,3,4],
+				[obj.res.data.id, key, obj.token, "admin"],
 				function (err) {
-					if(err) console.error(err)
+					respond.cookie('key',key, { maxAge: 900000, httpOnly: true })
+					if(err){
+						console.error(err.message)
+						respond.send('DATABASE ERROR')
+					}else{
+						//noinspection JSCheckFunctionSignatures
+						respond.send("OK");
+					}
 				})
 		})
-		.catch(e=>console.log(e))
+		.catch(e=>{
+			log(e,1)
+		})
 
-	res.send('OK');
 }).post('/login', function (req, res) {
 	var github = global.github,
 		token = req.body.token
 	github.authenticate({
 		type: "oauth",
-		token: token || 'b14a6741eb3b4c904f484a6604590f099aa06008'
+		token: token
 	});
 	res.send('OK');
 }).get('/redirect', function (req, res) {

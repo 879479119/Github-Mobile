@@ -1,4 +1,4 @@
-require('colors');
+var colors = require('colors');
 
 module.exports = (function () {
 	return function (str, tag) {
@@ -10,7 +10,7 @@ module.exports = (function () {
 				break
 			default:
 				color = "green"
-				console.log("[ LOG ] ==> "[color] + str)
+				console.log(colors[color]("[ LOG ] ==> ") + str)
 		}
 		return true
 	}
