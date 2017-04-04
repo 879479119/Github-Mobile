@@ -7,15 +7,18 @@ var GitHubApi = require("github");
 var routes = require('./routes/index');
 var user = require('./routes/users');
 var api = require('./routes/api');
+var mysql = require('mysql');
 global.config = require('./config');
 
 var app = express();
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'dist')));
 
 /**
  * initialize the github kit
@@ -33,7 +36,20 @@ global.github = new GitHubApi({
 	timeout: 10000
 });
 
+/**
+ * initialize the connection with MySQL
+ */
+
+
+
+global.connection = mysql.createConnection(global.config.mysql);
+/**
+ * when to stop it ? listen the process exit event ?
+ */
+global.connection.connect();
+
 app.use('/api', api);
+app.use('/', routes);
 app.use('/user', user);
 
 app.use(function(req, res, next) {

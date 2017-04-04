@@ -8,15 +8,11 @@ const prodConfig = require('./config/webpack.prod.config')
 
 let commonConfig = {
 	entry: {
-		main: [
-			"./src/app.jsx",
-			'webpack/hot/only-dev-server',
-			'webpack-dev-server/client?http://0.0.0.0:8888',
-		],
+		main: "./src/app.jsx",
 		vendor: ['react', 'redux', 'react-dom', 'react-router']
 	},
 	output: {
-		path: __dirname + '/dist/',
+		path: __dirname + '/server/dist/',
 		filename: "[name].bundle.[hash].js",
 	},
 	module: {
