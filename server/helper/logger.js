@@ -6,11 +6,11 @@ module.exports = (function () {
 		switch (tag){
 			case 1:
 				color = "red"
-				console.error("[ ERROR ] ==> "[color] + str)
+				console.error("[ ERROR ] ==> "[color] , str)
 				break
 			default:
 				color = "green"
-				console.log(colors[color]("[ LOG ] ==> ") + str)
+				console.log(colors[color]("[ LOG ] ==> ") , str)
 		}
 		return true
 	}
