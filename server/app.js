@@ -1,16 +1,16 @@
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var GitHubApi = require("github");
-var routes = require('./routes/index');
-var user = require('./routes/users');
-var api = require('./routes/api');
-var mysql = require('mysql');
+let express = require('express');
+let path = require('path');
+let logger = require('morgan');
+let cookieParser = require('cookie-parser');
+let bodyParser = require('body-parser');
+let GitHubApi = require("github");
+let routes = require('./routes/index');
+let user = require('./routes/users');
+let api = require('./routes/api');
+let mysql = require('mysql');
 global.config = require('./config');
 
-var app = express();
+let app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
@@ -19,6 +19,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'dist')));
+
+/**
+ * initialize the logger tool
+ */
+
+global.log = require('./helper/logger')
 
 /**
  * initialize the github kit
@@ -53,7 +59,7 @@ app.use('/', routes);
 app.use('/user', user);
 
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  let err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
