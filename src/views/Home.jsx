@@ -18,6 +18,7 @@ export default class Home extends Component{
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded'
 				},
+				credentials: 'include',
 				body: "code=" + code
 			}).then(res => res.text()).then(res=>{
 				console.log(res)
