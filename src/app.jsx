@@ -5,6 +5,7 @@ import React, { Component } from "react"
 import configStore from './redux/store'
 import rootStore from './views/HomeRedux'
 import DevTools from './containers/DevTools'
+import 'antd/dist/antd.min.css'
 
 const store = configStore(rootStore, {})
 
