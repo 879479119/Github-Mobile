@@ -2,8 +2,9 @@ let express = require('express');
 let router = express.Router();
 let fetch = require('node-fetch');
 let Promise = require('bluebird');
-let log = require('../helper/logger');
-
+let log = require('../helper/logger')
+let login = require('../proxy/login')
+let syncAuth = require('../proxy/syncAuth')
 let DataQuery = require('../dao/userAccess')
 
 router.post('/register', function (req, respond) {
@@ -31,10 +32,7 @@ router.post('/register', function (req, respond) {
 				reject("undefined token")
 			}
 
-			github.authenticate({
-				type: "oauth",
-				token: token
-			})
+			syncAuth(token)
 
 			github.users.get(
 				{}, function (err, res) {
@@ -56,8 +54,7 @@ router.post('/register', function (req, respond) {
 	})
 
 }).post('/login', function (req, respond) {
-	let github = global.github,
-		gid = req.cookies['gid'],
+	let gid = req.cookies['gid'],
 		key = req.cookies['key'];
 
 	if(typeof key === "undefined" || typeof gid === "undefined"){
@@ -65,13 +62,8 @@ router.post('/register', function (req, respond) {
 		return
 	}
 
-	DataQuery.chkLogin(gid,key)
-	.then(function (token) {
-		github.authenticate({
-			type: "oauth",
-			token: token
-		})
-		respond.send("login success")
+	login(gid, key).then(function (token) {
+		if(token) respond.send("login success")
 	}).catch(function (err) {
 		log(err,1)
 		respond.send(err)

@@ -46,9 +46,8 @@ global.github = new GitHubApi({
  * initialize the connection with MySQL
  */
 
-
-
 global.connection = mysql.createConnection(global.config.mysql);
+
 /**
  * when to stop it ? listen the process exit event ?
  */
