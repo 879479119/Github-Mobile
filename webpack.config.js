@@ -9,7 +9,7 @@ const prodConfig = require('./config/webpack.prod.config')
 let commonConfig = {
 	entry: {
 		main: "./src/app.jsx",
-		vendor: ['react', 'redux', 'react-dom', 'react-router']
+		vendor: ['react', 'redux', 'react-dom', 'react-router', 'babel-polyfill']
 	},
 	output: {
 		path: __dirname + '/server/dist/',

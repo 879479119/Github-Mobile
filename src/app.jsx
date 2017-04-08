@@ -1,10 +1,12 @@
+import 'babel-core/register'
+import 'babel-polyfill'
 import ReactDOM from 'react-dom'
 import Router from './routes'
 import { Provider } from 'react-redux'
 import React, { Component } from "react"
 import configStore from './redux/store'
 import rootStore from './views/HomeRedux'
-import DevTools from './containers/DevTools'
+
 import 'antd/dist/antd.min.css'
 
 const store = configStore(rootStore, {})
@@ -15,12 +17,7 @@ class Page extends Component{
 	}
 	render = () => (
 		<Provider store={store}>
-			<div>
-				{Router()}
-
-				<DevTools/>
-			</div>
-
+			{Router()}
 		</Provider>
 	)
 }

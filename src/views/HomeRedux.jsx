@@ -9,8 +9,29 @@ function common(state = {a:1}, action) {
 	return state
 }
 
+
+const dashboard = (state = {}, action) => {
+	switch(action.type) {
+		case 'SUCCESS':
+			return Object.assign({}, state, action.payload);
+		default :
+			return state;
+	}
+}
+
+const user = (state = {}, action)  => {
+	switch(action.type) {
+		case 'USER' :
+			return action.payload;
+		default :
+			return state;
+	}
+};
+
 export default combineReducers({
-	common
+	common,
+	dashboard,
+	user
 })
 
 export const changeA = (a) => {

@@ -1,4 +1,3 @@
-let Promise = require('bluebird')
 let DataQuery = require('../dao/userAccess')
 let syncAuth = require('./syncAuth')
 

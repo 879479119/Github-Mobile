@@ -1,18 +1,26 @@
 import {createStore, applyMiddleware, compose} from 'redux'
 import thunkMiddleware from 'redux-thunk'
-import DevTools from '../containers/DevTools'
+import createSagaMiddleware from 'redux-saga'
+import sagas from '../views/Saga'
+
+const sagaMiddleware = createSagaMiddleware()
 
 export default function (rootReducer, initialState) {
-	return createStore(
+	//noinspection JSUnresolvedVariable,JSUnresolvedFunction
+	const store = createStore(
 		rootReducer,
 		initialState,
 		compose(
 			applyMiddleware(
-				thunkMiddleware
+				thunkMiddleware,
+				sagaMiddleware
 			),
-			DevTools.instrument()
+			window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
 		)
 	)
+
+	sagaMiddleware.run(sagas)
+	return store
 }
 
 //TODO: remember to delete the DevTools when publish this

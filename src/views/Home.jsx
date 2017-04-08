@@ -7,7 +7,7 @@ import { Layout, Menu, Breadcrumb, Icon } from 'antd';
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 
-@connect(state=>({a: state.common.a}), { changeA })
+@connect(state=>({a: state.common.a}), { changeA, load:() => dispatch => {return dispatch({type: 'LOAD_DASHBOARD'})}})
 export default class Home extends Component{
 	componentWillMount(){
 		let code = null
@@ -31,13 +31,16 @@ export default class Home extends Component{
 		}
 	}
 	componentDidMount(){
-		console.log(localStorage.getItem("key"))
+		this.props.load()
 		// if(!localStorage.getItem("key")){
 		// 	window.location = "https://github.com/login/oauth/authorize?scope=admin&client_id=af4fdd0b77c3a4073f0c"
 		// }
 	}
 	render(){
-		setTimeout(() => this.props.changeA(5),5000)
+		setTimeout(() => {
+			this.props.changeA(5)
+			console.log(123)
+		},5000)
 
 		return (
 			<Layout>
