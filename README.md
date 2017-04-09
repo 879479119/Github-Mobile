@@ -16,3 +16,22 @@ something you need to know
 
 ### Frame in work:
 ![home](http://7xsm7w.com1.z0.glb.clouddn.com/2549.png)
+
+### Notice
+If you want to use qiniu to deploy your resources on CDN, you can create a
+file like `/config/CDNConfig.js`
+
+```javascript
+module.exports = {
+	dist: "../server/dist",
+	domain: "http://7xsm7w.com1.z0.glb.clouddn.com",
+	bucket: "stones",
+	prefix: "github",
+	access_key: "<FIND_IT_IN_SETTING>",
+	secret_key: "<FIND_IT_IN_SETTING>",
+}
+```
+
+Then run `npm run upload`
+
+*Upload HTML file is forbidden, and I don't know why*
