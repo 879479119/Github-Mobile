@@ -40,8 +40,8 @@ class TravelServiceApi {
 				resolve({
 					userID : user.email,
 					flightID : 'AR1973',
-				date : '10/27/2016 16:00PM'
-			});
+					date : '10/27/2016 16:00PM'
+				});
 			}, 2500);
 		});
 	}

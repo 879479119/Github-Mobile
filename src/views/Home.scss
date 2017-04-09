@@ -1,0 +1,75 @@
+.logo{
+  position: absolute;
+  left: 18px;
+  top: 14px;
+  width: 36px;
+  height: 36px;
+  background: url(/assets/github.png) no-repeat;
+  background-size: contain;
+}
+
+.left-menu{
+  display: inline-block;
+  line-height: 64px;
+  width: 600px;
+}
+
+.right-menu{
+  position: relative;
+  line-height: 64px;
+  display: inline-block;
+  width: 200px;
+  float: right;
+}
+
+.user-face-main{
+  width: 150px;
+  margin: 0 auto;
+  border-bottom: dashed #999 1px;
+  .uf-pic{
+    position: relative;
+    margin-top: 22px;
+    width: 150px;
+    height: 150px;
+    border-radius: 6px;
+  }
+  h4{
+    margin-top: 6px;
+    font-size: 16px;
+  }
+  h5{
+    font-size: 13px;
+  }
+  p{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 10px;
+  }
+  hr{
+    width: 80%;
+    background: #c0c0c0;
+    height: 0;
+  }
+}
+
+.main-body{
+  margin-top: 16px;
+  .ant-card{
+    display: inline-block;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    .ant-card-body{
+      padding: 12px;
+      h5 a{
+        font-size: 16px;
+      }
+      p{
+        margin-top: 4px;
+        max-height: 36px;
+        overflow: hidden;
+      }
+    }
+  }
+
+}
