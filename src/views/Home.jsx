@@ -3,6 +3,7 @@ import './Home.scss'
 import { connect } from 'react-redux'
 import { changeA } from '../views/HomeRedux'
 
+import AnimationTable from '../components/Home/Table'
 
 import { Layout, Menu, Breadcrumb, Icon, Input, Card } from 'antd';
 const { SubMenu } = Menu
@@ -159,6 +160,7 @@ export default class Home extends Component{
 									<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
 								</Card>
 							</div>
+							<AnimationTable />
 						</Content>
 					</Layout>
 				</Layout>
