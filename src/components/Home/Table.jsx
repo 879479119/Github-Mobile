@@ -4,19 +4,23 @@ import "./Table.scss";
 import {spring, StaggeredMotion} from "react-motion";
 
 class Item extends Component {
+	//noinspection JSUnusedGlobalSymbols,JSMethodCanBeStatic
 	componentWillEnter(callback) {
 		console.log("component will enter");
 		callback();
 	}
 
+	//noinspection JSMethodCanBeStatic
 	componentWillReceiveProps(nextProps){
 		console.log(nextProps);
 	}
 
+	//noinspection JSMethodCanBeStatic,JSUnusedGlobalSymbols
 	componentDidEnter() {
 		console.log("component did enter");
 	}
 
+	//noinspection JSMethodCanBeStatic,JSUnusedGlobalSymbols
 	componentWillLeave(callback) {
 		console.log("component will leave");
 		callback();

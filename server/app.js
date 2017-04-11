@@ -8,6 +8,7 @@ let routes = require('./routes/index');
 let user = require('./routes/users');
 let api = require('./routes/api');
 let mysql = require('mysql');
+let Promise = require('bluebird');
 global.config = require('./config');
 
 let app = express();
@@ -25,6 +26,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
  */
 
 global.log = require('./helper/logger')
+global.Promise = Promise
 
 /**
  * initialize the github kit
@@ -72,3 +74,8 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+// str = [1,2,23,3,1]
+//
+// let k = global.connection.query("INSERT INTO t_repo VALUES ?",str,()=>{})
+// console.log(k.sql)
