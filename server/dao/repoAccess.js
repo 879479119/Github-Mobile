@@ -7,6 +7,7 @@ module.exports = {
 			return '('+stringify(item)+')'
 		})
 		let query = `INSERT INTO t_repo VALUES ${values.join(',')}`
+		console.error(query)
 		return new Promise(function(resolve, reject){
 			global.connection.query(query, (err)=>{
 				if(err){

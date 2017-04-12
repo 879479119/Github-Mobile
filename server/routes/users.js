@@ -6,6 +6,7 @@ let log = require('../helper/logger')
 let login = require('../proxy/login')
 let syncAuth = require('../proxy/syncAuth')
 let DataQuery = require('../dao/userAccess')
+let profileInit = require('../services/profileInit')
 
 router.post('/register', function (req, respond) {
 	let github = global.github,
@@ -70,9 +71,19 @@ router.post('/register', function (req, respond) {
 	})
 }).get('/redirect', function (req, res) {
 	res.redirect("https://github.com/login/oauth/authorize?scope=admin&client_id="+global.config.clientID)
-}).get('/test', (req, res) => {
-
-	res.send("123")
+}).get('/init', (req, res) => {
+	let gname = req.query.name
+	if(gname === undefined) {
+		res.status(403)
+		return
+	}
+	profileInit(gname).then((arr)=>{
+		console.log(arr)
+		res.write(arr)
+	}).catch(e=>{
+		console.log(e)
+		res.send(e)
+	})
 })
 
 module.exports = router;

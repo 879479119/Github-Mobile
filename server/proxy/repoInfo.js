@@ -1,7 +1,8 @@
 let Promise = require('bluebird')
+let time2date = require('../helper/time2date')
 
 function getAllLanguages(gname) {
-	getAllRepo(gname).then((arr) => {
+	return getAllRepo(gname).then((arr) => {
 		let promises = arr.data.map(item => {
 			let repo = item.name
 			return new Promise((resolve, reject) => {
@@ -17,8 +18,8 @@ function getAllLanguages(gname) {
 							languages: res.data,
 							description: item.description,
 							forked: item.fork,
-							created_time: item.created_at,
-							updated_time: item.updated_at,
+							created_time: time2date(item.created_at),
+							updated_time: time2date(item.updated_at),
 							lang_main: item.language,
 							file_count: item.size,
 							star: item.stargazers_count,
@@ -33,7 +34,8 @@ function getAllLanguages(gname) {
 		})
 		return Promise.all(promises)
 	}).then(repos => {
-		console.log(repos)
+		console.log('===========================================')
+		console.log(repos.length)
 		return repos
 	})
 }
