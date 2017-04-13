@@ -9,6 +9,7 @@ let user = require('./routes/users');
 let api = require('./routes/api');
 let mysql = require('mysql');
 let Promise = require('bluebird');
+let tty = require("tty");
 global.config = require('./config');
 
 let app = express();
@@ -41,19 +42,19 @@ global.github = new GitHubApi({
 	},
 	Promise: require('bluebird'),
 	followRedirects: false, // default: true; there's currently an issue with non-get redirects, so allow ability to disable follow-redirects
-	timeout: 20000
+	timeout: 30000
 });
 
 /**
  * initialize the connection with MySQL
  */
 
-global.connection = mysql.createConnection(global.config.mysql);
+global.pool = mysql.createPool(global.config.mysql);
 
 /**
  * when to stop it ? listen the process exit event ?
  */
-global.connection.connect();
+// global.connection.connect();
 
 app.use('/api', api);
 app.use('/', routes);
@@ -75,7 +76,19 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-// str = [1,2,23,3,1]
-//
-// let k = global.connection.query("INSERT INTO t_repo VALUES ?",str,()=>{})
-// console.log(k.sql)
+/**
+ * catch all the exceptions and release resources
+ */
+process.on('uncaughtException', function (err) {
+	//release the mysql connection if we need
+	log('exit with uncaughtException',1)
+})
+process.on('exit', function(){
+	log('exit peaceful')
+})
+process.openStdin().on("keypress", function(chunk, key) {
+	if(key && key.name === "c" && key.ctrl) {
+		log('exit peaceful')
+		process.exit()
+	}
+})

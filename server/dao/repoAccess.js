@@ -1,4 +1,5 @@
 let Promise = require('bluebird')
+let basicQuery = require('./basicQuery')
 const stringify = require('../helper/stringify')
 
 module.exports = {
@@ -7,9 +8,9 @@ module.exports = {
 			return '('+stringify(item)+')'
 		})
 		let query = `INSERT INTO t_repo VALUES ${values.join(',')}`
-		console.error(query)
+
 		return new Promise(function(resolve, reject){
-			global.connection.query(query, (err)=>{
+			basicQuery(query, (err)=>{
 				if(err){
 					reject('DATABASE ERROR , Details: '+err)
 				}else{

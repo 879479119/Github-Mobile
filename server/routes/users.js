@@ -78,10 +78,9 @@ router.post('/register', function (req, respond) {
 		return
 	}
 	profileInit(gname).then((arr)=>{
-		console.log(arr)
-		res.write(arr)
+		res.send(arr)
 	}).catch(e=>{
-		console.log(e)
+		log(e, 1)
 		res.send(e)
 	})
 })

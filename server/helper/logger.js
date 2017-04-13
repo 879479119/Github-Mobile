@@ -1,16 +1,16 @@
-var colors = require('colors');
+let colors = require('colors');
 
 module.exports = (function () {
 	return function (str, tag) {
-		var color = "blue"
+		let color = "blue"
 		switch (tag){
 			case 1:
 				color = "red"
-				console.error("[ ERROR ] ==> "[color] , str)
+				console.error("\u001b[31m[ ERROR ] ==> \u001b[39m" , str)
 				break
 			default:
 				color = "green"
-				console.log(colors[color]("[ LOG ] ==> ") , str)
+				console.log("\u001b[36m[ LOG ] ==> \u001b[39m" , str)
 		}
 		return true
 	}

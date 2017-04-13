@@ -1,4 +1,5 @@
 let Promise = require('bluebird')
+let simpleQuery = require('./simpleQuery')
 
 module.exports = {
 	/**
@@ -7,7 +8,7 @@ module.exports = {
 	 */
 	chkUserExist(obj){
 		return new Promise(function (resolve, reject) {
-			global.connection.query("SELECT gid FROM t_user WHERE gid = ?",
+			simpleQuery("SELECT gid FROM t_user WHERE gid = ?",
 				[obj.res.data.id],
 				function (err, data) {
 					if(err) reject(err.message)
@@ -26,7 +27,7 @@ module.exports = {
 	 */
 	chkLogin(gid, key){
 		return new Promise(function (resolve, reject) {
-			global.connection.query("SELECT token FROM t_user WHERE gid = ? AND `key` = ?",
+			simpleQuery("SELECT token FROM t_user WHERE gid = ? AND `key` = ?",
 				[gid, key],
 				function (err, data) {
 					if(err){
@@ -48,7 +49,7 @@ module.exports = {
 	addUser(gid, token, scope){
 		return new Promise(function(resolve, reject){
 			let key = Date.now()
-			global.connection.query("INSERT INTO t_user VALUES (NULL,?,?,?,?)",
+			simpleQuery("INSERT INTO t_user VALUES (NULL,?,?,?,?)",
 				[gid, key, token, scope || "admin"],
 				function (err) {
 					if(err){
