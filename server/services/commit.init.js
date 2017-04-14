@@ -8,7 +8,5 @@ module.exports = function (gname) {
 		//TODO: will this work? try it later
 		if(arr.length === 0) rejectHook(STDR.success("no log",1))
 		return getAllCommits(arr)
-	}).then(arr=>{
-		return arr
 	})
 }

@@ -4,8 +4,10 @@ let fetch = require('node-fetch')
 let log = require('../helper/logger')
 let login = require('../proxy/login')
 let profileInit = require('../services/profile.init')
+let commitInit = require('../services/commit.init')
 let register = require('../services/register')
 let getLang = require('../services/langInfo')
+let syncAuth = require('../proxy/syncAuth')
 
 router.post('/register', (req, respond)=>{
 
@@ -71,7 +73,9 @@ router.post('/register', (req, respond)=>{
 		res.send(STDR.argvError("you should pass 'name'"))
 		return
 	}
-	profileInit(gname).then((arr)=>{
+
+	commitInit(gname).then((arr)=>{
+		log({p:'=================>',arr})
 		res.send(STDR.success(arr))
 	}).catch(e=>{
 		log(e, 1)

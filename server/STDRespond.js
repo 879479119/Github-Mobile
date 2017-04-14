@@ -66,7 +66,7 @@ function headerError(detail) {
 function success(data, code=0) {
 	return {
 		code: 10000 + code,
-		message: "operation success",
+		message: "operation success ^_^",
 		data: data
 	}
 }

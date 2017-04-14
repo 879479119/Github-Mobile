@@ -57,7 +57,6 @@ global.github = new GitHubApi({
 	timeout: 30000
 });
 
-
 /**
  * initialize the connection with MySQL
  */
