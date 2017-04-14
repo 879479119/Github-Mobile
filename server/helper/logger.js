@@ -1,5 +1,3 @@
-let colors = require('colors');
-
 module.exports = (function () {
 	return function (str, tag) {
 		let color = "blue"

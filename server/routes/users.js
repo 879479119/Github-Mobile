@@ -3,7 +3,7 @@ let router = express.Router()
 let fetch = require('node-fetch')
 let log = require('../helper/logger')
 let login = require('../proxy/login')
-let profileInit = require('../services/profileInit')
+let profileInit = require('../services/profile.init')
 let register = require('../services/register')
 let getLang = require('../services/langInfo')
 
@@ -64,6 +64,18 @@ router.post('/register', (req, respond)=>{
 	}).catch(err=>{
 		log(err, 1)
 		res.send(err)
+	})
+}).get('/initCommits', (req, res) => {
+	let gname = req.query.name
+	if(gname === undefined) {
+		res.send(STDR.argvError("you should pass 'name'"))
+		return
+	}
+	profileInit(gname).then((arr)=>{
+		res.send(STDR.success(arr))
+	}).catch(e=>{
+		log(e, 1)
+		res.send(e)
 	})
 })
 
