@@ -11,11 +11,8 @@ module.exports = {
 
 		return new Promise(function(resolve, reject){
 			basicQuery(query, (err)=>{
-				if(err){
-					reject('DATABASE ERROR , Details: '+err)
-				}else{
-					resolve(repoArr)
-				}
+				if(err)	reject(STDR.databaseError(err))
+				else resolve(repoArr)
 			})
 		})
 	}

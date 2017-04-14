@@ -8,11 +8,11 @@ let routes = require('./routes/index');
 let user = require('./routes/users');
 let api = require('./routes/api');
 let mysql = require('mysql');
+let session = require('express-session');
 let Promise = require('bluebird');
 let fetch = require('node-fetch');
 let tty = require("tty");
-let syncAuth = require('./proxy/syncAuth');
-global.config = require('./config');
+let STDR = require('./STDRespond');
 
 let app = express();
 app.set('views', path.join(__dirname, 'views'));
@@ -23,14 +23,23 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'dist')));
+app.use(session({
+	secret: 'github',
+	name: 'sid',
+	resave: false,
+	saveUninitialized: true
+}));
 
 /**
  * initialize the logger tool
+ * @global
  */
 
+global.config = require('./config')
 global.log = require('./helper/logger')
 global.Promise = Promise
 global.fetch = fetch
+global.STDR = STDR
 
 /**
  * initialize the github kit
@@ -48,8 +57,6 @@ global.github = new GitHubApi({
 	timeout: 30000
 });
 
-//TODO: token works just for test
-syncAuth('8d7da4f512874607e06cda1f6f484904cf77efb6')
 
 /**
  * initialize the connection with MySQL
@@ -67,12 +74,13 @@ app.use('/', routes);
 app.use('/user', user);
 
 app.use(function(req, res, next) {
-  let err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+  // let err = new Error('Not Found');
+  // err.status = 404;
+  // next(err);
+	res.send({code: 404,msg: "Not Found"})
 });
 
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
@@ -85,7 +93,7 @@ module.exports = app;
 /**
  * catch all the exceptions and release resources
  */
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', function () {
 	//release the mysql connection if we need
 	log('exit with uncaughtException',1)
 })

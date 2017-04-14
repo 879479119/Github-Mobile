@@ -12,13 +12,15 @@ router.post('/register', (req, respond)=>{
 	let code = req.body.code
 	log(code)
 
-	register(code).then((gid, key)=>{
+	register(code).then(({gid, gname, key})=>{
+		log({gid, gname, key})
 		respond.cookie('gid', gid, { maxAge: 30*24*60*60*1000 })
+		respond.cookie('gname', gname, { maxAge: 30*24*60*60*1000 })
 		respond.cookie('key',key, { maxAge: 30*24*60*60*1000, httpOnly: true })
-		respond.send("OK").end();
+		respond.send(STDR.success('register success'))
 	}).catch(e=>{
 		log(e,1)
-		respond.send(e).end()
+		respond.send(e)
 	})
 
 }).post('/login', (req, respond)=>{
@@ -26,12 +28,13 @@ router.post('/register', (req, respond)=>{
 		key = req.cookies['key'];
 
 	if(typeof key === "undefined" || typeof gid === "undefined"){
-		respond.write("no key or gid in cookie")
+		respond.send(STDR.headerError("no key or gid in cookie"))
 		return
 	}
 
 	login(gid, key).then((token)=>{
-		if(token) respond.send("login success")
+		req.session.token = token
+		respond.send(STDR.success("login success"))
 	}).catch((err)=>{
 		log(err,1)
 		respond.send(err)
@@ -41,21 +44,26 @@ router.post('/register', (req, respond)=>{
 }).get('/init', (req, res) => {
 	let gname = req.query.name
 	if(gname === undefined) {
-		res.status(403)
+		res.send(STDR.argvError("you should pass 'name'"))
 		return
 	}
 	profileInit(gname).then((arr)=>{
-		res.send(arr)
+		res.send(STDR.success(arr))
 	}).catch(e=>{
 		log(e, 1)
 		res.send(e)
 	})
 }).get('/getLangInfo', (req, res)=>{
-	getLang('879479119').then(countObj=>{
-		res.send(countObj)
+	let gname = req.query.name
+	if(gname === undefined) {
+		res.send(STDR.argvError("you should pass 'name'"))
+		return
+	}
+	getLang(gname).then(countObj=>{
+		res.send(STDR.success(countObj))
 	}).catch(err=>{
-		res.send("SOME THING WENT WRONG WHEN FETCH LANG DATA")
-		log(err,1)
+		log(err, 1)
+		res.send(err)
 	})
 })
 

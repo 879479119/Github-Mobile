@@ -4,16 +4,16 @@ let simpleQuery = require('./simpleQuery')
 module.exports = {
 	/**
 	 * @return {Object}
-	 * @param obj
+	 * @param {Object} obj
 	 */
 	chkUserExist(obj){
 		return new Promise(function (resolve, reject) {
 			simpleQuery("SELECT gid FROM t_user WHERE gid = ?",
 				[obj.res.data.id],
 				function (err, data) {
-					if(err) reject(err.message)
+					if(err) reject(STDR.databaseError(err))
 					else if(data.length >= 1){
-						reject("user already stored")
+						reject(STDR.success('user already existed',1))
 					}else{
 						resolve(obj)
 					}
@@ -22,8 +22,8 @@ module.exports = {
 	},
 	/**
 	 * @return access_token
-	 * @param gid
-	 * @param key
+	 * @param {String} gid
+	 * @param {String} key
 	 */
 	chkLogin(gid, key){
 		return new Promise(function (resolve, reject) {
@@ -31,40 +31,40 @@ module.exports = {
 				[gid, key],
 				function (err, data) {
 					if(err){
-						reject("database error occurs when login")
+						reject(STDR.databaseError(err))
 					}else if(data.length !== 0){
 						resolve(data[0].token)
 					}else{
-						reject("invalid key with gid")
+						reject(STDR.authError('invalid key with gid'))
 					}
 				})
 		})
 	},
 	/**
-	 * @return gid key
-	 * @param gid
-	 * @param token
-	 * @param [scope]
+	 * @param {String} gid
+	 * @param {String} gname
+	 * @param {String} token
+	 * @param {String} [scope]
 	 */
-	addUser(gid, token, scope){
-		return new Promise(function(resolve, reject){
+	addUser(gid, gname, token, scope){
+		return new Promise((resolve, reject)=>{
 			let key = Date.now()
-			simpleQuery("INSERT INTO t_user VALUES (NULL,?,?,?,?)",
-				[gid, key, token, scope || "admin"],
+			simpleQuery("INSERT INTO t_user VALUES (NULL,?,?,?,?,?,NULL)",
+				[gid, gname, key, token, scope || "admin"],
 				function (err) {
 					if(err){
-						reject('DATABASE ERROR')
+						reject(STDR.databaseError(err))
 					}else{
-						resolve(gid, key)
+						resolve({gid, gname, key})
 					}
 				})
 		})
 	},
 	/**
 	 * get the language information about a user
-	 * @param gname
-	 * @param gid
-	 * @return {string}
+	 * @param {String} gname
+	 * @param {String} [gid]
+	 * @return {String}
 	 */
 	getLangInfo(gname, gid){
 		if(gid !== undefined){
@@ -72,7 +72,7 @@ module.exports = {
 				simpleQuery("SELECT languages FROM t_repo WHERE gid = ?",
 					[gid],
 					(err, rows) => {
-						if(err) reject('DATABASE ERROR: Cannot fetch lang info with gid')
+						if(err) reject(STDR.databaseError(err))
 						else resolve(rows)
 					})
 			})
@@ -82,10 +82,27 @@ module.exports = {
 				simpleQuery("SELECT languages FROM t_repo WHERE git_name = ?",
 					[gname],
 					(err, rows) => {
-						if(err) reject('DATABASE ERROR: Cannot fetch lang info with gname')
+						if(err) reject(STDR.databaseError(err))
 						else resolve(rows)
 					})
 			})
 		}
+	},
+	/**
+	 * store the language info in mysql
+	 * @param {String} gname
+	 * @param {Object} langObj
+	 */
+	storeLangInfo(gname, langObj){
+		let langStr = JSON.stringify(langObj)
+		log(langStr.length)
+		return new Promise((resolve, reject) => {
+			simpleQuery("UPDATE t_user SET languages = ? WHERE git_name = ?",
+				[langStr, gname],
+				(err) => {
+					if(err) reject(STDR.databaseError(err))
+					else resolve(langObj)
+				})
+		})
 	}
 }

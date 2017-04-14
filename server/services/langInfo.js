@@ -22,6 +22,8 @@ module.exports = function (gname, gid) {
 				}
 			}
 		})
-		return countObj
+		return {gname, countObj}
+	}).then(({gname, countObj})=>{
+		return DataQuery.storeLangInfo(gname,countObj)
 	})
 }

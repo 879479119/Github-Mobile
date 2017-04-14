@@ -24,8 +24,8 @@ module.exports = function (code) {
 
 			syncAuth(token)
 
-			global.github.users.get(
-				{}, function (err, res) {
+			global.github.users.get({},
+				function (err, res) {
 					if(err) reject("get user info error or timeout")
 					resolve({res:res,token:token})
 				})
@@ -33,6 +33,6 @@ module.exports = function (code) {
 	}).then(function (obj) {
 		return DataQuery.chkUserExist(obj)
 	}).then(function (obj) {
-		return DataQuery.addUser(obj.res.data.id, obj.token)
+		return DataQuery.addUser(obj.res.data.id, obj.res.data.name, obj.token)
 	})
 }
