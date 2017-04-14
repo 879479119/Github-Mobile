@@ -59,5 +59,33 @@ module.exports = {
 					}
 				})
 		})
+	},
+	/**
+	 * get the language information about a user
+	 * @param gname
+	 * @param gid
+	 * @return {string}
+	 */
+	getLangInfo(gname, gid){
+		if(gid !== undefined){
+			return new Promise((resolve, reject) => {
+				simpleQuery("SELECT languages FROM t_repo WHERE gid = ?",
+					[gid],
+					(err, rows) => {
+						if(err) reject('DATABASE ERROR: Cannot fetch lang info with gid')
+						else resolve(rows)
+					})
+			})
+		}else{
+			if(gname === undefined)	return "github name is undefined"
+			return new Promise((resolve, reject) => {
+				simpleQuery("SELECT languages FROM t_repo WHERE git_name = ?",
+					[gname],
+					(err, rows) => {
+						if(err) reject('DATABASE ERROR: Cannot fetch lang info with gname')
+						else resolve(rows)
+					})
+			})
+		}
 	}
 }

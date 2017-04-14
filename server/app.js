@@ -9,7 +9,9 @@ let user = require('./routes/users');
 let api = require('./routes/api');
 let mysql = require('mysql');
 let Promise = require('bluebird');
+let fetch = require('node-fetch');
 let tty = require("tty");
+let syncAuth = require('./proxy/syncAuth');
 global.config = require('./config');
 
 let app = express();
@@ -28,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 global.log = require('./helper/logger')
 global.Promise = Promise
+global.fetch = fetch
 
 /**
  * initialize the github kit
@@ -44,6 +47,9 @@ global.github = new GitHubApi({
 	followRedirects: false, // default: true; there's currently an issue with non-get redirects, so allow ability to disable follow-redirects
 	timeout: 30000
 });
+
+//TODO: token works just for test
+syncAuth('8d7da4f512874607e06cda1f6f484904cf77efb6')
 
 /**
  * initialize the connection with MySQL

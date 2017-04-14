@@ -1,51 +1,18 @@
-let express = require('express');
-let router = express.Router();
-let fetch = require('node-fetch');
-let Promise = require('bluebird');
+let express = require('express')
+let router = express.Router()
+let fetch = require('node-fetch')
 let log = require('../helper/logger')
 let login = require('../proxy/login')
-let syncAuth = require('../proxy/syncAuth')
-let DataQuery = require('../dao/userAccess')
 let profileInit = require('../services/profileInit')
+let register = require('../services/register')
+let getLang = require('../services/langInfo')
 
-router.post('/register', function (req, respond) {
-	let github = global.github,
-		code = req.body.code
+router.post('/register', (req, respond)=>{
 
+	let code = req.body.code
 	log(code)
 
-	fetch("https://github.com/login/oauth/access_token",{
-		method: 'POST',
-		headers: {
-			"Accept": "application/json",
-			'Content-Type': 'application/x-www-form-urlencoded'
-		},
-		body: "client_id="+global.config.clientID+"&client_secret="+global.config.clientSecret+"&code="+code
-	}).then(res => res.json()).then(res => {
-		return new Promise(function (resolve, reject) {
-			log(res.access_token)
-			/**
-			 * authenticate is sync operation
-			 */
-			let token = res.access_token
-
-			if(token === undefined){
-				reject("undefined token")
-			}
-
-			syncAuth(token)
-
-			github.users.get(
-				{}, function (err, res) {
-					if(err) reject("get user info error or timeout")
-					resolve({res:res,token:token})
-			})
-		})
-	}).then(function (obj) {
-		return DataQuery.chkUserExist(obj)
-	}).then(function (obj) {
-		return DataQuery.addUser(obj.res.data.id, obj.token)
-	}).then(function (gid, key) {
+	register(code).then((gid, key)=>{
 		respond.cookie('gid', gid, { maxAge: 30*24*60*60*1000 })
 		respond.cookie('key',key, { maxAge: 30*24*60*60*1000, httpOnly: true })
 		respond.send("OK").end();
@@ -54,7 +21,7 @@ router.post('/register', function (req, respond) {
 		respond.send(e).end()
 	})
 
-}).post('/login', function (req, respond) {
+}).post('/login', (req, respond)=>{
 	let gid = req.cookies['gid'],
 		key = req.cookies['key'];
 
@@ -63,13 +30,13 @@ router.post('/register', function (req, respond) {
 		return
 	}
 
-	login(gid, key).then(function (token) {
+	login(gid, key).then((token)=>{
 		if(token) respond.send("login success")
-	}).catch(function (err) {
+	}).catch((err)=>{
 		log(err,1)
 		respond.send(err)
 	})
-}).get('/redirect', function (req, res) {
+}).get('/redirect', (req, res)=>{
 	res.redirect("https://github.com/login/oauth/authorize?scope=admin&client_id="+global.config.clientID)
 }).get('/init', (req, res) => {
 	let gname = req.query.name
@@ -83,6 +50,13 @@ router.post('/register', function (req, respond) {
 		log(e, 1)
 		res.send(e)
 	})
+}).get('/getLangInfo', (req, res)=>{
+	getLang('879479119').then(countObj=>{
+		res.send(countObj)
+	}).catch(err=>{
+		res.send("SOME THING WENT WRONG WHEN FETCH LANG DATA")
+		log(err,1)
+	})
 })
 
-module.exports = router;
+module.exports = router
