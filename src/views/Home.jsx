@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { changeA } from '../views/HomeRedux'
 
 import AnimationTable from '../components/Home/Table'
+import CommitTable from '../components/Home/CommitTable'
 
 import { Layout, Menu, Breadcrumb, Icon, Input, Card } from 'antd';
 const { SubMenu } = Menu
@@ -35,11 +36,9 @@ export default class Home extends Component{
 	}
 	componentDidMount(){
 		this.props.load()
-		// if(!localStorage.getItem("key")){
-		// 	window.location = "https://github.com/login/oauth/authorize?scope=admin&client_id=af4fdd0b77c3a4073f0c"
-		// }
 	}
-	render(){
+	render = () => {
+		const {commits} = this.props
 		return (
 			<Layout>
 				<Header className="header">
@@ -74,13 +73,6 @@ export default class Home extends Component{
 							<h4>RockSAMA</h4>
 							<h5>879479119</h5>
 							<p>Tech Otaku Save World</p>
-							{/*<p>@CQUPT</p>*/}
-							{/*<p>Chongqing,China</p>*/}
-							{/*<p><a href="#">767444690@qq.com</a></p>*/}
-							{/*<p><a href="#">http://www.jian.com</a></p>*/}
-							{/*<hr/>*/}
-							{/*<h4>Organizations</h4>*/}
-							{/*<a href="#">Organ</a>*/}
 						</div>
 						<Menu
 							mode="inline"
@@ -160,7 +152,8 @@ export default class Home extends Component{
 									<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
 								</Card>
 							</div>
-							<AnimationTable />
+							{/*<AnimationTable />*/}
+							<CommitTable/>
 						</Content>
 					</Layout>
 				</Layout>

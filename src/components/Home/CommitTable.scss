@@ -1,0 +1,34 @@
+.commit-table{
+
+  table{
+
+    tr{
+
+      td{
+        background: #999999;
+        width: 10px;
+        height: 10px;
+
+
+      }
+      .level-0{
+        background: #aaa;
+      }
+      .level-1{
+        background: yellowgreen;
+      }
+
+      .level-2{
+        background: green;
+      }
+
+      .level-3{
+        background: darkgreen;
+      }
+
+      .level-4{
+        background: darkslategray;
+      }
+    }
+  }
+}
