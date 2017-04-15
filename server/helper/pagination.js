@@ -17,7 +17,7 @@ module.exports = function (asyncFunc, perPage, start, end=Infinity){
 				asyncFunc(page, (err, res) => {
 					if(err) rej(err)
 					page ++
-					result.push([...res])
+					result.push(res)
 					if(page > end || res.length < perPage) {
 						sol(result)
 					}else{

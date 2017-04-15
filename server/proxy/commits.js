@@ -3,15 +3,16 @@ let time2date = require('../helper/time2date')
 let pagination = require('../helper/pagination')
 
 function dataFilter(data, repo_name) {
-	if(data.length === 0) return null
+	if(data.length === 0) return []
+	//noinspection JSUnusedGlobalSymbols
 	return data.map(item=>({
 		sha: item.sha,
-		tree: item.commit.tree.sha,
-		message: item.commit.message,
-		parents: item.parents.map(t=>t.sha).join(','),
-		time: time2date(item.commit.committer.date),
+		repo_name,
 		git_name: item.committer.login,
-		repo_name
+		time: time2date(item.commit.committer.date),
+		message: item.commit.message,
+		tree: item.commit.tree.sha,
+		parents: item.parents.map(t=>t.sha).join(',')
 	}))
 }
 
@@ -23,12 +24,14 @@ function dataFilter(data, repo_name) {
 function pp(author, repo) {
 	return pagination((page, callback)=>{
 		log({repo, page})
-		global.github.repos.getCommits({ owner: author, repo, per_page: 80, page },
+		global.github.repos.getCommits({ owner: author, repo, author, per_page: 90, page },
 			(err, res) => {
+				log("OK????")
 				log(dataFilter(res.data, repo).length)
+				log("OK!!!!")
 				callback(err, dataFilter(res.data, repo))
 			})
-	}, 100, 1)
+	}, 90, 1)
 }
 
 /**
@@ -42,11 +45,11 @@ function getAllCommits(arr) {
 				author = item.git_name
 			return pp(author, repo)
 		})
-		log(promises.length)
+		log('prepare =====>', promises.length)
 		return Promise.all(promises)
-	}).then(repos => {
-		log(repos.length)
-		return repos
+	}).then(res => {
+		log('ready =====> ',res.length)
+		return res
 	})
 }
 

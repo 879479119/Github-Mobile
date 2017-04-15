@@ -5,6 +5,7 @@ let log = require('../helper/logger')
 let login = require('../proxy/login')
 let profileInit = require('../services/profile.init')
 let commitInit = require('../services/commit.init')
+let commitService = require('../services/commit.optimize')
 let register = require('../services/register')
 let getLang = require('../services/langInfo')
 let syncAuth = require('../proxy/syncAuth')
@@ -74,8 +75,22 @@ router.post('/register', (req, respond)=>{
 		return
 	}
 
+	syncAuth("0af36a9f7ed6c22d434ed27206365835b9faec28")
+
 	commitInit(gname).then((arr)=>{
-		log({p:'=================>',arr})
+		res.send(STDR.success(arr))
+	}).catch(e=>{
+		log(e, 1)
+		res.send(e)
+	})
+}).get('/getCommits', (req, res) => {
+	let gname = req.query.name
+	if(gname === undefined) {
+		res.send(STDR.argvError("you should pass 'name'"))
+		return
+	}
+
+	commitService(gname, ['repo_name', 'time']).then((arr)=>{
 		res.send(STDR.success(arr))
 	}).catch(e=>{
 		log(e, 1)

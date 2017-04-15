@@ -1,14 +1,19 @@
+/**
+ * usage:
+ *        log()      => log in cyan,
+ *        log(...,1) => error in red
+ */
+
 module.exports = (function () {
-	return function (str, tag) {
-		let color = "blue"
+	return function (...str) {
+
+		let tag = arguments.length === 1 ? 0 : arguments[arguments.length - 1]
 		switch (tag){
 			case 1:
-				color = "red"
-				console.error("\u001b[31m[ ERROR ] ==> \u001b[39m" , str)
+				console.error("\u001b[31m[ ERROR ] ==> \u001b[39m" , ...str)
 				break
 			default:
-				color = "green"
-				console.log("\u001b[36m[ LOG ] ==> \u001b[39m" , str)
+				console.log("\u001b[36m[ LOG ] ==> \u001b[39m" , ...str)
 		}
 		return true
 	}

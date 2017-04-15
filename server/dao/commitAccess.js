@@ -1,21 +1,37 @@
 let Promise = require('bluebird')
+let basicQuery = require('./basicQuery')
 let simpleQuery = require('./simpleQuery')
 const stringify = require('../helper/stringify')
 
 module.exports = {
-	commits(repoArr){
-		let values = repoArr.map(item=>{
+	/**
+	 * store all the commits you provide in database
+	 * @param {Array} commitsArr
+	 */
+	storeCommits(commitsArr){
+		let values = commitsArr.map(item=>{
 			return '('+stringify(item)+')'
 		})
-		let query = `INSERT INTO t_repo VALUES ${values.join(',')}`
+		let query = `INSERT INTO t_commits VALUES ${values.join(',')}`
 
 		return new Promise(function(resolve, reject){
-			simpleQuery(query, (err)=>{
-				if(err){
-					reject('DATABASE ERROR , Details: '+err)
-				}else{
-					resolve(repoArr)
-				}
+			basicQuery(query, err=>{
+				if(err)	reject(STDR.databaseError(err))
+				else resolve(commitsArr)
+			})
+		})
+	},
+	/**
+	 * get commit detail
+	 * @param {String} gname
+	 * @param {Array} [keys]
+	 */
+	getCommitsByUser(gname, keys=[]){
+		let values = keys.join(',') || '*'
+		return new Promise(function(resolve, reject){
+			simpleQuery(`SELECT ${values} FROM t_commits WHERE git_name = ?`, [gname], (err, rows)=>{
+				if(err)	reject(STDR.databaseError(err))
+				else resolve(rows)
 			})
 		})
 	}
