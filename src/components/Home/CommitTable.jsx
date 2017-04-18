@@ -404,7 +404,7 @@ function dataFormat(commits) {
 	return result
 }
 
-export default function (commits) {
+export default function (props) {
 	let data = dataFormat(DATA.data)
 
 	return (

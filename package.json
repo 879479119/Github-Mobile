@@ -30,6 +30,7 @@
     "babel-preset-es2015": "^6.24.0",
     "babel-preset-react": "^6.23.0",
     "css-loader": "^0.27.3",
+    "d3": "^4.8.0",
     "ejs-compiled-loader": "^1.1.0",
     "extract-text-webpack-plugin": "^2.1.0",
     "github": "^9.2.0",

@@ -5,6 +5,7 @@ import { changeA } from '../views/HomeRedux'
 
 import AnimationTable from '../components/Home/Table'
 import CommitTable from '../components/Home/CommitTable'
+import Percentage from '../components/Home/Percentage'
 
 import { Layout, Menu, Breadcrumb, Icon, Input, Card } from 'antd';
 const { SubMenu } = Menu
@@ -154,6 +155,7 @@ export default class Home extends Component{
 							</div>
 							{/*<AnimationTable />*/}
 							<CommitTable/>
+							<Percentage/>
 						</Content>
 					</Layout>
 				</Layout>
