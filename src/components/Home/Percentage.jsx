@@ -1,66 +1,51 @@
 import React, { Component } from 'react'
 import {spring, StaggeredMotion} from "react-motion"
 
-function cal(lang) {
+function genePath(lang) {
 	lang = [
-		60,20,10,10
+		10,10,10,20,25,
 	]
-	let outR = 50,
-		innerR = 20
+	let sum = lang.reduce((prevAll,cur)=>{
+		return prevAll.concat(prevAll[prevAll.length-1]+cur)
+	},[0])
+	let outR = 30,
+		innerR = 10
 
 	let centerX = 40,
 		centerY = 40
 
-	let result = lang.reduce((prevAll, cur) => {
-
-		console.log(prevAll)
-		let sum = prevAll[prevAll.length-1].sum
-
-		let r = Math.PI * cur / 100 * 2
-		let x = Math.sin(r) * outR + centerX
-		let y = Math.cos(r) * outR + centerY
-
-		let pX = outR / Math.cos(cur/100) * Math.sin(sum) + centerX
-		let pY = outR / Math.cos(cur/100) * Math.sin(sum) + centerY
-
-		return prevAll.concat({
-			sum: sum + r,
-			points: [
-				prevAll[prevAll.length-1].points[2],
-				{x:pX,y:pY},
-				{x:x,y:y},
-				prevAll[prevAll.length-1].points[5],
-				{x:innerR / Math.cos(cur/100) * Math.sin(sum) + centerX,y:innerR / Math.cos(cur/100) * Math.sin(sum) + centerY},
-				{x:Math.sin(r) * innerR + centerX,y:Math.cos(r) * innerR + centerY},
-			]
-		})
-	},[{
-		sum: 0,
-		points: [
-			{x:centerX,y:centerY-outR},
-			{x:centerX,y:centerY-outR},
-			{x:centerX,y:centerY-outR},
-			{x:centerX,y:centerY-innerR},
-			{x:centerX,y:centerY-innerR},
-			{x:centerX,y:centerY-innerR},
-		]
-	}])
+	let result = []
+	lang.map((item, index)=>{
+		if (item <= 100) {
+			let progress = item / 100;
+			let degrees = progress * 360;
+			let rad = degrees * (Math.PI / 180);
+			let x = (Math.sin(rad) * outR).toFixed(2)
+			let y = -(Math.cos(rad) * outR).toFixed(2)
+			let length = window.Number(degrees > 180)
+			let descriptions = ['M', centerX, centerY-outR, 'A', outR, outR, 0, length, 1, +x+centerX, +y+centerY];
+			result.push({
+				r: sum[index],
+				path: descriptions.join(' ')
+			})
+		}
+	})
 
 	return result
 }
 
 export default class Percentage extends Component{
-	componentDidMount(){
-		// console.log(cal());
+	componentWillMount(){
+		console.log(genePath());
 	}
 	render = () => (
 		<div className="percentage">
 				<svg>
 					{
-						cal().map((item,index,arr)=>{
-							let p = item.points
-							return(
-								<path key={index} d={`M${p[0].x},${p[0].y} Q${p[1].x},${p[1].y} ${p[2].x},${p[2].y}`} stroke="#000"/>
+						genePath().map((item,index,arr)=>{
+							let r = item.r
+							return (
+								<path d={item.path} key={index} fill="transparent" stroke="rgba(255,255,0,0.4)" strokeWidth={10}  style={{transformOrigin:`40px 40px`,transform:`rotate(${r*3.6}deg)`}}/>
 							)
 						})
 					}
