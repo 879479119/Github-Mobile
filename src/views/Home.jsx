@@ -122,40 +122,42 @@ export default class Home extends Component{
 								<Menu.Item key="following">Following</Menu.Item>
 							</Menu>
 							<div className="main-body">
-								<Card style={{width: 360,height: 110}}>
-									<h5>lll <a href="#">react-native</a></h5>
-									<p>A SVG shadow component powered with react-native-svg,which can provide shadow on svg,which can provide shadow on svg,which can provide shadow on svg,which can provide shadow on svg,which can provide shadow on svg,which can provide shadow on Android like iOS ^_^</p>
-									<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
-								</Card>
-								<Card style={{width: 360}}>
-									<h5>lll <a href="#">react-native</a></h5>
-									<p>A SVG shadow component powered with react-naticomponent powered with react-naticomponent powered with react-native-svg,which can provide shadow on Android like iOS ^_^</p>
-									<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
-								</Card>
-								<Card style={{width: 360}}>
-									<h5>lll <a href="#">react-native</a></h5>
-									<p>A SVG shadow component powered with react-native-svg,which can provide shadow on Android like iOS ^_^</p>
-									<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
-								</Card>
-								<Card style={{width: 360}}>
-									<h5>lll <a href="#">react-native</a></h5>
-									<p>A SVG shadow component powered with react-native-svg,which can provide shadow on Android like iOS ^_^</p>
-									<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
-								</Card>
-								<Card style={{width: 360}}>
-									<h5>lll <a href="#">react-native</a></h5>
-									<p>A SVG shadow component powered with react-native-svg,which can provide shadow on Android like iOS ^_^</p>
-									<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
-								</Card>
-								<Card style={{width: 360}}>
-									<h5>lll <a href="#">react-native</a></h5>
-									<p>A SVG shadow component powered with react-native-svg,which can provide shadow on Android like iOS ^_^</p>
-									<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
-								</Card>
+								<div className="repos">
+									<Card style={{width: 360,height: 110}}>
+										<h5>lll <a href="#">react-native</a></h5>
+										<p>A SVG shadow component powered with react-native-svg,which can provide shadow on svg,which can provide shadow on svg,which can provide shadow on svg,which can provide shadow on svg,which can provide shadow on svg,which can provide shadow on Android like iOS ^_^</p>
+										<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
+									</Card>
+									<Card style={{width: 360}}>
+										<h5>lll <a href="#">react-native</a></h5>
+										<p>A SVG shadow component powered with react-naticomponent powered with react-naticomponent powered with react-native-svg,which can provide shadow on Android like iOS ^_^</p>
+										<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
+									</Card>
+									<Card style={{width: 360}}>
+										<h5>lll <a href="#">react-native</a></h5>
+										<p>A SVG shadow component powered with react-native-svg,which can provide shadow on Android like iOS ^_^</p>
+										<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
+									</Card>
+									<Card style={{width: 360}}>
+										<h5>lll <a href="#">react-native</a></h5>
+										<p>A SVG shadow component powered with react-native-svg,which can provide shadow on Android like iOS ^_^</p>
+										<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
+									</Card>
+									<Card style={{width: 360}}>
+										<h5>lll <a href="#">react-native</a></h5>
+										<p>A SVG shadow component powered with react-native-svg,which can provide shadow on Android like iOS ^_^</p>
+										<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
+									</Card>
+									<Card style={{width: 360}}>
+										<h5>lll <a href="#">react-native</a></h5>
+										<p>A SVG shadow component powered with react-native-svg,which can provide shadow on Android like iOS ^_^</p>
+										<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
+									</Card>
+								</div>
+								<Percentage percentage={[10,20,10,20,25,15]} />
 							</div>
 							{/*<AnimationTable />*/}
 							<CommitTable/>
-							<Percentage/>
 						</Content>
 					</Layout>
 				</Layout>

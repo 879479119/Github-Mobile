@@ -1,72 +1,97 @@
 import React, { Component } from 'react'
+import { findDOMNode } from 'react-dom'
 import {spring, StaggeredMotion} from "react-motion"
+import getSeriesColor from '../../utils/colors'
+import './Percentage.scss'
 
-function genePath(lang) {
-	lang = [
-		10,10,10,20,25,
-	]
-	let sum = lang.reduce((prevAll,cur)=>{
-		return prevAll.concat(prevAll[prevAll.length-1]+cur)
-	},[0])
-	let outR = 30,
-		innerR = 10
+function genePath(lang, conf) {
 
-	let centerX = 40,
-		centerY = 40
+	let { outR,innerR,cx,cy,style } = conf,
+		width = (outR - innerR) / 2,
+		r = innerR + width
 
+	let color = getSeriesColor(lang.length, style)
 	let result = []
 	lang.map((item, index)=>{
 		if (item <= 100) {
-			let progress = item / 100;
-			let degrees = progress * 360;
-			let rad = degrees * (Math.PI / 180);
-			let x = (Math.sin(rad) * outR).toFixed(2)
-			let y = -(Math.cos(rad) * outR).toFixed(2)
+			let progress = item / 100
+			let degrees = progress * 360
+			let rad = degrees * (Math.PI / 180)
+			let x = (Math.sin(rad) * r).toFixed(2)
+			let y = -(Math.cos(rad) * r).toFixed(2)
 			let length = window.Number(degrees > 180)
-			let descriptions = ['M', centerX, centerY-outR, 'A', outR, outR, 0, length, 1, +x+centerX, +y+centerY];
+			let descriptions = ['M', cx, cy-r, 'A', r, r, 0, length, 1, +x+cx, +y+cy];
 			result.push({
-				r: sum[index],
-				path: descriptions.join(' ')
+				r: index === 0 ? 0 : lang[index - 1] * 3.6,
+				path: descriptions.join(' '),
+				width: width * 2,
+				center: `${cx}px ${cy}px 0`,
+				color: color[index]
 			})
 		}
 	})
-
 	return result
 }
 
 export default class Percentage extends Component{
-	componentWillMount(){
-		console.log(genePath());
+
+	constructor(...props){
+		super(...props)
+		this.state = {
+			over: false
+		}
 	}
-	render = () => (
-		<div className="percentage">
-				<svg>
-					{
-						genePath().map((item,index,arr)=>{
-							let r = item.r
-							return (
-								<path d={item.path} key={index} fill="transparent" stroke="rgba(255,255,0,0.4)" strokeWidth={10}  style={{transformOrigin:`40px 40px`,transform:`rotate(${r*3.6}deg)`}}/>
-							)
-						})
-					}
-				</svg>
+
+	mouseOver(e){
+		let dom = e.target
+		console.log(dom.style.transform)
+		dom.style.transform += " scale(1.2)"
+	}
+
+	mouseLeave(e){
+		let dom = e.target
+		console.log(dom.style.transform)
+		dom.style.transform = dom.style.transform.split(" ")[0]
+	}
+
+	render = () => {
+
+		const { width= 290, height= 300, conf, percentage } = this.props
+		const defaultConf ={
+			padding: 3,
+			colors: [],
+			style: 'blue',
+			cx: 60,
+			cy: 60,
+			outR: 60,
+			innerR: 30
+		}
+
+		let path = genePath(percentage, Object.assign(defaultConf, conf))
+		let pathLabels = path.map((item,index)=>{
+			return (circle) => (
+				<path onMouseOver={::this.mouseOver} onMouseLeave={::this.mouseLeave} className="path" d={item.path} key={index} fill="transparent" stroke={item.color} strokeWidth={item.width}  style={{transformOrigin:item.center,transform:`rotate(${circle}deg)`}}/>
+			)
+		})
+
+		return (
+			<div className="percentage" style={{width,height,display:'inline-block',verticalAlign:'top'}}>
 				<StaggeredMotion
-					defaultStyles={[{h: 0}, {h: 0}, {h: 0}]}
+					defaultStyles={(new Array(path.length)).fill({h:0})}
 					styles={prevInterpolatedStyles => prevInterpolatedStyles.map((_, i) => {
 						return i === 0
-							? {h: spring(100)}
-							: {h: spring(prevInterpolatedStyles[i - 1].h)}
+							? {h: spring(path[i].r)}
+							: {h: spring(prevInterpolatedStyles[i - 1].h+path[i].r)}
 					})}>
 					{
 						interpolatingStyles =>
 							<svg>
 							{interpolatingStyles.map((style, i) =>
-								<path key={i} d={`M0,${i*20+6} h${style.h} z`} stroke="#000" strokeWidth='6'/>
+								pathLabels[i](style.h)
 							)}
 							</svg>
 					}
 				</StaggeredMotion>
-
-		</div>
-	)
+			</div>
+	)}
 }

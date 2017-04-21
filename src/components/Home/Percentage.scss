@@ -1,0 +1,8 @@
+.path{
+  //transition: scale 1s;
+  fill: red;
+  &:hover{
+    transform: scale(1.2);
+    width: 2px;
+  }
+}
