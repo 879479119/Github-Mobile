@@ -2,6 +2,7 @@ import React from 'react'
 import './RecentEvent.scss'
 import temp from '../../utils/template'
 import formatDate from '../../utils/formatDate'
+import emojizer from '../../utils/emojizer'
 
 /**
  * all the event types here
@@ -96,7 +97,7 @@ function CreateEvent() {
 				return (
 					<div key={'i'+index} className="create-repo">
 						<a href="#">{item.name}</a><em style={{float:'right'}}>{item.date.split(' ')[0]}</em>
-						<p style={{background:'#f1f1f1'}}>{item.description}</p>
+						<p style={{background:'#f1f1f1'}} dangerouslySetInnerHTML={{__html:emojizer(item.description)}} />
 					</div>
 				)
 			})
