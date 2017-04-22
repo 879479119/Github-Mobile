@@ -1,33 +1,56 @@
+.level{
+  display: table-cell;
+}
+
 .commit-table{
-
+  position: relative;
+  .weekday{
+    position: absolute;
+    top: 8px;
+    p{
+      position: relative;
+      margin-bottom: 7px;
+    }
+  }
+  .month{
+    position: absolute;
+    p{
+      position: relative;
+      float: left;
+      width: 54px;
+      top: -25px;
+      left: 42px;
+    }
+  }
   table{
-
+    position: relative;
+    margin-left: 40px;
+    margin-top: 20px;
     tr{
-
       td{
-        background: #999999;
+        display: none;
         width: 10px;
         height: 10px;
-
-
       }
       .level-0{
-        background: #aaa;
+        background: #eee;
+        @extend .level;
       }
       .level-1{
-        background: yellowgreen;
+        background: #C6E48B;
+        @extend .level;
       }
-
       .level-2{
-        background: green;
+        background: #7BC96F;
+        @extend .level;
       }
-
       .level-3{
-        background: darkgreen;
+        background: #239A3B;
+        @extend .level;
       }
-
       .level-4{
-        background: darkslategray;
+        background: #196127;
+        @extend .level;
       }
     }
   }

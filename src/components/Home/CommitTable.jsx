@@ -404,23 +404,36 @@ function dataFormat(commits) {
 	return result
 }
 
+function monthList(start) {
+	let months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+	let list = []
+	for(let i = start;i < start + 12;i ++){
+		list.push(<p key={i}>{months[i % 12]}</p>)
+	}
+	return list
+}
+
 export default function (props) {
 	let data = dataFormat(DATA.data)
 
 	return (
 		<div className="commit-table">
-			<table>
+			<aside className="weekday">
+				<p>Mon</p>
+				<p>Wed</p>
+				<p>Fri</p>
+			</aside>
+			<header className="month">
+				{monthList(2)}
+			</header>
+			<table className="table">
 				<tbody>
 				{
-					data.map((item,i)=>{
-						return (
-							<tr key={i}>
-								{
-									item.map((t,j)=><td key={i+'-'+j} className={`level-${t>=4?4:t}`}> </td>)
-								}
-							</tr>
-						)
-					})
+					data.map((item,i)=>(
+						<tr key={i}>
+							{item.map((t,j)=><td key={i+'-'+j} className={`level-${t>=4?4:t}`}> </td>)}
+						</tr>
+					))
 				}
 				</tbody>
 			</table>
