@@ -75,9 +75,13 @@
       }
     }
   }
-  .chart-lang{
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 120%;
+  .aside{
+    width: 290px;
+    float: right;
+    .chart-lang{
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 120%;
+    }
   }
 }

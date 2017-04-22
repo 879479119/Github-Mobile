@@ -53,7 +53,7 @@ function geneText(percentage, keys, conf) {
 
 export default function (props) {
 
-		const { width= 290, height= 300, conf= {}, percentage, children } = props
+		const { width= 290, height= 'auto', conf= {}, percentage, children } = props
 		const defaultConf ={
 			color: [],
 			style: 'blue',
@@ -79,7 +79,6 @@ export default function (props) {
 
 		let pathLabels = path.map((item,index)=>{
 			return (circle) => {
-				console.log(circle);
 				return (
 			<path className="path"
 			      d={item.path}
@@ -94,7 +93,6 @@ export default function (props) {
 
 		let textLabels = text.map((item,index)=>{
 			return (opacity) => {
-				console.log(opacity);
 				return (
 				<g key={'text'+index} className="label" style={{opacity}} color={opacity}>
 					<rect x={item.x-15}

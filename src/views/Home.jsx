@@ -3,7 +3,7 @@ import './Home.scss'
 import { connect } from 'react-redux'
 import { changeA } from '../views/HomeRedux'
 
-import AnimationTable from '../components/Home/Table'
+import RecentEvent from '../components/Home/RecentEvent'
 import CommitTable from '../components/Home/CommitTable'
 import Percentage from '../components/Home/Percentage'
 
@@ -154,9 +154,12 @@ export default class Home extends Component{
 										<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
 									</Card>
 								</div>
-								<Percentage percentage={[25,20,20,15,10,10]}>
-									<p className="chart-lang">Language Chart</p>
-								</Percentage>
+								<div className="aside">
+									<Percentage percentage={[25,20,20,15,10,10]}>
+										<p className="chart-lang">Language Chart</p>
+									</Percentage>
+									<RecentEvent/>
+								</div>
 							</div>
 							{/*<AnimationTable />*/}
 							<CommitTable/>

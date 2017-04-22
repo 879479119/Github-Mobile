@@ -1,0 +1,22 @@
+.recent-event{
+  h3{
+    text-align: center;
+  }
+  section{
+    margin-bottom: 16px;
+
+    p{
+      margin-left: 1em;
+      margin-top: 4px;
+    }
+    .create-repo{
+      margin-left: 1em;
+      margin-top: 4px;
+      p{
+        border-radius: 2px;
+        padding: 4px;
+        margin-bottom: 4px;
+      }
+    }
+  }
+}
