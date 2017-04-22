@@ -1,8 +1,6 @@
 .path{
-  //transition: scale 1s;
-  fill: red;
+  transition: opacity 0.2s;
   &:hover{
-    transform: scale(1.2);
-    width: 2px;
+    opacity: 0.8;
   }
 }

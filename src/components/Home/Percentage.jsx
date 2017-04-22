@@ -1,16 +1,14 @@
 import React, { Component } from 'react'
-import { findDOMNode } from 'react-dom'
 import {spring, StaggeredMotion} from "react-motion"
 import getSeriesColor from '../../utils/colors'
 import './Percentage.scss'
 
 function genePath(lang, conf) {
 
-	let { outR,innerR,cx,cy,style } = conf,
+	let { outR,innerR,cx,cy,color } = conf,
 		width = (outR - innerR) / 2,
 		r = innerR + width
 
-	let color = getSeriesColor(lang.length, style)
 	let result = []
 	lang.map((item, index)=>{
 		if (item <= 100) {
@@ -33,65 +31,125 @@ function genePath(lang, conf) {
 	return result
 }
 
-export default class Percentage extends Component{
+function geneText(percentage, keys, conf) {
+	const { color, text: {
+		x, y, size, col, row,
+		paddingCol,
+		paddingRow
+	} } = conf
 
-	constructor(...props){
-		super(...props)
-		this.state = {
-			over: false
+	return percentage.map((item, index) => {
+		let px = x + ((index / row) >>> 0) * paddingCol
+		let py = y + (index % row) * paddingRow
+		return {
+			x: px,
+			y: py,
+			size,
+			color:color[index],
+			text: keys[index]
 		}
-	}
+	})
+}
 
-	mouseOver(e){
-		let dom = e.target
-		console.log(dom.style.transform)
-		dom.style.transform += " scale(1.2)"
-	}
+export default function (props) {
 
-	mouseLeave(e){
-		let dom = e.target
-		console.log(dom.style.transform)
-		dom.style.transform = dom.style.transform.split(" ")[0]
-	}
-
-	render = () => {
-
-		const { width= 290, height= 300, conf, percentage } = this.props
+		const { width= 290, height= 300, conf= {}, percentage, children } = props
 		const defaultConf ={
-			padding: 3,
-			colors: [],
+			color: [],
 			style: 'blue',
 			cx: 60,
 			cy: 60,
 			outR: 60,
-			innerR: 30
+			innerR: 30,
+			text: {
+				x: 150,
+				y: 50,
+				size: 12,
+				col: 2,
+				row: 3,
+				paddingCol: 70,
+				paddingRow: 20
+			}
 		}
+		conf.color = getSeriesColor(percentage.length, conf.style || defaultConf.style)
 
 		let path = genePath(percentage, Object.assign(defaultConf, conf))
+		let text = geneText(percentage, ['Javascript','Java','C','C++','Ruby','Python'], Object.assign(defaultConf, conf))
+
+
 		let pathLabels = path.map((item,index)=>{
-			return (circle) => (
-				<path onMouseOver={::this.mouseOver} onMouseLeave={::this.mouseLeave} className="path" d={item.path} key={index} fill="transparent" stroke={item.color} strokeWidth={item.width}  style={{transformOrigin:item.center,transform:`rotate(${circle}deg)`}}/>
-			)
+			return (circle) => {
+				console.log(circle);
+				return (
+			<path className="path"
+			      d={item.path}
+			      key={'g'+index}
+			      fill="transparent"
+			      stroke={item.color}
+			      strokeWidth={item.width}
+			      style={{transformOrigin:item.center,transform:`rotate(${circle}deg)`}}
+			/>
+			)}
+		})
+
+		let textLabels = text.map((item,index)=>{
+			return (opacity) => {
+				console.log(opacity);
+				return (
+				<g key={'text'+index} className="label" style={{opacity}} color={opacity}>
+					<rect x={item.x-15}
+					      y={item.y-7}
+					      width={10}
+					      height={10}
+					      fill={item.color}
+					/>
+					<text x={item.x}
+					      y={item.y}
+					      fontSize={item.size}
+					      color="#000"
+					      alignmentBaseline={'middle'}
+					>{item.text}</text>
+				</g>
+			)}
 		})
 
 		return (
 			<div className="percentage" style={{width,height,display:'inline-block',verticalAlign:'top'}}>
-				<StaggeredMotion
-					defaultStyles={(new Array(path.length)).fill({h:0})}
-					styles={prevInterpolatedStyles => prevInterpolatedStyles.map((_, i) => {
-						return i === 0
-							? {h: spring(path[i].r)}
-							: {h: spring(prevInterpolatedStyles[i - 1].h+path[i].r)}
-					})}>
-					{
-						interpolatingStyles =>
-							<svg>
-							{interpolatingStyles.map((style, i) =>
-								pathLabels[i](style.h)
-							)}
-							</svg>
-					}
-				</StaggeredMotion>
+				{children}
+				<svg  style={{width,height}}>
+					<StaggeredMotion
+						defaultStyles={(new Array(path.length)).fill({h:0})}
+						styles={prevInterpolatedStyles => prevInterpolatedStyles.map((_, i) => {
+							return i === 0
+								? {h: spring(path[i].r)}
+								: {h: spring(prevInterpolatedStyles[i - 1].h+path[i].r)}
+						})}>
+						{
+							interpolatingStyles =>
+								<g>
+								{interpolatingStyles.map((style, i) =>
+									pathLabels[i](style.h)
+								)}
+								</g>
+						}
+					</StaggeredMotion>
+					<StaggeredMotion
+						defaultStyles={(new Array(text.length)).fill({o:0})}
+						styles={prevInterpolatedStyles => prevInterpolatedStyles.map((_, i) => {
+							return i === 0
+								? {o: spring(1)}
+								: {o: spring(prevInterpolatedStyles[i - 1].o)}
+						})}>
+						{
+							interpolatingStyles =>
+								<g>
+								{interpolatingStyles.map((style, i) =>
+									textLabels[i](style.o)
+								)}
+								</g>
+						}
+					</StaggeredMotion>
+				</svg>
 			</div>
-	)}
+	)
 }

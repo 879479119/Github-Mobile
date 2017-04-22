@@ -154,7 +154,9 @@ export default class Home extends Component{
 										<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
 									</Card>
 								</div>
-								<Percentage percentage={[10,20,10,20,25,15]} />
+								<Percentage percentage={[25,20,20,15,10,10]}>
+									<p className="chart-lang">Language Chart</p>
+								</Percentage>
 							</div>
 							{/*<AnimationTable />*/}
 							<CommitTable/>
