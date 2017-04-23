@@ -1,18 +1,29 @@
-import { fork,takeLatest, call, put, take, select } from 'redux-saga/effects'
+import { fork, takeLatest, takeEvery, call, put, take, select } from 'redux-saga/effects'
+
+import searchSaga from '../views/Saga'
 
 export default function * () {
 	yield [
-		fork(loadUser),
-		takeLatest('LOAD_DASHBOARD', loadDash)
+		...searchSaga,
+		takeEvery('SEARCH_END', searchEnd),
+		takeLatest('LOAD_DASHBOARD', loadDash),
+		fork(loadUser)
 	]
 }
 
+function * searchEnd() {
+	console.log(123);
+	put({type: "END"})
+}
+
 function* loadUser() {
+	console.log(456)
 	const user = yield call( TravelServiceApi.getUser )
 	yield put({type: "USER", payload: user})
 }
 
 function* loadDash() {
+	console.log(999);
 	try {
 		yield take('USER')
 		const user = yield select(state => state.user)

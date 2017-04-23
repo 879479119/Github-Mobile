@@ -1,13 +1,35 @@
-import { fork,takeLatest, call, put, take, select } from 'redux-saga/effects'
+import { fork,takeLatest, call, put, take, takeEvery, select } from 'redux-saga/effects'
+import { COMMON_SEARCH } from './SearchResultRedux'
 
-export default function * () {
-	yield [
-		fork(loadUser),
-		takeLatest('LOAD_DASHBOARD', loadDash)
-	]
+export default [
+	takeEvery(COMMON_SEARCH,commonSearch),
+]
+
+function* commonSearch(action) {
+	// let res = yield call(fetch, ...['/api/search/repo', {
+	// 	method: "POST",
+	// 	headers: {
+	// 		'Content-Type': 'application/x-www-form-urlencoded'
+	// 	},
+	// 	credentials: 'include',
+	// 	body: `q=${action.payload}`
+	// }])
+
+	let res = yield fetch('/api/search/repo', {
+		method: "POST",
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded'
+		},
+		credentials: 'include',
+		body: `q=${action.payload}`
+	})
+
+	let data = yield res.json()
+	yield put({type: "READY", data})
 }
 
-function* loadUser() {
+function* loadUser(data) {
+	console.log(data)
 	const user = yield call( TravelServiceApi.getUser )
 	yield put({type: "USER", payload: user})
 }

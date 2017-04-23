@@ -1,17 +1,14 @@
-import React, { Component } from 'react'
-import './Home.scss'
-import { connect } from 'react-redux'
-import { changeA } from '../views/HomeRedux'
-
-import RecentEvent from '../components/Home/RecentEvent'
-import CommitTable from '../components/Home/CommitTable'
-import Percentage from '../components/Home/Percentage'
-
-import { Layout, Menu, Breadcrumb, Icon, Input, Card } from 'antd';
+import React, {Component} from "react";
+import "./Home.scss";
+import {connect} from "react-redux";
+import {changeA} from "../views/HomeRedux";
+import { withRouter } from 'react-router-dom'
+import {Breadcrumb, Icon, Input, Layout, Menu} from "antd";
 const { SubMenu } = Menu
 const { Search } = Input
-const { Header, Content, Sider } = Layout;
+const { Header, Sider } = Layout;
 
+@withRouter
 @connect(state=>({a: state.common.a}), { changeA, load:() => dispatch => {return dispatch({type: 'LOAD_DASHBOARD'})}})
 export default class Home extends Component{
 	componentWillMount(){
@@ -38,6 +35,10 @@ export default class Home extends Component{
 	componentDidMount(){
 		this.props.load()
 	}
+	searchContent(val){
+		this.props.history.push(`/search?query=${encodeURI(val)}`)
+	}
+
 	render = () => {
 		const {commits} = this.props
 		return (
@@ -51,7 +52,7 @@ export default class Home extends Component{
 						className="left-menu"
 						style={{ lineHeight: '64px' }}
 					>
-						<Menu.Item key="0"><Search placeholder="text" style={{width: 200,marginTop:20}}/></Menu.Item>
+						<Menu.Item key="0"><Search placeholder="Search" style={{width: 200,marginTop:20}} onSearch={::this.searchContent} /></Menu.Item>
 						<Menu.Item key="1">Pull requests</Menu.Item>
 						<Menu.Item key="2">Issues</Menu.Item>
 						<Menu.Item key="3">Gist</Menu.Item>
@@ -59,7 +60,6 @@ export default class Home extends Component{
 					<Menu
 						theme="dark"
 						mode="horizontal"
-						defaultSelectedKeys={['2']}
 						style={{ lineHeight: '64px' }}
 						className="right-menu"
 					>
@@ -104,66 +104,7 @@ export default class Home extends Component{
 							<Breadcrumb.Item>User Center</Breadcrumb.Item>
 							<Breadcrumb.Item>Profile</Breadcrumb.Item>
 						</Breadcrumb>
-						<Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 400 }}>
-							<Menu
-								selectedKeys={['overview']}
-								mode="horizontal"
-							>
-								<Menu.Item key="overview">
-									<Icon type="idcard" />Overview
-								</Menu.Item>
-								<Menu.Item key="repo">
-									<Icon type="database" />Repositories
-								</Menu.Item>
-								<Menu.Item key="star">
-									<Icon type="star-o" />Stars
-								</Menu.Item>
-								<Menu.Item key="follower">Followers</Menu.Item>
-								<Menu.Item key="following">Following</Menu.Item>
-							</Menu>
-							<div className="main-body">
-								<div className="repos">
-									<Card style={{width: 360,height: 110}}>
-										<h5>lll <a href="#">react-native</a></h5>
-										<p>A SVG shadow component powered with react-native-svg,which can provide shadow on svg,which can provide shadow on svg,which can provide shadow on svg,which can provide shadow on svg,which can provide shadow on svg,which can provide shadow on Android like iOS ^_^</p>
-										<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
-									</Card>
-									<Card style={{width: 360}}>
-										<h5>lll <a href="#">react-native</a></h5>
-										<p>A SVG shadow component powered with react-naticomponent powered with react-naticomponent powered with react-native-svg,which can provide shadow on Android like iOS ^_^</p>
-										<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
-									</Card>
-									<Card style={{width: 360}}>
-										<h5>lll <a href="#">react-native</a></h5>
-										<p>A SVG shadow component powered with react-native-svg,which can provide shadow on Android like iOS ^_^</p>
-										<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
-									</Card>
-									<Card style={{width: 360}}>
-										<h5>lll <a href="#">react-native</a></h5>
-										<p>A SVG shadow component powered with react-native-svg,which can provide shadow on Android like iOS ^_^</p>
-										<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
-									</Card>
-									<Card style={{width: 360}}>
-										<h5>lll <a href="#">react-native</a></h5>
-										<p>A SVG shadow component powered with react-native-svg,which can provide shadow on Android like iOS ^_^</p>
-										<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
-									</Card>
-									<Card style={{width: 360}}>
-										<h5>lll <a href="#">react-native</a></h5>
-										<p>A SVG shadow component powered with react-native-svg,which can provide shadow on Android like iOS ^_^</p>
-										<p>Javascript <Icon type="star" /> 46 <Icon type="usb" /> 4 </p>
-									</Card>
-								</div>
-								<div className="aside">
-									<Percentage percentage={[25,20,20,15,10,10]}>
-										<p className="chart-lang">Language Chart</p>
-									</Percentage>
-									<RecentEvent/>
-								</div>
-							</div>
-							{/*<AnimationTable />*/}
-							<CommitTable/>
-						</Content>
+						{this.props.children}
 					</Layout>
 				</Layout>
 			</Layout>

@@ -424,7 +424,7 @@ export default function (props) {
 				<p>Fri</p>
 			</aside>
 			<header className="month">
-				{monthList(2)}
+				{monthList(4)}
 			</header>
 			<table className="table">
 				<tbody>

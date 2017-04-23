@@ -30,6 +30,10 @@ router.get('/', function(req, res) {
 		log(`API called: ${group} - ${action}`);
 		respond.send(res)
 	}).catch(function (err) {
+		if(err instanceof TypeError){
+			respond.send(STDR.argvError("there is no api like this"))
+			return
+		}
 		log(err,1)
 		respond.send(err)
 	})
@@ -41,7 +45,7 @@ router.get('/', function(req, res) {
 		key = req.cookies['key']
 
 	if(typeof key === "undefined" || typeof gid === "undefined"){
-		respond.send("no key or gid in cookie")
+		respond.send(STDR.authError("no key or gid in cookie"))
 		return
 	}
 	if(["activity","authorization","enterprise","gists","gitdata","integrations", "issues",

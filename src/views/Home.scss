@@ -1,11 +1,17 @@
-.logo{
-  position: absolute;
-  left: 18px;
-  top: 14px;
-  width: 36px;
-  height: 36px;
-  background: url(/assets/github.png) no-repeat;
-  background-size: contain;
+
+.header {
+  .logo {
+    position: absolute;
+    left: 18px;
+    top: 14px;
+    width: 36px;
+    height: 36px;
+    background: url(/assets/github.png) no-repeat;
+    background-size: contain;
+  }
+  .ant-input-search{
+    opacity: 0.4;
+  }
 }
 
 .left-menu{
