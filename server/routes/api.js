@@ -28,7 +28,7 @@ router.get('/', function(req, res) {
 		})
 	}).then(function (res) {
 		log(`API called: ${group} - ${action}`);
-		respond.send(res)
+		respond.send(STDR.success(res))
 	}).catch(function (err) {
 		if(err instanceof TypeError){
 			respond.send(STDR.argvError("there is no api like this"))

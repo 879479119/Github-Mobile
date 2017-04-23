@@ -5,7 +5,7 @@ import Router from './routes'
 import { Provider } from 'react-redux'
 import React, { Component } from "react"
 import configStore from './redux/store'
-import rootStore from './views/HomeRedux'
+import rootStore from './redux/reducers'
 
 import './styles/common.scss'
 import 'antd/dist/antd.min.css'

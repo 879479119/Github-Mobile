@@ -9,7 +9,7 @@ const { Search } = Input
 const { Header, Sider } = Layout;
 
 @withRouter
-@connect(state=>({a: state.common.a}), { changeA, load:() => dispatch => {return dispatch({type: 'LOAD_DASHBOARD'})}})
+@connect(state=>({a: state.common.a}), { changeA })
 export default class Home extends Component{
 	componentWillMount(){
 		let code = null
@@ -33,7 +33,7 @@ export default class Home extends Component{
 		}
 	}
 	componentDidMount(){
-		this.props.load()
+
 	}
 	searchContent(val){
 		this.props.history.push(`/search?query=${encodeURI(val)}`)

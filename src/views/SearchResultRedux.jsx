@@ -1,8 +1,9 @@
-import { combineReducers } from 'redux'
-
 export const COMMON_SEARCH = "COMMON_SEARCH"
+export const SEARCH_LOADING = "SEARCH_LOADING"
+export const SEARCH_READY = "SEARCH_READY"
+export const SEARCH_ERROR = "SEARCH_ERROR"
 
-export function commonQuery(data) {
+export function commonSearch(data) {
 	return (dispatch) => {
 		dispatch({
 			type: COMMON_SEARCH,
@@ -11,14 +12,17 @@ export function commonQuery(data) {
 	}
 }
 
-function search(state = {result: null}, action) {
-	switch (action){
-		case COMMON_SEARCH: return Object.assign({}, state, {})
-		case "READY": return state
+const initialState = {
+	status: 0,
+	result: null
+}
+
+export default function search(state= initialState, action) {
+	switch (action.type){
+		case COMMON_SEARCH: return state
+		case SEARCH_LOADING: console.log(789);return Object.assign({}, state, {status: 1})
+		case SEARCH_READY: return Object.assign({}, state, {status: 2, result: action.data})
+		case SEARCH_ERROR: return Object.assign({}, state, {status: 3, result: action.data})
 	}
 	return state
 }
-
-export default combineReducers({
-	search
-})
