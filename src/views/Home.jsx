@@ -1,16 +1,19 @@
 import React, {Component} from "react";
 import "./Home.scss";
 import {connect} from "react-redux";
-import {changeRouter} from "../views/HomeRedux";
+import {changeRouter, login} from "../views/HomeRedux";
 import {withRouter} from "react-router-dom";
-import {Icon, Input, Layout, Menu} from "antd";
+import {Icon, Input, Layout, Menu, message} from "antd";
 import AutoBreadcrumb from "../components/common/AutoBreadcrumb";
 const { SubMenu } = Menu
 const { Search } = Input
 const { Header, Sider } = Layout;
 
 @withRouter
-@connect(state=>({route: state.common.route}), { changeRouter })
+@connect(state=>({
+	route: state.common.route,
+	loginStatus: state.common.loginStatus
+}), { changeRouter, login })
 export default class Home extends Component{
 	componentWillMount(){
 		let code = null
@@ -34,12 +37,25 @@ export default class Home extends Component{
 		}
 	}
 	componentDidMount(){
-
+		//the application needs auth, or it cannot fetch data as the frequency we want
+		this.props.login()
 	}
 	searchContent(val){
 		this.props.changeRouter(`/search?query=${encodeURI(val)}`)
 	}
-
+	//noinspection JSMethodCanBeStatic
+	shouldComponentUpdate(nextProps){
+		if(nextProps.loginStatus === true){
+			message.success('Login success!',2)
+			return false
+		}else if(nextProps.loginStatus === false){
+			message.error('Re:login in 3s',3)
+			setTimeout(()=>{
+				window.location = ""
+			},3000)
+			return false
+		}
+	}
 	render = () => {
 		const {commits, route} = this.props
 		return (
