@@ -15,7 +15,7 @@ something you need to know
 + `cheerio` providing some info only from the pages
 
 ### Frame in work:
-![home](http://7xsm7w.com1.z0.glb.clouddn.com/2549.png)
+![home](http://7xsm7w.com1.z0.glb.clouddn.com/github-preview.png)
 
 ### Notice
 If you want to use qiniu to deploy your resources on CDN, you can create a

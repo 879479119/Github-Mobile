@@ -32,7 +32,9 @@ export default class Home extends Component{
 				credentials: 'include',
 				body: "code=" + code
 			}).then(res => res.text()).then(res=>{
-				console.log(res)
+				message.success(res,3)
+			}).catch(e=>{
+				message.error(e,3)
 			})
 		}
 	}
