@@ -34,6 +34,7 @@
     "ejs-compiled-loader": "^1.1.0",
     "extract-text-webpack-plugin": "^2.1.0",
     "github": "^9.2.0",
+    "history": "^4.6.1",
     "html-webpack-plugin": "^2.28.0",
     "image-loader": "0.0.1",
     "img-loader": "^2.0.0",

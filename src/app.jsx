@@ -6,6 +6,7 @@ import { Provider } from 'react-redux'
 import React, { Component } from "react"
 import configStore from './redux/store'
 import rootStore from './redux/reducers'
+import {history} from './redux/store'
 
 import './styles/common.scss'
 import 'antd/dist/antd.min.css'
@@ -13,12 +14,9 @@ import 'antd/dist/antd.min.css'
 const store = configStore(rootStore, {})
 
 class Page extends Component{
-	static pro = {
-		a : 0
-	}
 	render = () => (
 		<Provider store={store}>
-			{Router()}
+			{Router({history})}
 		</Provider>
 	)
 }

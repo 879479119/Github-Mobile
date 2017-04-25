@@ -1,15 +1,16 @@
 import React, {Component} from "react";
 import "./Home.scss";
 import {connect} from "react-redux";
-import {changeA} from "../views/HomeRedux";
-import { withRouter } from 'react-router-dom'
-import {Breadcrumb, Icon, Input, Layout, Menu} from "antd";
+import {changeRouter} from "../views/HomeRedux";
+import {withRouter} from "react-router-dom";
+import {Icon, Input, Layout, Menu} from "antd";
+import AutoBreadcrumb from "../components/common/AutoBreadcrumb";
 const { SubMenu } = Menu
 const { Search } = Input
 const { Header, Sider } = Layout;
 
 @withRouter
-@connect(state=>({a: state.common.a}), { changeA })
+@connect(state=>({route: state.common.route}), { changeRouter })
 export default class Home extends Component{
 	componentWillMount(){
 		let code = null
@@ -36,11 +37,11 @@ export default class Home extends Component{
 
 	}
 	searchContent(val){
-		this.props.history.push(`/search?query=${encodeURI(val)}`)
+		this.props.changeRouter(`/search?query=${encodeURI(val)}`)
 	}
 
 	render = () => {
-		const {commits} = this.props
+		const {commits, route} = this.props
 		return (
 			<Layout>
 				<Header className="header">
@@ -99,11 +100,7 @@ export default class Home extends Component{
 						</Menu>
 					</Sider>
 					<Layout style={{ padding: '0 24px 24px' }}>
-						<Breadcrumb style={{ margin: '12px 0' }}>
-							<Breadcrumb.Item>Github</Breadcrumb.Item>
-							<Breadcrumb.Item>User Center</Breadcrumb.Item>
-							<Breadcrumb.Item>Profile</Breadcrumb.Item>
-						</Breadcrumb>
+						<AutoBreadcrumb location={route}/>
 						{this.props.children}
 					</Layout>
 				</Layout>

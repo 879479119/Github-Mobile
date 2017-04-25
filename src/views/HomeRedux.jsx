@@ -1,19 +1,20 @@
+export const ROUTE = "ROUTE"
+import {push} from "react-router-redux"
 
-export default function common(state = {a:1}, action) {
-	// let payload = action.a
-	switch (action){
-		case A: return Object.assign({}, state, {a})
+export default function common(state = {route:'/home'}, action) {
+	switch (action.type){
+		case ROUTE: return Object.assign({}, state, {route: action.payload})
 	}
 	return state
 }
 
-export const changeA = (a) => {
+export const changeRouter = (route) => {
 	return (dispatch) => {
 		dispatch({
-			type: A,
-			a
+			type: ROUTE,
+			payload: route
 		})
+		dispatch(push(route))
 	}
 }
 
-export let A = "A"

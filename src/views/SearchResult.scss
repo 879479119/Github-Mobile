@@ -1,0 +1,33 @@
+.search{
+  min-height: 200px;
+  text-align: center;
+}
+
+
+.search-empty{
+  @extend .search;
+  img{
+    width: 200px;
+    height: 200px;
+    display: block;
+    margin: 20px auto 20px auto;
+  }
+  h1{
+    position: relative;
+    margin-bottom: 10px;
+  }
+}
+
+.search-error{
+  @extend .search;
+  img{
+    width: 200px;
+    height: 200px;
+    display: block;
+    margin: 20px auto 20px auto;
+  }
+  h1{
+    position: relative;
+    margin-bottom: 10px;
+  }
+}

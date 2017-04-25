@@ -20,7 +20,7 @@ const initialState = {
 export default function search(state= initialState, action) {
 	switch (action.type){
 		case COMMON_SEARCH: return state
-		case SEARCH_LOADING: console.log(789);return Object.assign({}, state, {status: 1})
+		case SEARCH_LOADING: return Object.assign({}, state, {status: 1})
 		case SEARCH_READY: return Object.assign({}, state, {status: 2, result: action.data})
 		case SEARCH_ERROR: return Object.assign({}, state, {status: 3, result: action.data})
 	}

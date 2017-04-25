@@ -6,12 +6,13 @@ import Home from "../views/Home";
 import Profile from "../components/Home/Profile";
 import SearchResult from "../views/SearchResult";
 
-export default function () {
+export default function (props) {
 	return (
-		<HashRouter>
+		<HashRouter history={props.history}>
 			<Home>
 				<Route path="/" exact={true} component={Profile}/>
 				<Route path="/search" component={SearchResult}/>
+				<Route path="/home" component={Profile}/>
 			</Home>
 		</HashRouter>
 	)

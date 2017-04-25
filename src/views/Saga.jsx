@@ -1,11 +1,14 @@
-import { fork,takeLatest, call, put, take, takeEvery, select } from 'redux-saga/effects'
-import { COMMON_SEARCH, SEARCH_LOADING, SEARCH_READY, SEARCH_ERROR } from './SearchResultRedux'
+import {call, put, takeEvery} from "redux-saga/effects";
+import {COMMON_SEARCH, SEARCH_ERROR, SEARCH_LOADING, SEARCH_READY} from "./SearchResultRedux";
 
 export default [
 	takeEvery(COMMON_SEARCH,commonSearch),
 ]
 
 function* commonSearch(action) {
+	//return when there is nothing to do
+	if(!action.payload) return
+
 	yield put({type: SEARCH_LOADING})
 	try {
 		let res = yield call(fetch, ...['/api/search/repos', {
