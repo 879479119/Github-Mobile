@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import {changeRouter, login} from "../views/HomeRedux";
 import {withRouter} from "react-router-dom";
 import {Icon, Input, Layout, Menu, message} from "antd";
-import AutoBreadcrumb from "../components/common/AutoBreadcrumb";
+import AutoBreadcrumb from "../components/Common/AutoBreadcrumb";
 const { SubMenu } = Menu
 const { Search } = Input
 const { Header, Sider } = Layout;
@@ -45,21 +45,8 @@ export default class Home extends Component{
 	searchContent(val){
 		this.props.changeRouter(`/search?query=${encodeURI(val)}`)
 	}
-	//noinspection JSMethodCanBeStatic
-	shouldComponentUpdate(nextProps){
-		if(nextProps.loginStatus === true){
-			message.success('Login success!',2)
-			return false
-		}else if(nextProps.loginStatus === false){
-			message.error('Re:login in 3s',3)
-			setTimeout(()=>{
-				window.location = ""
-			},3000)
-			return false
-		}
-	}
 	render = () => {
-		const {commits, route} = this.props
+		const {route} = this.props
 		return (
 			<Layout>
 				<Header className="header">

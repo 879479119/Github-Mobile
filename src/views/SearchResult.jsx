@@ -1,10 +1,12 @@
 import React, {Component} from "react";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {Input, Layout} from "antd";
+import {Input, Layout, Menu} from "antd";
 import {commonSearch} from "./SearchResultRedux";
 import "./SearchResult.scss";
 import {changeRouter} from "../views/HomeRedux";
+import repo from "../utils/repos";
+import Repo from "../components/Search/Repo";
 
 const {Content} = Layout
 const {Search} = Input
@@ -39,15 +41,11 @@ export default class SearchResult extends Component{
 				InnerContent = <SearchShow result={result}/>
 				break
 			case 3:
-				InnerContent = <SearchError search={::this.search}/>
+				InnerContent = <SearchShow search={::this.search} result={repo}/>
 				break
 		}
 
-		return (
-			<Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 100 }}>
-				{InnerContent}
-			</Content>
-		)
+		return InnerContent
 	}
 }
 
@@ -72,19 +70,33 @@ function SearchLoad(props) {
 
 function SearchShow(props) {
 	const {result} = props
+	if(result.items === 0){
+		return <p>Empty Content</p>
+	}
 	return (
-		<div className="search-show">
-			{
-				result.data.data.items.map((item,index)=>(
-					<div key={'p'+index}>
-						<h5>{item.name}</h5>
-						<p>{item.description}</p>
-					</div>
-				))
-			}
-		</div>
+		<Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 400 }}>
+			<h2>Result for {"CDN"}</h2>
+			<Menu
+				selectedKeys={['1']}
+				mode="horizontal"
+			    className="search-show"
+			>
+				<Menu.Item key="1">Repositories</Menu.Item>
+				<Menu.Item key="2">
+					<a href="#" className="head-example" >Code <span className="count">12</span></a>
+				</Menu.Item>
+				<Menu.Item key="3">Commits</Menu.Item>
+				<Menu.Item key="4">Issues</Menu.Item>
+				<Menu.Item key="5">Wikis</Menu.Item>
+				<Menu.Item key="6">Users</Menu.Item>
+			</Menu>
+			<div className="main-body">
+				<Repo result={result}/>
+			</div>
+		</Content>
 	)
 }
+
 
 function SearchError(props) {
 	return (

@@ -1,0 +1,47 @@
+.repo-container{
+  width: 800px;
+
+  ul{
+
+    li{
+      display: flex;
+      border-bottom: dashed 1px #eaeaea;
+      padding: 10px;
+      section{
+
+        &.first{
+          flex: 2;
+          a{
+            display: inline-block;
+            font-size: 20px;
+            margin-bottom: 6px;
+          }
+          em{
+            color: #ccc;
+          }
+        }
+        &.second{
+          flex: 1;
+          padding-left: 20px;
+          span{
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin-right: 6px;
+            border-radius: 50%;
+          }
+        }
+        &.third{
+          flex: 1;
+          p{
+            color: #aaa;
+            margin-bottom: 3px;
+            i{
+              margin-right: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
