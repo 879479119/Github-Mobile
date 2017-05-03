@@ -16,7 +16,7 @@ export function fromNow(dateString) {
 	let D = pad(date.getDate(),2);
 
 	let period = new Date() - date, p
-	console.log(`${F}-${Mo}-${D}`);
+
 	switch (true){
 		case period > (p = 1000*60*60*24*30): return `on ${F}-${Mo}-${D}`
 		case period > (p /= 30): return Math.floor(period/1000/60/60/24) + ' days ago'

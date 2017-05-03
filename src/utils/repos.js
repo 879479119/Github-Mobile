@@ -1472,7 +1472,7 @@ export default {
 			},
 			"private": false,
 			"html_url": "https://github.com/justjavac/ReplaceGoogleCDN",
-			"description": ":cancer: 涓€涓� Chrome 鎻掍欢锛氬皢 Google CDN 鏇挎崲涓哄浗鍐呯殑銆�",
+			"description": ":cancer: 涓€涓� Chrome 你好我是你爸爸 Google CDN 鏇挎崲涓哄浗鍐呯殑銆�",
 			"fork": false,
 			"url": "https://api.github.com/repos/justjavac/ReplaceGoogleCDN",
 			"forks_url": "https://api.github.com/repos/justjavac/ReplaceGoogleCDN/forks",

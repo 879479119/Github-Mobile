@@ -18,11 +18,11 @@ export default [
  */
 function* commonSearch(action) {
 	//return when there is nothing to do
-	if(!action.payload) return
+	if(!action.payload.q) return
 
 	yield put({type: SEARCH_LOADING})
 	try {
-		let res = yield call(request, ...['/api/search/repo',`q=${action.payload}`])
+		let res = yield call(request, ...['/api/search/repo',`q=${action.payload.q}`])
 		let data = yield res.json()
 		if(data.code >= 20000){
 			yield put({type: SEARCH_ERROR, data})

@@ -1,0 +1,28 @@
+.filter{
+  width: 200px;
+  background: #fff;
+  border: solid #eee 1px;
+  border-radius: 3px;
+  padding: 10px;
+  li{
+    text-indent: 5px;
+    cursor: pointer;
+    padding: 6px;
+  }
+  .item{
+    &:hover{
+      background: #ecf6fd;
+    }
+  }
+  .title{
+    text-indent: 0;
+    font-weight: bold;
+    font-size: 16px;
+    border-bottom: dashed #eee 1px;
+    margin-bottom: 8px;
+  }
+  .active{
+    background: #ecf6fd;
+    color: #108ee9;
+  }
+}

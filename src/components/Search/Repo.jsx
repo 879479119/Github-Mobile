@@ -23,7 +23,7 @@ export default function (props) {
 								</section>
 								<section className="second">
 									<p><span className="badge" style={{background:color}} />{item.language}</p>
-									<p>{item.score}</p>
+									<p className="score"><Icon type="trophy" />{item.score}</p>
 								</section>
 								<section className="third">
 									<p><Icon type="star"/>{item.stargazers_count}</p>

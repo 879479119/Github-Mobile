@@ -1,12 +1,17 @@
 import React, {Component} from "react";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {Input, Layout, Menu} from "antd";
+import {Input, Layout, Menu, Pagination} from "antd";
 import {commonSearch} from "./SearchResultRedux";
 import "./SearchResult.scss";
 import {changeRouter} from "../views/HomeRedux";
 import repo from "../utils/repos";
 import Repo from "../components/Search/Repo";
+import Filter from '../components/Common/Filter'
+
+function onChange(pageNumber) {
+	console.log('Page: ', pageNumber);
+}
 
 const {Content} = Layout
 const {Search} = Input
@@ -15,20 +20,22 @@ const {Search} = Input
 @connect((state=>({
 	route: state.common.route,
 	result: state.search.result,
-	status: state.search.status
+	status: state.search.status,
+	type: state.search.type
 })), {commonSearch,changeRouter})
 export default class SearchResult extends Component{
 	componentDidMount(){
 		const { location: {search}, history } = this.props
 		let value = search.match(/query=([\w%0-9]+)/)[1]
 
-		this.props.commonSearch(value)
+		this.props.commonSearch({q:value,type:'Repositories'})
 	}
 	search(val){
 		this.props.changeRouter(`/search?query=${encodeURI(val)}`)
 	}
 	render = () => {
-		const { result, status } = this.props
+		const { result, status, type } = this.props
+
 		let InnerContent = null
 		switch (status){
 			case 0:
@@ -38,10 +45,10 @@ export default class SearchResult extends Component{
 				InnerContent = <SearchLoad/>
 				break
 			case 2:
-				InnerContent = <SearchShow result={result}/>
+				InnerContent = <SearchShow result={result} type={type}/>
 				break
 			case 3:
-				InnerContent = <SearchShow search={::this.search} result={repo}/>
+				InnerContent = <SearchShow search={::this.search} result={repo} type={type}/>
 				break
 		}
 
@@ -69,10 +76,17 @@ function SearchLoad(props) {
 }
 
 function SearchShow(props) {
-	const {result} = props
+	const {result, type} = props
 	if(result.items === 0){
 		return <p>Empty Content</p>
 	}
+
+	let nav = ["Repositories","Code","Commits","Issues","Wikis","Users"],
+		top = nav.map(item=>({
+			title: item,
+			count: type === item ? result.total_count : -1
+		}))
+
 	return (
 		<Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 400 }}>
 			<h2>Result for {"CDN"}</h2>
@@ -81,17 +95,18 @@ function SearchShow(props) {
 				mode="horizontal"
 			    className="search-show"
 			>
-				<Menu.Item key="1">Repositories</Menu.Item>
-				<Menu.Item key="2">
-					<a href="#" className="head-example" >Code <span className="count">12</span></a>
-				</Menu.Item>
-				<Menu.Item key="3">Commits</Menu.Item>
-				<Menu.Item key="4">Issues</Menu.Item>
-				<Menu.Item key="5">Wikis</Menu.Item>
-				<Menu.Item key="6">Users</Menu.Item>
+				{
+					top.map((item, index)=>(
+						<Menu.Item key={'item'+index}>{item.title}
+							{item.count >= 0 ? <span className="count">{item.count}</span> : ''}
+						</Menu.Item>
+					))
+				}
 			</Menu>
 			<div className="main-body">
 				<Repo result={result}/>
+				<div style={{textAlign:"center"}}><Pagination showQuickJumper defaultCurrent={1} defaultPageSize={30} total={result.total_count} onChange={onChange} style={{display: 'inline-block',marginTop: 30}}/></div>
+				<Filter data={['Best Match', 'Stars', 'Forks', 'Updated']} defaultSelected="Best Match" sort={true} style={{position:'absolute',top: 0,right: 30,boxShadow: 'rgba(0,0,0,0.05) 1px 1px 2px'}}/>
 			</div>
 		</Content>
 	)

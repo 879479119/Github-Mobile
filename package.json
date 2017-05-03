@@ -59,7 +59,8 @@
     "url-loader": "^0.5.8",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.2",
-    "webpack-merge": "^4.1.0"
+    "webpack-merge": "^4.1.0",
+    "classnames": "latest"
   },
   "dependencies": {
     "bluebird": "^3.5.0",

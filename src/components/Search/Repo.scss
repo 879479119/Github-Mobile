@@ -23,6 +23,9 @@
         &.second{
           flex: 1;
           padding-left: 20px;
+          .score{
+            color: #eee;
+          }
           span{
             display: inline-block;
             width: 10px;
