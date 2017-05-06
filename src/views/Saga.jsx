@@ -3,6 +3,7 @@ import {COMMON_SEARCH, SEARCH_ERROR, SEARCH_LOADING, SEARCH_READY} from "./Searc
 import {LOGIN, LOGIN_ERROR, LOGIN_SUCCESS} from "./HomeRedux";
 import request, {login} from "../utils/request";
 import {message} from "antd";
+import {REPO_CONTENT, COMMON_FETCH, COMMON_ERROR, COMMON_LOADING, COMMON_READY} from './RepoRedux'
 
 /**
  * export the default saga array to take the action we need
@@ -10,6 +11,8 @@ import {message} from "antd";
 export default [
 	takeEvery(COMMON_SEARCH,commonSearch),
 	takeEvery(LOGIN,loginSaga),
+	takeEvery(REPO_CONTENT,repoContent),
+	takeEvery(COMMON_FETCH,commonFetch),
 ]
 
 /**
@@ -57,6 +60,44 @@ function* loginSaga() {
 		setTimeout(()=>{
 			window.location = ""
 		},3000)
+	}
+}
+
+function *repoContent(action) {
+	//return when there is nothing to do
+	if(!action.payload.owner) return
+
+	yield put({type: SEARCH_LOADING})
+	try {
+		let res = yield call(request, ...['/api/repos/getContent', action.payload])
+		let data = yield res.json()
+		if(data.code >= 20000){
+			yield put({type: SEARCH_ERROR, data})
+		}else{
+			yield put({type: SEARCH_READY, data})
+		}
+	}catch (e){
+		yield put({type: SEARCH_ERROR})
+	}
+}
+
+/**
+ * the most common way to release a request
+ * @param action
+ */
+function *commonFetch(action) {
+	let {url} = action.payload
+	yield put({type: COMMON_LOADING, payload: {url}})
+	try {
+		let res = yield call(request, ...[action.payload.url, action.payload.data])
+		let data = yield res.json()
+		if(data.code >= 20000){
+			yield put({type: COMMON_ERROR, payload: {url, data}})
+		}else{
+			yield put({type: COMMON_READY, payload: {url, data}})
+		}
+	}catch (e){
+		yield put({type: COMMON_ERROR, payload: {url}})
 	}
 }
 

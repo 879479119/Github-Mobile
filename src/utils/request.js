@@ -4,7 +4,7 @@ export default function request (url, body) {
 		search = body
 	}else if(body.constructor === Object){
 		for(let attr in body){
-			if(body.hasOwnProperty(attr)) search += attr + body[attr] + '&'
+			if(body.hasOwnProperty(attr)) search += attr + '=' + body[attr] + '&'
 		}
 	}else if(body.constructor === String){
 		search = body

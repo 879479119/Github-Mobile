@@ -23,7 +23,7 @@ router.get('/', function(req, res) {
 
 	new Promise(function (resolve, reject) {
 		global.github[group][action](params,function (err, res) {
-			if(err) reject("no permission or timeout")
+			if(err) reject(STDR.networkError("no permission or timeout"))
 			else resolve(res)
 		})
 	}).then(function (res) {
