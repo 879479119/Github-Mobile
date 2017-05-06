@@ -3,6 +3,7 @@ import {fromNow} from "../../utils/formatDate";
 import "./Repo.scss";
 import {Icon} from "antd";
 import LANGUAGES from '../../utils/languages'
+import {Link} from 'react-router-dom'
 
 export default function (props) {
 	const {result} = props
@@ -17,7 +18,7 @@ export default function (props) {
 						return (
 							<li key={'s'+index} className="repo-item">
 								<section className="first">
-									<a href={item.html_url}>{item.full_name}</a>
+									<Link to={`/repo/${item.owner.login}/${item.name}`}>{item.full_name}</Link>
 									<p>{item.description}</p>
 									<em>Updated {fromNow(item.pushed_at)}</em>
 								</section>

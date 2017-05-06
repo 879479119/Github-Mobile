@@ -23,7 +23,7 @@ const {Search} = Input
 	status: state.search.status,
 	type: state.search.type
 })), {commonSearch,changeRouter})
-export default class SearchResult extends Component{
+export default class  SearchResult extends Component{
 	componentDidMount(){
 		const { location: {search}, history } = this.props
 		let value = search.match(/query=([\w%0-9]+)/)[1]
@@ -106,7 +106,16 @@ function SearchShow(props) {
 			<div className="main-body">
 				<Repo result={result}/>
 				<div style={{textAlign:"center"}}><Pagination showQuickJumper defaultCurrent={1} defaultPageSize={30} total={result.total_count} onChange={onChange} style={{display: 'inline-block',marginTop: 30}}/></div>
-				<Filter data={['Best Match', 'Stars', 'Forks', 'Updated']} defaultSelected="Best Match" sort={true} style={{position:'absolute',top: 0,right: 30,boxShadow: 'rgba(0,0,0,0.05) 1px 1px 2px'}}/>
+				<Filter
+					data={['Best Match', 'Stars', 'Forks', 'Updated']}
+					defaultSelected={0}
+					sort={true}
+					style={{position:'absolute',top: 0,right: 30,boxShadow: 'rgba(0,0,0,0.05) 1px 1px 2px'}}
+				    type="filter"
+				    onFilter={(e)=>console.log(e)}
+				    onSelect={(e)=>console.log(e)}
+				    onSort={(e)=>console.log(e)}
+				/>
 			</div>
 		</Content>
 	)

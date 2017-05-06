@@ -12,6 +12,7 @@ export default function (props) {
 			<Home>
 				<Route path="/" exact={true} component={Profile}/>
 				<Route path="/search" component={SearchResult}/>
+				<Route path="/repo" component={Profile}/>
 				<Route path="/home" component={Profile}/>
 			</Home>
 		</HashRouter>
