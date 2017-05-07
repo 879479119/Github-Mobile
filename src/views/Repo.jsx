@@ -7,6 +7,7 @@ import {connect} from "react-redux";
 import CodeTree from "../components/Repo/CodeTree"
 import User from "../components/Repo/User"
 import LanguageBar from "../components/Repo/LanguageBar"
+import CommitBar from "../components/Repo/CommitBar"
 import formatDate from "../utils/formatDate"
 
 const {Content} = Layout
@@ -15,7 +16,9 @@ const ButtonGroup = Button.Group
 const API = [
 	'/api/repos/get',
 	'/api/repos/getContent',
-	'/api/repos/getLanguages'
+	'/api/repos/getLanguages',
+	'/api/modified/repos/readme',
+	'/api/repos/getStatsParticipation'
 ]
 
 @withRouter
@@ -30,6 +33,8 @@ export default class extends Component{
 		commonFetch(API[0], {owner, repo})
 		commonFetch(API[1], {owner, repo, path:''})
 		commonFetch(API[2], {owner, repo})
+		commonFetch(API[3], {owner, repo})
+		commonFetch(API[4], {owner, repo})
 	}
 	getData(url){
 		const { queue, commonRelease } = this.props
@@ -49,6 +54,8 @@ export default class extends Component{
 		let details = this.getData(API[0])
 		let content = this.getData(API[1]), fragment
 		let languages = this.getData(API[2])
+		let readme = this.getData(API[3])
+		let commits = this.getData(API[4])
 
 		//the files' detail
 		if(content.status === 3){
@@ -112,28 +119,32 @@ export default class extends Component{
 					<LanguageBar lang={languages.result ? languages.result.data.data : {}} />
 					{fragment}
 					<div className="right-part">
-						<section className="operation">
-							<Select defaultValue="master" style={{ width: 120 }}>
-								<Option value="master">Master</Option>
-								<Option value="lucy">Others</Option>
-							</Select>
-							<ButtonGroup style={{float:'right'}}>
-								<Button>Create new file</Button>
-								<Button>Upload files</Button>
-								<Button>Find file</Button>
-							</ButtonGroup>
-						</section>
-						<section>
-							<Button>New pull request</Button>
-							<Button type='primary'  style={{float:'right'}}>Clone or download</Button>
-						</section>
-						<section className="timeline">
-							<span>Created: <em>{details.result ? formatDate(details.result.data.data.created_at, true) : '_'}</em></span>
-							<span>Pushed: <em>{details.result ? formatDate(details.result.data.data.pushed_at, true) : '_'}</em></span>
-							<span>Updated: <em>{details.result ? formatDate(details.result.data.data.updated_at, true) : '_'}</em></span>
-						</section>
-						{user}
+						<div className="repo-header">
+							<section className="operation">
+								<Select defaultValue="master" style={{ width: 120 }}>
+									<Option value="master">Master</Option>
+									<Option value="lucy">Others</Option>
+								</Select>
+								<ButtonGroup style={{float:'right'}}>
+									<Button>Create new file</Button>
+									<Button>Upload files</Button>
+									<Button>Find file</Button>
+								</ButtonGroup>
+							</section>
+							<section>
+								<Button>New pull request</Button>
+								<Button type='primary'  style={{float:'right'}}>Clone or download</Button>
+							</section>
+							<section className="timeline">
+								<span>Created: <em>{details.result ? formatDate(details.result.data.data.created_at, true) : '_'}</em></span>
+								<span>Pushed: <em>{details.result ? formatDate(details.result.data.data.pushed_at, true) : '_'}</em></span>
+								<span>Updated: <em>{details.result ? formatDate(details.result.data.data.updated_at, true) : '_'}</em></span>
+							</section>
+							{user}
+						</div>
+						{commits.result ? <CommitBar data={commits.result.data.data} /> : ''}
 					</div>
+					<article dangerouslySetInnerHTML={{__html:readme.result ? readme.result.data.readme : 0}} className="readme"/>
 				</div>
 			</Content>
 		)

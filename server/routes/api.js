@@ -68,6 +68,35 @@ router.get('/', function(req, res) {
 		log(err,1)
 		respond.send(err)
 	})
+}).post('/modified/:group/:action', function (req, respond) {
+	let group = req.params.group,
+		action = req.params.action,
+		params = req.body || {},
+		gid = req.cookies['gid'],
+		key = req.cookies['key']
+
+	if(group === 'repos' && action === 'readme'){
+		fetch(`https://api.github.com/repos/${params.owner}/${params.repo}/readme`,{
+			method:"GET",
+			credentials: 'include',
+			headers: {
+				'Accept': 'application/vnd.github.VERSION.html'
+			}
+		})
+		.then(e => e.text())
+		.then(function (res) {
+			log(`AUTH API called: Modified ~ ${group} - ${action}`)
+			// let base64 = res.content
+			// let buffer = new Buffer(base64, 'base64')
+			respond.send(STDR.success({readme: res}))
+		}).catch(function (err) {
+			log(err,1)
+			respond.send(STDR.uncaughtError(err))
+		})
+		return 0
+	}
+
+	respond.send(STDR.argvError("Wrong link"))
 })
 
 module.exports = router;
