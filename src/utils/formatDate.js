@@ -1,4 +1,4 @@
-export default function (dateString) {
+export default function (dateString, short= false) {
 	let date = new Date(dateString)
 	let F = date.getFullYear();
 	let Mo = pad(date.getMonth()+1,2);
@@ -6,6 +6,7 @@ export default function (dateString) {
 	let H = pad(date.getHours(),2);
 	let Mi = pad(date.getMinutes(),2);
 	let S = pad(date.getSeconds(),2);
+	if(short) return `${F}-${Mo}-${D}`
 	return `${F}-${Mo}-${D} ${H}:${Mi}:${S}`
 }
 

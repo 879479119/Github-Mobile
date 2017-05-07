@@ -1,0 +1,25 @@
+.code-tree{
+  width: 500px;
+  ul{
+
+    li{
+      margin-bottom: 10px;
+      border-bottom: dashed 1px #eaeaea;
+      width: 500px;
+      a{
+        display: inline-block;
+        &:first-child{
+          width: 150px;
+        }
+        &:nth-child(2){
+          width: 300px;
+        }
+        i{
+          margin-right: 4px;
+        }
+      }
+      em{
+        float: right;
+      }
+    }
+  }}

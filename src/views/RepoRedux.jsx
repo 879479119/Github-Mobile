@@ -1,17 +1,9 @@
-export const REPO_CONTENT = "REPO_CONTENT"
 export const COMMON_FETCH = "COMMON_FETCH"
 export const COMMON_LOADING = "COMMON_LOADING"
 export const COMMON_READY = "COMMON_READY"
 export const COMMON_ERROR = "COMMON_ERROR"
 
 export const COMMON_RELEASE = "COMMON_RELEASE"
-
-export function fetchRepoContent(owner, repo, path= '') {
-	return dispatch => dispatch({
-		type: REPO_CONTENT,
-		payload: {owner, repo, path}
-	})
-}
 
 export function commonFetch(url, data) {
 	return dispatch => dispatch({
@@ -67,7 +59,7 @@ export default function queue(state= initialState, action) {
 
 				//get the resources ans release the memory
 				case COMMON_RELEASE:
-					delete n.data[i]
+					n.data.splice(i,1)
 					n.length --
 					break
 				default:

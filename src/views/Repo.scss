@@ -5,3 +5,42 @@
     margin-right: 10px;
   }
 }
+
+.right-part{
+  position: relative;
+  float: right;
+  width: 540px;
+  height: 126px;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: top;
+  padding-left: 20px;
+  section{
+    width: 400px;
+
+    &.operation{
+      margin-bottom: 20px;
+    }
+    &.timeline{
+      margin-top: 20px;
+      span{
+        margin-right: 20px;
+      }
+      span:before{
+        content: '';
+        display: inline-block;
+        width: 4px;
+        height: 4px;
+        background: #108ee9;
+        border-radius: 50%;
+        vertical-align: 13%;
+        margin-right: 4px;
+      }
+    }
+  }
+}
+
+.description{
+  margin-bottom: 14px;
+  text-indent: 5px;
+}
