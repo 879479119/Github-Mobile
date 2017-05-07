@@ -41,6 +41,19 @@ export default class Home extends Component{
 	componentDidMount(){
 		//the application needs auth, or it cannot fetch data as the frequency we want
 		this.props.login()
+		let dom = document.querySelector(".ant-layout-sider")
+		//TODO: optimize
+		window.document.addEventListener("scroll",()=>{
+			if(window.scrollY > 64){
+				dom.style.position = 'fixed'
+				dom.style.top = 0
+				dom.nextSibling.style.marginLeft = '200px'
+			}else{
+				dom.style.position = 'relative'
+				dom.style.top = 0
+				dom.nextSibling.style.marginLeft = 0
+			}
+		})
 	}
 	searchContent(val){
 		this.props.changeRouter(`/search?query=${encodeURI(val)}`)
@@ -74,7 +87,7 @@ export default class Home extends Component{
 					</Menu>
 				</Header>
 				<Layout>
-					<Sider width={200} style={{ background: '#fff' }}>
+					<Sider width={200} style={{ background: '#fff', height: '100vh' }}>
 						<div className="user-face-main">
 							<img src="/assets/face.jpg" alt="face" className="uf-pic"/>
 							<h4>RockSAMA</h4>

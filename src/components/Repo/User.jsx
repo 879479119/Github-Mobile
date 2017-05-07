@@ -3,8 +3,15 @@ import {Link} from "react-router-dom";
 import "./User.scss";
 import {Icon} from "antd";
 
-export default function User(props) {
-	const { owner, style } = props
+export default function User({ owner, style={} }) {
+	if(owner === undefined){
+		owner = {
+			login: 'login',
+			avatar_url: '',
+			id: '',
+			type: 'User',
+		}
+	}
 	return(
 		<div className="user-small" style={style}>
 			<Link to={`/Profile/${owner.login}`}>

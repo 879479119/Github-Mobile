@@ -10,10 +10,13 @@
       a{
         display: inline-block;
         &:first-child{
-          width: 150px;
+          width: 280px;
         }
         &:nth-child(2){
-          width: 300px;
+          width: 140px;
+          display: inline-block;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         i{
           margin-right: 4px;

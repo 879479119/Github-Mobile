@@ -21,7 +21,7 @@ export default function CommitBar(props) {
 				<line x1={10} x2={400} y1={20} y2={20} stroke="#888" strokeWidth={1} />
 				{
 					data.all.map((item, i)=>{
-						return <rect key={i} x={20+i*7} y={21} width={7} height={item/max*70} fill={levels[(item/max*2)>>>0]} opacity={0.8} />
+						return <rect key={i} x={20+i*7} y={21} width={7} height={item/max*70 || 0} fill={levels[(item/max*2)>>>0]} opacity={0.8} />
 					})
 				}
 				<rect key={798} x={0} y={0} width={start*7} height={100} fill="rgba(0,0,0,0.06)" />
