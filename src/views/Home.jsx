@@ -87,7 +87,7 @@ export default class Home extends Component{
 						<Menu.Item key="2">Issues</Menu.Item>
 					</Menu>
 				</Header>
-				<Layout>
+				<Layout style={{minHeight:1000}}>
 					<Sider width={200} style={{ background: '#fff', height: '100vh' }}>
 						<div className="user-face-main">
 							<img src="/assets/face.jpg" alt="face" className="uf-pic"/>

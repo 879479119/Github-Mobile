@@ -3,6 +3,7 @@ import {withRouter} from "react-router-dom";
 import {Button, Select, Spin} from "antd";
 import "./index.scss";
 import {commonFetch, commonRelease} from "../../../views/RepoRedux";
+import addDataFetch from '../../../redux/addDataFetch'
 import {connect} from "react-redux";
 import CodeTree from "./CodeTree";
 import User from "./User";
@@ -12,7 +13,7 @@ import formatDate from "../../../utils/formatDate";
 
 const Option = Select.Option
 const ButtonGroup = Button.Group
-const API = [
+export const API = [
 	'/api/repos/getContent',
 	'/api/repos/getLanguages',
 	'/api/modified/repos/readme',
@@ -23,29 +24,26 @@ const API = [
 @connect(state=>({
 	queue: state.queue
 }),{ commonFetch, commonRelease})
+@addDataFetch
 export default class extends Component{
 	componentDidMount(){
-		const { commonFetch, owner, repo } = this.props
+		const { commonFetch, owner, repo, sendRequest } = this.props
 
-		commonFetch(API[0], {owner, repo, path:''})
-		commonFetch(API[1], {owner, repo})
-		commonFetch(API[2], {owner, repo})
-		commonFetch(API[3], {owner, repo})
-	}
-	getData(url){
-		const { queue } = this.props
-		let data = {}
-		queue.data.map(item=>{
-			if(item.url === url){
-				data = item
-				//TODO: this is a hack, maybe there is a better way to do this
-				// if(item.status === 3) setTimeout(()=>{commonRelease(url)},0)
+		for(let i = 0;i < API.length;i ++){
+			//noinspection JSUnfilteredForInLoop
+			if(this.getData(API[i]).status === 3){}
+			else { //noinspection JSUnfilteredForInLoop
+				commonFetch(API[i], {owner, repo, path:''})
 			}
-		})
-		return data
+		}
+		//
+		// commonFetch(API[0], {owner, repo, path:''})
+		// commonFetch(API[1], {owner, repo})
+		// commonFetch(API[2], {owner, repo})
+		// commonFetch(API[3], {owner, repo})
 	}
 	render = () => {
-		const { location, owner, repo, details } = this.props
+		const { owner, repo, details } = this.props
 		let content = this.getData(API[0])
 		let languages = this.getData(API[1])
 		let readme = this.getData(API[2])
@@ -58,6 +56,7 @@ export default class extends Component{
 				{(()=> {
 					let fragment
 					if (content.status === 3) {
+						console.log(content.result.data.data)
 						fragment = <CodeTree list={content.result.data.data} style={{display: 'inline-block'}}/>
 					} else if (content.status === 2) {
 						fragment = <p>error</p>

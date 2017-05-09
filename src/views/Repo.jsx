@@ -2,9 +2,12 @@ import React, {Component} from "react";
 import {Link, withRouter} from "react-router-dom";
 import {Icon, Layout, Menu, Button} from "antd";
 import "./Repo.scss";
+import { changeRouter } from "../views/HomeRedux";
 import { commonFetch, commonRelease} from "./RepoRedux";
 import {connect} from "react-redux";
-import Code from "../components/Repo/Code"
+import Code, {API as API_CODE} from "../components/Repo/Code"
+import Issue from "../components/Repo/Issue"
+
 const {Content} = Layout
 const ButtonGroup = Button.Group
 const API = [
@@ -13,23 +16,29 @@ const API = [
 
 @withRouter
 @connect(state=>({
-	queue: state.queue
-}),{ commonFetch, commonRelease})
+	queue: state.queue,
+	route: state.common.route
+}),{ commonFetch, commonRelease, changeRouter})
 export default class extends Component{
+	constructor(...props){
+		super(...props)
+	}
+	sendRequest(url, data){
+		commonFetch(url, data)
+	}
 	menuHandler(e){
-		const {location} = this.props,
+		const {changeRouter} = this.props,
 			{owner, repo} = this.data
 		const map = ['code','issue','pr','project','pulse','graph']
-		location.push(`/repo/${owner}/${repo}/${map[+e.key-1]}`)
+		changeRouter(`/repo/${owner}/${repo}/${e.key}`)
 	}
 	componentWillMount(){
 		const {location} = this.props
-		let [,,owner,repo,tab] = location.pathname.split('/')
+		let [,,owner,repo] = location.pathname.split('/')
 		//store it, maybe in other ways
 		this.data = {
-			owner, repo, tab
+			owner, repo
 		}
-		console.log(owner)
 	}
 	componentDidMount(){
 		const { commonFetch } = this.props,
@@ -49,9 +58,17 @@ export default class extends Component{
 		return data
 	}
 	render = () => {
-		const { location } = this.props,
+		const { location, children } = this.props,
 			{ owner, repo } = this.data
 		let details = this.getData(API[0])
+		let ShowComponent = Code
+
+		let [,,,,tab='code'] = location.pathname.split('/')
+
+		switch (tab){
+			case 'code': ShowComponent = Code; break
+			case 'issue': ShowComponent = Issue; break
+		}
 
 		return (
 			<Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 400 }}>
@@ -71,18 +88,18 @@ export default class extends Component{
 					</ButtonGroup>
 				</section>
 				<Menu
-					selectedKeys={['1']}
+					selectedKeys={[tab]}
 					mode="horizontal"
 				    onClick={::this.menuHandler}
 				>
-					<Menu.Item key="1"><Icon type="code-o" />Code</Menu.Item>
-					<Menu.Item key="2"><Icon type="database" />Issues</Menu.Item>
-					<Menu.Item key="3"><Icon type="usb" />Pull requests</Menu.Item>
-					<Menu.Item key="4"><Icon type="schedule" />Projects</Menu.Item>
-					<Menu.Item key="5"><Icon type="rocket" />Pulse</Menu.Item>
-					<Menu.Item key="6"><Icon type="line-chart" />Graphs</Menu.Item>
+					<Menu.Item key="code"><Icon type="code-o" />Code</Menu.Item>
+					<Menu.Item key="issue"><Icon type="database" />Issues</Menu.Item>
+					<Menu.Item key="pr"><Icon type="usb" />Pull requests</Menu.Item>
+					<Menu.Item key="project"><Icon type="schedule" />Projects</Menu.Item>
+					<Menu.Item key="pulse"><Icon type="rocket" />Pulse</Menu.Item>
+					<Menu.Item key="graph"><Icon type="line-chart" />Graphs</Menu.Item>
 				</Menu>
-				<Code owner={owner} repo={repo} details={details} />
+				<ShowComponent owner={owner} repo={repo} details={details} sendRequest={::this.sendRequest}/>
 			</Content>
 		)
 	}

@@ -12,6 +12,7 @@ export default function CodeTree(props) {
 	return(
 		<div className="code-tree" style={style}>
 			<ul>{
+			//TODO: it's so strange that there is an uncaught error when using 'React.Children.map'
 				list.map((item, i)=>{
 					let f = item.url.match(/repos\/(.+)\?ref/)[1]
 					return <li key={i} className={item.type}><Link to={`/file/${f}`}><Icon type={item.type==='file'?'file-text':'folder'}/>{item.name}</Link><Link to={`/commit/${item.sha}`}>{item.sha}</Link><em>{item.size !== 0 ? formatSize(item.size) : ''}</em></li>
