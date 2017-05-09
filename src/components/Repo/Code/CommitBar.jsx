@@ -1,9 +1,5 @@
 import React from "react";
-import {Link} from "react-router-dom";
 import "./CodeTree.scss";
-import {Icon} from "antd";
-import formatSize from '../../utils/formatSize'
-
 
 export default function CommitBar(props) {
 	const { style, data } = props

@@ -23,6 +23,7 @@ export default class Home extends Component{
 			code = null
 		}
 
+		//TODO: fix this
 		if(code){
 			fetch("/user/register",{
 				method: "POST",

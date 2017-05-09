@@ -1,6 +1,6 @@
 import React from "react";
 import "./LanguageBar.scss";
-import Reflect from "../../utils/languages"
+import Reflect from "../../../utils/languages"
 import {Tooltip} from "antd"
 
 export default function LanguageBar({ lang, style }) {

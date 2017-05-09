@@ -1,24 +1,14 @@
 import React, {Component} from "react";
 import {Link, withRouter} from "react-router-dom";
-import {Icon, Layout, Menu, Button, Select, Spin} from "antd";
+import {Icon, Layout, Menu, Button} from "antd";
 import "./Repo.scss";
 import { commonFetch, commonRelease} from "./RepoRedux";
 import {connect} from "react-redux";
-import CodeTree from "../components/Repo/CodeTree"
-import User from "../components/Repo/User"
-import LanguageBar from "../components/Repo/LanguageBar"
-import CommitBar from "../components/Repo/CommitBar"
-import formatDate from "../utils/formatDate"
-
+import Code from "../components/Repo/Code"
 const {Content} = Layout
-const Option = Select.Option
 const ButtonGroup = Button.Group
 const API = [
-	'/api/repos/get',
-	'/api/repos/getContent',
-	'/api/repos/getLanguages',
-	'/api/modified/repos/readme',
-	'/api/repos/getStatsParticipation'
+	'/api/repos/get'
 ]
 
 @withRouter
@@ -26,18 +16,28 @@ const API = [
 	queue: state.queue
 }),{ commonFetch, commonRelease})
 export default class extends Component{
+	menuHandler(e){
+		const {location} = this.props,
+			{owner, repo} = this.data
+		const map = ['code','issue','pr','project','pulse','graph']
+		location.push(`/repo/${owner}/${repo}/${map[+e.key-1]}`)
+	}
+	componentWillMount(){
+		const {location} = this.props
+		let [,,owner,repo,tab] = location.pathname.split('/')
+		//store it, maybe in other ways
+		this.data = {
+			owner, repo, tab
+		}
+		console.log(owner)
+	}
 	componentDidMount(){
-		const { location, commonFetch } = this.props
-		let [,,owner,repo] = location.pathname.split('/')
-
+		const { commonFetch } = this.props,
+			{ owner, repo } = this.data
 		commonFetch(API[0], {owner, repo})
-		commonFetch(API[1], {owner, repo, path:''})
-		commonFetch(API[2], {owner, repo})
-		commonFetch(API[3], {owner, repo})
-		commonFetch(API[4], {owner, repo})
 	}
 	getData(url){
-		const { queue, commonRelease } = this.props
+		const { queue } = this.props
 		let data = {}
 		queue.data.map(item=>{
 			if(item.url === url){
@@ -49,22 +49,9 @@ export default class extends Component{
 		return data
 	}
 	render = () => {
-		const { location } = this.props
-		let [,,owner,repo] = location.pathname.split('/')
+		const { location } = this.props,
+			{ owner, repo } = this.data
 		let details = this.getData(API[0])
-		let content = this.getData(API[1]), fragment
-		let languages = this.getData(API[2])
-		let readme = this.getData(API[3])
-		let commits = this.getData(API[4])
-
-		//the files' detail
-		if(content.status === 3){
-			fragment = <CodeTree list={content.result.data.data} style={{display:'inline-block'}}/>
-		}else if(content.status === 2){
-			fragment = <p>error</p>
-		}else{
-			fragment = <section className="loading" style={{minHeight:250, textAlign:'center', display:'inline-block'}}><Spin style={{marginTop:100}} /></section>
-		}
 
 		return (
 			<Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 400 }}>
@@ -86,6 +73,7 @@ export default class extends Component{
 				<Menu
 					selectedKeys={['1']}
 					mode="horizontal"
+				    onClick={::this.menuHandler}
 				>
 					<Menu.Item key="1"><Icon type="code-o" />Code</Menu.Item>
 					<Menu.Item key="2"><Icon type="database" />Issues</Menu.Item>
@@ -94,38 +82,7 @@ export default class extends Component{
 					<Menu.Item key="5"><Icon type="rocket" />Pulse</Menu.Item>
 					<Menu.Item key="6"><Icon type="line-chart" />Graphs</Menu.Item>
 				</Menu>
-				<div className="main-body">
-					<p className="description">{details.result ? details.result.data.data.description : <span style={{width: 500,background:"#ecf6fd",display:"inline-block",height:20,opacity:0.5}} />}</p>
-					<LanguageBar lang={languages.result ? languages.result.data.data : {}} />
-					{fragment}
-					<div className="right-part">
-						<div className="repo-header">
-							<section className="operation">
-								<Select defaultValue="master" style={{ width: 120 }}>
-									<Option value="master">Master</Option>
-									<Option value="lucy">Others</Option>
-								</Select>
-								<ButtonGroup style={{float:'right'}}>
-									<Button>Create new file</Button>
-									<Button>Upload files</Button>
-									<Button>Find file</Button>
-								</ButtonGroup>
-							</section>
-							<section>
-								<Button>New pull request</Button>
-								<Button type='primary'  style={{float:'right'}}>Clone or download</Button>
-							</section>
-							<section className="timeline">
-								<span>Created: <em>{details.result ? formatDate(details.result.data.data.created_at, true) : '_'}</em></span>
-								<span>Pushed: <em>{details.result ? formatDate(details.result.data.data.pushed_at, true) : '_'}</em></span>
-								<span>Updated: <em>{details.result ? formatDate(details.result.data.data.updated_at, true) : '_'}</em></span>
-							</section>
-							<User style={{position: 'absolute',top: 0,right: 0}} owner={details.result ? details.result.data.data.owner : {}} />
-						</div>
-						<CommitBar data={commits.result ? commits.result.data.data : {all:[0]}} />
-					</div>
-					<article dangerouslySetInnerHTML={{__html:readme.result ? readme.result.data.readme : 0}} className="readme"/>
-				</div>
+				<Code owner={owner} repo={repo} details={details} />
 			</Content>
 		)
 	}

@@ -2,7 +2,7 @@
 Application built with React, Redux, data powered by github
 
 ---
-something you need to know
+Something you need to know
 
 + `webpack@2.0.0` instead of `1.0.0`
 + `react-router-dom` instead of `react-router@4.0.0`
@@ -17,21 +17,18 @@ something you need to know
 ### Frame in work:
 ![home](http://7xsm7w.com1.z0.glb.clouddn.com/github-preview.png)
 
-### Notice
-If you want to use qiniu to deploy your resources on CDN, you can create a
-file like `/config/CDNConfig.js`
+**Finished:**
++ Home
+  - Profile
++ Repo
+  - Code Tab
++ Search
+  - Advanced Search
+  - Repo
 
-```javascript
-module.exports = {
-	dist: "../server/dist",
-	domain: "http://7xsm7w.com1.z0.glb.clouddn.com",
-	bucket: "stones",
-	prefix: "github",
-	access_key: "<FIND_IT_IN_SETTING>",
-	secret_key: "<FIND_IT_IN_SETTING>",
-}
-```
+### Some Help I Need
++ `syntaxhighlighter` doesn't work on windows 10, built package in need
++ code detection is needed for the codes
++ ...
 
-Then run `npm run upload`
-
-*Upload HTML file is forbidden, and I don't know why*
+*there might be a pocket edition written in `Vue.js` some day ~*

@@ -2,7 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import "./CodeTree.scss";
 import {Icon} from "antd";
-import formatSize from '../../utils/formatSize'
+import formatSize from '../../../utils/formatSize'
 
 export default function CodeTree(props) {
 	const { list, style } = props
