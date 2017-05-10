@@ -26,6 +26,9 @@ export const API = [
 }),{ commonFetch, commonRelease})
 @addDataFetch
 export default class extends Component{
+	static contextTypes = {
+		details: React.PropTypes.object
+	}
 	componentDidMount(){
 		const { commonFetch, owner, repo, sendRequest } = this.props
 
@@ -36,14 +39,10 @@ export default class extends Component{
 				commonFetch(API[i], {owner, repo, path:''})
 			}
 		}
-		//
-		// commonFetch(API[0], {owner, repo, path:''})
-		// commonFetch(API[1], {owner, repo})
-		// commonFetch(API[2], {owner, repo})
-		// commonFetch(API[3], {owner, repo})
 	}
 	render = () => {
-		const { owner, repo, details } = this.props
+		const { owner, repo } = this.props,
+			{ details } = this.context
 		let content = this.getData(API[0])
 		let languages = this.getData(API[1])
 		let readme = this.getData(API[2])
@@ -56,7 +55,6 @@ export default class extends Component{
 				{(()=> {
 					let fragment
 					if (content.status === 3) {
-						console.log(content.result.data.data)
 						fragment = <CodeTree list={content.result.data.data} style={{display: 'inline-block'}}/>
 					} else if (content.status === 2) {
 						fragment = <p>error</p>

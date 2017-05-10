@@ -5,8 +5,7 @@ import "./Repo.scss";
 import { changeRouter } from "../views/HomeRedux";
 import { commonFetch, commonRelease} from "./RepoRedux";
 import {connect} from "react-redux";
-import Code, {API as API_CODE} from "../components/Repo/Code"
-import Issue from "../components/Repo/Issue"
+import addDataFetch from '../redux/addDataFetch'
 
 const {Content} = Layout
 const ButtonGroup = Button.Group
@@ -19,12 +18,16 @@ const API = [
 	queue: state.queue,
 	route: state.common.route
 }),{ commonFetch, commonRelease, changeRouter})
+@addDataFetch
 export default class extends Component{
 	constructor(...props){
 		super(...props)
 	}
-	sendRequest(url, data){
-		commonFetch(url, data)
+	static childContextTypes = {
+		details: React.PropTypes.object
+	}
+	getChildContext(){
+		return {details: this.getData(API[0])}
 	}
 	menuHandler(e){
 		const {changeRouter} = this.props,
@@ -45,30 +48,11 @@ export default class extends Component{
 			{ owner, repo } = this.data
 		commonFetch(API[0], {owner, repo})
 	}
-	getData(url){
-		const { queue } = this.props
-		let data = {}
-		queue.data.map(item=>{
-			if(item.url === url){
-				data = item
-				//TODO: this is a hack, maybe there is a better way to do this
-				// if(item.status === 3) setTimeout(()=>{commonRelease(url)},0)
-			}
-		})
-		return data
-	}
 	render = () => {
-		const { location, children } = this.props,
-			{ owner, repo } = this.data
+		const { owner, repo } = this.data
 		let details = this.getData(API[0])
-		let ShowComponent = Code
 
 		let [,,,,tab='code'] = location.pathname.split('/')
-
-		switch (tab){
-			case 'code': ShowComponent = Code; break
-			case 'issue': ShowComponent = Issue; break
-		}
 
 		return (
 			<Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 400 }}>
@@ -99,7 +83,7 @@ export default class extends Component{
 					<Menu.Item key="pulse"><Icon type="rocket" />Pulse</Menu.Item>
 					<Menu.Item key="graph"><Icon type="line-chart" />Graphs</Menu.Item>
 				</Menu>
-				<ShowComponent owner={owner} repo={repo} details={details} sendRequest={::this.sendRequest}/>
+				{this.props.children}
 			</Content>
 		)
 	}
