@@ -23,9 +23,11 @@ export default class extends Component{
 	constructor(...props){
 		super(...props)
 	}
+	//noinspection JSUnusedGlobalSymbols
 	static childContextTypes = {
 		details: React.PropTypes.object
 	}
+	//noinspection JSUnusedGlobalSymbols
 	getChildContext(){
 		return {details: this.getData(API[0])}
 	}
