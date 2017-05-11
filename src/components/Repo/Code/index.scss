@@ -79,6 +79,19 @@
     display: inline-block;
     margin-right: 10px;
   }
+  table{
+    font-size: 12px;
+    tr{
+      th{
+        padding-bottom: 4px;
+      }
+      td{
+        margin-left: 10px;
+        border-top: dashed 1px #ddd;
+        padding: 4px;
+      }
+    }
+  }
 }
 
 .description{

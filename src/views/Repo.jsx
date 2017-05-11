@@ -51,6 +51,7 @@ export default class extends Component{
 		commonFetch(API[0], {owner, repo})
 	}
 	render = () => {
+		const { location } = this.props
 		const { owner, repo } = this.data
 		let details = this.getData(API[0])
 

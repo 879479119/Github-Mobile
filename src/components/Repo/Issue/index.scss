@@ -18,8 +18,10 @@
 }
 
 .issue-card-container{
+  position: relative;
   .issues{
     margin-top: 20px;
+    max-width: 800px;
     li{
       position: relative;
       width: 800px;
@@ -66,6 +68,31 @@
       &:last-child{
         border-bottom-left-radius: $radius;
         border-bottom-right-radius: $radius;
+      }
+    }
+  }
+  .i-s-labels{
+    position: absolute;
+    top: 0;
+    right: 40px;
+  }
+}
+
+.label-list{
+  background: #fff;
+  width: 180px;
+  li{
+    margin-left: 10px;
+    max-width: 180px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-top: 8px;
+    opacity: 0.6;
+    a{
+      border-radius: 4px;
+      padding: 1px 5px 4px 5px;
+      i{
+        margin-right: 4px;
       }
     }
   }

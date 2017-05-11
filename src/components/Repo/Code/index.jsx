@@ -30,7 +30,7 @@ export default class extends Component{
 		details: React.PropTypes.object
 	}
 	componentDidMount(){
-		const { commonFetch, owner, repo, sendRequest } = this.props
+		const { commonFetch, owner, repo } = this.props
 
 		for(let i = 0;i < API.length;i ++){
 			//noinspection JSUnfilteredForInLoop
