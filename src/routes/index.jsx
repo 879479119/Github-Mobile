@@ -8,6 +8,7 @@ import SearchResult from "../views/SearchResult";
 import Repo from '../views/Repo'
 import Issue from '../components/Repo/Issue'
 import Code from '../components/Repo/Code'
+import PullRequest from '../components/Repo/PullRequest'
 
 export default function (props) {
 	return (
@@ -24,6 +25,7 @@ export default function (props) {
 							switch (route.pop()){
 								case 'code': ShowComponent = Code; break
 								case 'issue': ShowComponent = Issue; break
+								case 'pr': ShowComponent = PullRequest; break
 								default: ShowComponent = Code
 							}
 							let [,,owner,repo] = route

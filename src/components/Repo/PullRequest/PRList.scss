@@ -1,0 +1,72 @@
+.pr{
+  margin-top: 20px;
+  max-width: 800px;
+  li{
+    background: rgba(0, 0, 0, 0.02);
+    $radius: 4px;
+    margin-bottom: 4px;
+    .i-s-main{
+      background: rgba(0,0,0,0.02);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 800px;
+      position: relative;
+      overflow: hidden;
+      padding: 12px 20px 12px 36px;
+    }
+    .i-s-head{
+      position: relative;
+      font-size: 16px;
+      svg{
+        position: absolute;
+        left: -20px;
+        top: 4px;
+      }
+    }
+    .i-s-details{
+      float: right;
+      font-size: 14px;
+      color: #aaa;
+      &:after{
+        content: '>';
+        color: #ddd;
+      }
+      i{
+        margin-right: 6px;
+      }
+    }
+    div{
+      margin-top: 10px;
+      .label{
+        border-radius: 2px;
+        padding: 1px 5px 3px 5px;
+        margin-right: 10px;
+        display: inline-block;
+        line-height: 14px;
+      }
+    }
+    p{
+      margin-top: 6px;
+    }
+    .issue-body{
+      pre{
+        width: 720px;
+        line-height: 1.5;
+        margin: 10px 10px 10px 35px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        img{
+          max-width: 720px;
+        }
+      }
+    }
+    &:first-child{
+      border-top-left-radius: $radius;
+      border-top-right-radius: $radius;
+    }
+    &:last-child{
+      border-bottom-left-radius: $radius;
+      border-bottom-right-radius: $radius;
+    }
+  }
+}

@@ -5,14 +5,14 @@ import "./index.scss";
 import addDataFetch from "../../../redux/addDataFetch";
 import {commonFetch, commonRelease} from "../../../views/RepoRedux";
 import {connect} from "react-redux";
-import ListModified from "./ListModified";
-import IssueList from "./IssueList"
+import ListModified from "../Issue/ListModified";
+import PRList from "./PRList"
 
 const InputGroup = Input.Group
 const Option = Select.Option
 const ButtonGroup = Button.Group
 const API = [
-	'/api/issues/getForRepo',
+	'/api/pullRequests/getAll',
 	'/api/issues/getLabels'
 ]
 
@@ -33,7 +33,7 @@ export default class extends Component{
 	render = () => {
 		const { owner, repo } = this.props,
 			{ details } = this.context
-		let issues = this.getData(API[0])
+		let pr = this.getData(API[0])
 		let labels = this.getData(API[1])
 		let base = `/repo/${owner}/${repo}/issue`
 
@@ -45,13 +45,13 @@ export default class extends Component{
 							<Option value="1">Open issues and pull requests</Option>
 							<Option value="2">Your issues</Option>
 						</Select>
-						<Input style={{ width: 300 }} defaultValue="is:issue is:open" />
+						<Input style={{ width: 300 }} defaultValue="is:pr is:open" />
 					</InputGroup>
 					<ButtonGroup style={{display: 'inline-block'}}>
 						<Button>Labels</Button>
 						<Button>Milestones</Button>
 					</ButtonGroup>
-					<Button type="primary" size="large">New issue</Button>
+					<Button type="primary" size="large">New pull request</Button>
 					<InputGroup compact style={{marginTop:12}} className="bar-filter">
 						<Select defaultValue="Author">
 							<Option value={'asd'}/>
@@ -74,10 +74,12 @@ export default class extends Component{
 					</InputGroup>
 				</section>
 				<section className="issue-card-container">
-					<IssueList base={base} list={issues.result ? issues.result.data.data : []} />
+					<PRList base={base} list={pr.result ? pr.result.data.data : []} type="pr"/>
 					<ListModified className="i-s-labels" base={base} list={labels.result ? labels.result.data.data : []} />
 				</section>
 			</div>
 		)
 	}
 }
+
+

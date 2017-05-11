@@ -1,0 +1,52 @@
+.issues{
+  margin-top: 20px;
+  max-width: 800px;
+  li{
+    position: relative;
+    width: 800px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 12px 20px 12px 36px;
+    $radius: 4px;
+    margin-bottom: 4px;
+    background: rgba(0,0,0,0.02);
+    .i-s-head{
+      position: relative;
+      font-size: 16px;
+      i{
+        position: absolute;
+        left: -20px;
+        top: 4px;
+      }
+    }
+    .i-s-comments{
+      float: right;
+      font-size: 14px;
+      i{
+        margin-right: 6px;
+      }
+    }
+    div{
+      margin-top: 10px;
+      .label{
+        border-radius: 2px;
+        padding: 1px 5px 3px 5px;
+        margin-right: 10px;
+        display: inline-block;
+        line-height: 14px;
+      }
+    }
+    p{
+      margin-top: 6px;
+    }
+    &:first-child{
+      border-top-left-radius: $radius;
+      border-top-right-radius: $radius;
+    }
+    &:last-child{
+      border-bottom-left-radius: $radius;
+      border-bottom-right-radius: $radius;
+    }
+  }
+}
