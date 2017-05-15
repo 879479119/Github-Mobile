@@ -82,8 +82,8 @@ export default class extends Component{
 					<Menu.Item key="code"><Icon type="code-o" />Code</Menu.Item>
 					<Menu.Item key="issue"><Icon type="database" />Issues</Menu.Item>
 					<Menu.Item key="pr"><Icon type="usb" />Pull requests</Menu.Item>
-					<Menu.Item key="project"><Icon type="schedule" />Projects</Menu.Item>
-					<Menu.Item key="pulse"><Icon type="rocket" />Pulse</Menu.Item>
+					<Menu.Item key="project" disabled><Icon type="schedule" />Projects</Menu.Item>
+					<Menu.Item key="pulse" disabled><Icon type="rocket" />Pulse</Menu.Item>
 					<Menu.Item key="graph"><Icon type="line-chart" />Graphs</Menu.Item>
 				</Menu>
 				{this.props.children}

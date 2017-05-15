@@ -9,6 +9,11 @@ import Repo from '../views/Repo'
 import Issue from '../components/Repo/Issue'
 import Code from '../components/Repo/Code'
 import PullRequest from '../components/Repo/PullRequest'
+import Graph from '../components/Repo/Graph'
+
+//the graph parts
+import Contributor from '../components/Repo/Graph/Contributor'
+
 
 export default function (props) {
 	return (
@@ -22,15 +27,31 @@ export default function (props) {
 							let ShowComponent = Code,
 								route = e.location.pathname.split('/')
 
-							switch (route.pop()){
+							//the basic router
+							switch (route[4]){
 								case 'code': ShowComponent = Code; break
 								case 'issue': ShowComponent = Issue; break
 								case 'pr': ShowComponent = PullRequest; break
+								//we cannot wrap the graph contents in the route when it's rendered via function
+								case 'graph': ShowComponent = Graph; break
 								default: ShowComponent = Code
 							}
 							let [,,owner,repo] = route
 
-							return <ShowComponent owner={owner} repo={repo}/>
+							//dealing with the level3 router
+							let Content = undefined
+							if(route[4] === 'graph'){
+								switch (route[5]){
+									case 'contributor': Content = Contributor; break
+									default: Content = Contributor
+								}
+							}
+
+							return (
+								<ShowComponent owner={owner} repo={repo}>
+									<Content  owner={owner} repo={repo}/>
+								</ShowComponent>
+							)
 						}}/>
 					</Repo>
 				</Route>

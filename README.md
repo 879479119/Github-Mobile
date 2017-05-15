@@ -13,6 +13,7 @@ Something you need to know
 + `github` to authenticate and get some info
 + `express` based server
 + `cheerio` providing some info only from the pages
++ `paths-js` to build the path of charts
 
 ### Frame in work:
 ![home](http://7xsm7w.com1.z0.glb.clouddn.com/github-preview.png)
@@ -29,6 +30,6 @@ Something you need to know
 ### Some Help I Need
 + `syntaxhighlighter` doesn't work on windows 10, built package in need
 + code detection is needed for the codes
-+ ...
++ It's really hard to draw the path smoothly, is there any blog or book helps?
 
 *there might be a pocket edition written in `Vue.js` some day ~*
