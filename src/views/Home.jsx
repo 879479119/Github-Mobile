@@ -36,12 +36,16 @@ export default class Home extends Component{
 				message.success(res,3)
 			}).catch(e=>{
 				message.error(e,3)
+				setTimeout(()=>{
+					window.location = "https://github.com/login/oauth/authorize?scope=admin&client_id=af4fdd0b77c3a4073f0c"
+				},3000)
 			})
+		}else{
+			this.props.login()
 		}
 	}
 	componentDidMount(){
 		//the application needs auth, or it cannot fetch data as the frequency we want
-		this.props.login()
 		let dom = document.querySelector(".ant-layout-sider")
 		//TODO: optimize
 		window.document.addEventListener("scroll",()=>{

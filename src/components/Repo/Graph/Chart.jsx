@@ -1,8 +1,9 @@
 import React from 'react'
 import { Icon } from 'antd'
 import BarChart from './BarChart'
+import "./Chart.scss"
 
-export default function ({data, width= 600, height= 200}) {
+export default function ({data, width= 1000, height= 100}) {
 	let innerContent = undefined
 	if(data === void 0 || data.length === 0){
 		innerContent = <Icon type="loading" />
@@ -11,7 +12,7 @@ export default function ({data, width= 600, height= 200}) {
 	}
 
 	return (
-		<div className="common-chart" style={{width, height, overflow:'hidden'}}>
+		<div className="common-chart" style={{width, height}}>
 			{innerContent}
 		</div>
 	)

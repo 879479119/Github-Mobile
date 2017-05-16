@@ -28,6 +28,7 @@ router.post('/register', (req, respond)=>{
 
 }).post('/login', (req, respond)=>{
 	let gid = req.cookies['gid'],
+		gname = req.cookies['gname'],
 		key = req.cookies['key'];
 
 	if(typeof key === "undefined" || typeof gid === "undefined"){
@@ -37,6 +38,9 @@ router.post('/register', (req, respond)=>{
 
 	login(gid, key).then((token)=>{
 		req.session.token = token
+		respond.cookie('gid', gid, { maxAge: 30*24*60*60*1000 })
+		respond.cookie('gname', gname, { maxAge: 30*24*60*60*1000 })
+		respond.cookie('key',key, { maxAge: 30*24*60*60*1000, httpOnly: true })
 		respond.send(STDR.success("login success"))
 	}).catch((err)=>{
 		log(err,1)

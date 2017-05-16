@@ -1,3 +1,18 @@
+const month = [
+	'January',
+	'February',
+	'March',
+	'April',
+	'May',
+	'June',
+	'July',
+	'August',
+	'September',
+	'October',
+	'November',
+	'December'
+]
+
 export default function (dateString, short= false) {
 	let date = new Date(dateString)
 	let F = date.getFullYear();
@@ -6,7 +21,8 @@ export default function (dateString, short= false) {
 	let H = pad(date.getHours(),2);
 	let Mi = pad(date.getMinutes(),2);
 	let S = pad(date.getSeconds(),2);
-	if(short) return `${F}-${Mo}-${D}`
+	if(short === true) return `${F}-${Mo}-${D}`
+	else if(short === 1) return `${month[date.getMonth()].slice(0,3)} ${D}`
 	return `${F}-${Mo}-${D} ${H}:${Mi}:${S}`
 }
 

@@ -1,0 +1,13 @@
+.chart-bar{
+
+  .left{
+    text{
+      font-size: 10px;
+      fill: #aaa;
+      transform: translateY(3px);
+    }
+    line{
+      transform: translateX(10px);
+    }
+  }
+}
