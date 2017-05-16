@@ -23,6 +23,8 @@ export default function (dateString, short= false) {
 	let S = pad(date.getSeconds(),2);
 	if(short === true) return `${F}-${Mo}-${D}`
 	else if(short === 1) return `${month[date.getMonth()].slice(0,3)} ${D}`
+	else if(short === 2) return `${month[date.getMonth()]}`
+	else if(short === 2) return F + ''
 	return `${F}-${Mo}-${D} ${H}:${Mi}:${S}`
 }
 

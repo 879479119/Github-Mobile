@@ -49,7 +49,7 @@ export default function (props) {
 
 							return (
 								<ShowComponent owner={owner} repo={repo}>
-									<Content  owner={owner} repo={repo}/>
+									{Content ? <Content owner={owner} repo={repo}/> : ''}
 								</ShowComponent>
 							)
 						}}/>

@@ -19,7 +19,7 @@ export default function ({data, className, parent: {width= 1000, height= 100}, .
 	for(let i = 0;i < len;i ++){
 		if(arr[i].c > max) max = arr[i].c
 	}
-	let base = [1, 4, 10, 20, 50, 100, 200, 500]
+	let base = [1, 4, 10, 20, 40, 50, 80, 100, 160, 200, 300, 400, 500]
 	let line = 500
 	for(let t = base.length - 1;t > 0;t --){
 		if(max >= base[t]){
@@ -31,20 +31,38 @@ export default function ({data, className, parent: {width= 1000, height= 100}, .
 	//dealing with the axisX, generate the category
 	let day = 60 * 60 * 24
 	let count = (end - start) / day
-	console.info(count)
+	let everyday = width / count
 	//period means the gap between labels (day)
 	let period = (count / 8) >>> 0
 	let labels = []
+	console.info(count)
+	//noinspection FallThroughInSwitchStatementJS
 	switch (true){
+		case count > 30 * 12 * 3:
+			//label it with year only
+			let year = new Date(start * 1000).getFullYear() + 1
+			let first = new Date('1 1,'+year),
+				last = new Date(end * 1000).getFullYear(),
+				offset = (first.getTime() / 1000 - start) / day * everyday
+			for(let k = 0;k <= last - year;k ++){
+				labels.push({x: offset + k * everyday * 365, text: year + k})
+			}
+			//there is no statement like break, we would like to add some label on it
 		case count > 30 * 12:
-			//label it with year
-			break
-		case count > 30 * 3:
+			if(count > 30 * 20 * 3) break
+			//add months to the array of years
+			//first year
+			if(offset - everyday * 183 > 0) labels.push({x: offset - everyday * 183, text: 'July'})
+			for(let k = 0;k <= last - year;k ++){
+				if(offset + k * everyday * 183 > width + 20) break
+				labels.push({x: offset + k * everyday * 183, text: 'July'})
+			}
 			break
 		case count > 30:
+			let block = weeksCount / 8
 			for(let i = 1;i < 8;i ++){
 				let text = formatDate((start + i * period * day) * 1000, 1)
-				labels.push({x: (i) * span, text})
+				labels.push({x: (i) * block * span, text})
 			}
 			break
 	}
@@ -60,7 +78,6 @@ export default function ({data, className, parent: {width= 1000, height= 100}, .
 		points.push([p * span, k])
 	}
 	// points.push([weeksCount * span,height])
-	console.info(points)
 	let curve = Bezier({
 		points: points,
 		tension: 0.4
@@ -91,7 +108,7 @@ export default function ({data, className, parent: {width= 1000, height= 100}, .
 				</g>
 			</g>
 			<g transform={`translate(10,10)`}>
-				<path d={p.replace(/M 0 (\d+)/,`M -10 ${height} L 0 $1`)} stroke="#00caab" fill="#00caab" fillOpacity={0.4} style={{transform: 'translateX(10px)'}} />
+				<path d={p.replace(/M 0 (\d+)/,`M -10 ${height} L 0 $1`)} fill="#28a745" fillOpacity={0.4} style={{transform: 'translateX(10px)'}} />
 			</g>
 			<g  transform={`translate(10,${height+20})`}>
 				{

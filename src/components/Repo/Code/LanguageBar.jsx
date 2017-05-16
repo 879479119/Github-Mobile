@@ -1,5 +1,5 @@
-import React from "react";
-import "./LanguageBar.scss";
+import React from "react"
+import "./LanguageBar.scss"
 import Reflect from "../../../utils/languages"
 import {Tooltip} from "antd"
 
@@ -11,8 +11,14 @@ export default function LanguageBar({ lang, style }) {
 	}
 	for(let attr in lang){
 		//noinspection JSUnfilteredForInLoop
-		let color = Reflect[attr]['color'],
+		let color = undefined,
 			len = (lang[attr] / sum * 100).toFixed(2) + '%'
+		try{
+			//noinspection JSUnfilteredForInLoop
+			color = Reflect[attr]['color']
+		}catch (e){
+			color = "#eee"
+		}
 		//noinspection JSUnfilteredForInLoop
 		bar.push(<Tooltip key={attr}  overlay={attr+' '+len} placement={'bottom'} style={{display:'inline-block'}}><figure style={{background:color, width:len}} /></Tooltip>)
 	}
