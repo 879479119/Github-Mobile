@@ -4,20 +4,14 @@ import cls from "classnames"
 import formatDate from "../../../utils/formatDate"
 
 export default class BarChart extends Component{
-	componentDidMount(){
-		this.offsetLeft = document.querySelector('.main-body').offsetLeft
-		this.selection = document.querySelector('.selection')
-		this.left = 100
-		this.right = 200
-	}
 	render(){
-		let {data, className, parent: {width, height}, level, fill, ...props} = this.props
+		let {data, className, parent: {width, height}, level, fill, max: maxTop, ...props} = this.props
 		let simpleMode = false
 		if(level === "simple") simpleMode = true
 		let innerWidth = width - 20,
-			innerHeight = height - 20
+			innerHeight = height - 30
 		//get the copy of the data, since we may render it again
-		let arr = data.slice(),
+		let arr = data.concat(),
 			len = arr.length,
 			start = arr[0].w,
 			end = arr[len-1].w
@@ -28,17 +22,23 @@ export default class BarChart extends Component{
 
 		//get the max value of the commits
 		let max = 0
-		for(let i = 0;i < len;i ++){
-			if(arr[i].c > max) max = arr[i].c
-		}
 
 		//these are all the line types
 		let base = [1, 4, 10, 20, 40, 50, 80, 100, 160, 200, 300, 400, 500]
 		let line = 500
-		for(let t = base.length - 1;t > 0;t --){
-			if(max >= base[t]){
-				line = base[t]
-				break
+		console.info(maxTop)
+		if(maxTop){
+			line = maxTop
+			max = maxTop
+		}else{
+			for(let i = 0;i < len;i ++){
+				if(arr[i].c > max) max = arr[i].c
+			}
+			for(let t = base.length - 1;t > 0;t --){
+				if(max >= base[t]){
+					line = base[t]
+					break
+				}
 			}
 		}
 
@@ -114,7 +114,11 @@ export default class BarChart extends Component{
 							<line x2={innerWidth} stroke="#ccc" strokeOpacity={0.5} />
 						</g>
 				}
+				<g transform={`translate(10,10)`}>
+					<path d={p.replace(/M 0 (\d+)/,`M -10 ${innerHeight} L 0 $1`)} fill={fill || "#28a745"} fillOpacity={0.4} style={{transform: 'translateX(10px)'}} />
+				</g>
 				<g transform={`translate(0,${innerHeight+10})`}  className="left">
+					<rect x={10} y={0} width={innerWidth} height={20} fill="#fafafa"/>
 					<text>0</text>
 					<line x2={innerWidth} stroke="#ccc" strokeOpacity={0.5} />
 					<g>
@@ -125,12 +129,10 @@ export default class BarChart extends Component{
 						}
 					</g>
 				</g>
-				<g transform={`translate(10,10)`}>
-					<path d={p.replace(/M 0 (\d+)/,`M -10 ${innerHeight} L 0 $1`)} fill={fill || "#28a745"} fillOpacity={0.4} style={{transform: 'translateX(10px)'}} />
-				</g>
+
 				{
 					simpleMode ? '' :
-					<g  transform={`translate(10,${height})`}>
+					<g  transform={`translate(10,${height-10})`}>
 						{
 							labels.map((item, index)=>(
 								<text x={item.x-15} key={'t'+index} style={{fill: '#aaa',fontSize: 10,userSelect: 'none'}}>{item.text}</text>

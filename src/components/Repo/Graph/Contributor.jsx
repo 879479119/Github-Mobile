@@ -25,29 +25,33 @@ export default class extends Component{
 	render = () => {
 		const { owner, repo } = this.props
 		let contributor = this.getData(API)
-		let sumArr = [], start= '', end= '', series = []
+		console.info('data',contributor)
+		let sumArr = [], start= '', end= '', series = [], max = 1
+		//FIXME: unknown error: contribution changes
 		if(contributor.result){
 			try{
-				series = contributor.result.data.data
+				series = contributor.result.data.data.concat().reverse()
+
 				series.forEach((item, index)=>{
 					if(index === 0){
 						start = formatDate(item.weeks[0].w * 1000, 4)
 						end = formatDate(item.weeks[item.weeks.length - 1].w * 1000, 4)
 
-						sumArr = item.weeks.slice()
+						sumArr = item.weeks.concat([])
 						//init the array and return to avoid loop
+
 						return
 					}
 					item.weeks.forEach((t, i)=>{
 						sumArr[i].a += t.a
 						sumArr[i].d += t.d
 						sumArr[i].c += t.c
+						if(t.c > max) max = t.c
 					})
 				})
 			}catch(e) {
 				console.error(e)
 			}
-
 		}
 
 		return (
@@ -74,7 +78,7 @@ export default class extends Component{
 												<span>/{add} ++/</span>
 												<span>{del} --</span></p>
 										</section>
-										<Chart data={t.weeks} type="smooth-path" level="simple" width={400} height={80} fill="#fb8532" className="c-small" />
+										<Chart max={max} data={t.weeks} type="smooth-path" level="simple" width={480} height={80} fill="#fb8532" className="c-small" />
 									</li>
 								)
 							})
