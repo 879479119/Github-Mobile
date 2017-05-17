@@ -24,7 +24,8 @@ export default function (dateString, short= false) {
 	if(short === true) return `${F}-${Mo}-${D}`
 	else if(short === 1) return `${month[date.getMonth()].slice(0,3)} ${D}`
 	else if(short === 2) return `${month[date.getMonth()]}`
-	else if(short === 2) return F + ''
+	else if(short === 3) return F + ''
+	else if(short === 4) return `${month[date.getMonth()].slice(0,3)} ${D}, ${F}`
 	return `${F}-${Mo}-${D} ${H}:${Mi}:${S}`
 }
 

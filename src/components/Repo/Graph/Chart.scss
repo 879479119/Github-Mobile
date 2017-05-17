@@ -1,6 +1,11 @@
+.common-chart{
+  text-align: center;
+  //background: #fafafa;
+}
+
 .chart-bar{
   background: #fafafa;
-  //user-select: none;
+  user-select: none;
   .left{
     text{
       font-size: 10px;
@@ -10,20 +15,5 @@
     line{
       transform: translateX(10px);
     }
-  }
-  .selection{
-    fill: #24292e;
-    fill-opacity: 0.1;
-    stroke: #24292e;
-    stroke-dasharray: 3 3;
-    stroke-opacity: 0.4;
-    stroke-width: 1px;
-    shape-rendering: crispedges;
-    cursor: move;
-  }
-  .l,.r{
-    fill: #24292e;
-    fill-opacity: 0.1;
-    cursor: ew-resize;
   }
 }

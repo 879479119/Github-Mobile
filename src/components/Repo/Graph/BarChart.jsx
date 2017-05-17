@@ -4,28 +4,6 @@ import cls from "classnames"
 import formatDate from "../../../utils/formatDate"
 
 export default class BarChart extends Component{
-
-	select(e){
-		let left = e.clientX - this.offsetLeft
-		//TODO: lots to do
-	}
-	drag(e){
-		if(e.clientX === 0) return
-		if(this.left >= this.right) return
-		let latest = e.clientX - this.offsetLeft - 10
-
-		if(e.target.classList[0] === 'l'){
-			this.left = latest
-		}else{
-			this.right = latest
-		}
-
-		//we must make those operation on the real DOM, ro it will take a long time to re-render
-		e.target.setAttribute('x', latest)
-		let width = Math.abs(this.right - this.left)
-		this.selection.setAttribute('x', this.left+'px')
-		this.selection.setAttribute('width', width+'px')
-	}
 	componentDidMount(){
 		this.offsetLeft = document.querySelector('.main-body').offsetLeft
 		this.selection = document.querySelector('.selection')
@@ -33,16 +11,20 @@ export default class BarChart extends Component{
 		this.right = 200
 	}
 	render(){
-		let {data, className, parent: {width= 1000, height= 100}, ...props} = this.props
+		let {data, className, parent: {width, height}, level, fill, ...props} = this.props
+		let simpleMode = false
+		if(level === "simple") simpleMode = true
+		let innerWidth = width - 20,
+			innerHeight = height - 20
 		//get the copy of the data, since we may render it again
-		let arr = data.data.data[0].weeks.slice(),
+		let arr = data.slice(),
 			len = arr.length,
 			start = arr[0].w,
 			end = arr[len-1].w
 		let points = []
 		let week = 60 * 60 * 24 * 7
 		let weeksCount = (arr[len-1].w - arr[0].w) / week + 1
-		let span = width / weeksCount
+		let span = innerWidth / weeksCount
 
 		//get the max value of the commits
 		let max = 0
@@ -63,11 +45,10 @@ export default class BarChart extends Component{
 		//dealing with the axisX, generate the category
 		let day = 60 * 60 * 24
 		let count = (end - start) / day
-		let everyday = width / count
+		let everyday = innerWidth / count
 		//period means the gap between labels (day)
 		let period = (count / 8) >>> 0
 		let labels = []
-		console.info(count)
 		//noinspection FallThroughInSwitchStatementJS
 		switch (true){
 			case count > 30 * 12 * 3:
@@ -86,7 +67,7 @@ export default class BarChart extends Component{
 				//first year
 				if(offset - everyday * 183 > 0) labels.push({x: offset - everyday * 183, text: 'July'})
 				for(let k = 0;k <= last - year;k ++){
-					if(offset + k * everyday * 183 > width + 20) break
+					if(offset + k * everyday * 183 > innerWidth) break
 					labels.push({x: offset + k * everyday * 183, text: 'July'})
 				}
 				break
@@ -100,60 +81,64 @@ export default class BarChart extends Component{
 		}
 
 		//get how long the bar is
-		let per = height / max
+		let per = innerHeight / max
 
 		for(let p = 0;p < weeksCount;p ++){
-			let k = height
+			let k = innerHeight
 			if(arr[0].w === start + p * week){
-				k = height - arr.shift().c * per
+				k = innerHeight - arr.shift().c * per
 			}
 			points.push([p * span, k])
 		}
-		// points.push([weeksCount * span,height])
+		points.push([weeksCount * span, innerHeight])
+		// points.push([weeksCount * span,innerHeight])
 		let curve = Bezier({
 			points: points,
 			tension: 0.4
 		})
 
 		//some preset of path
+		//noinspection JSUnresolvedVariable
 		let p = curve.path.print()
 
 		return (
-			<svg width={width+20} height={height+40} {...props} className="chart-bar">
-				<g transform={`translate(0,${height-line*per+10})`} className="left">
+			<svg width={width} height={height} {...props} className={cls("chart-bar", className)}>
+				<g transform={`translate(0,${innerHeight-line*per+10})`} className="left">
 					<text>{line}</text>
-					<line x2={width} stroke="#ccc" strokeOpacity={0.5} />
+					<line x2={innerWidth} stroke="#ccc" strokeOpacity={0.5} />
 				</g>
-				<g transform={`translate(0,${height-line/2*per+10})`}  className="left">
-					<text>{line/2}</text>
-					<line x2={width} stroke="#ccc" strokeOpacity={0.5} />
-				</g>
-				<g transform={`translate(0,${height+10})`}  className="left">
+				{
+					simpleMode ? '' :
+						<g transform={`translate(0,${innerHeight-line/2*per+10})`}  className="left">
+							<text>{line/2}</text>
+							<line x2={innerWidth} stroke="#ccc" strokeOpacity={0.5} />
+						</g>
+				}
+				<g transform={`translate(0,${innerHeight+10})`}  className="left">
 					<text>0</text>
-					<line x2={width} stroke="#ccc" strokeOpacity={0.5} />
+					<line x2={innerWidth} stroke="#ccc" strokeOpacity={0.5} />
 					<g>
 						{
-							labels.map((item, index)=>(
+							simpleMode ? '' : labels.map((item, index)=>(
 								<line x1={item.x} x2={item.x} y2={3} key={'l'+index} style={{stroke: '#aaa'}}/>
 							))
 						}
 					</g>
 				</g>
 				<g transform={`translate(10,10)`}>
-					<path d={p.replace(/M 0 (\d+)/,`M -10 ${height} L 0 $1`)} fill="#28a745" fillOpacity={0.4} style={{transform: 'translateX(10px)'}} />
+					<path d={p.replace(/M 0 (\d+)/,`M -10 ${innerHeight} L 0 $1`)} fill={fill || "#28a745"} fillOpacity={0.4} style={{transform: 'translateX(10px)'}} />
 				</g>
-				<g  transform={`translate(10,${height+20})`}>
-					{
-						labels.map((item, index)=>(
-							<text x={item.x-15} key={'t'+index} style={{fill: '#aaa',fontSize: 10,userSelect: 'none'}}>{item.text}</text>
-						))
-					}
-				</g>
-				<g transform={`translate(10,10)`}>
-					<rect className="selection" x={100} width={100} height={100} onDrag={::this.select} draggable="true" />
-					<rect className="l" x={95} width={10} height={100} onDrag={::this.drag} draggable="true"/>
-					<rect className="r" x={195} width={10} height={100}  onDrag={::this.drag} draggable="true" />
-				</g>
+				{
+					simpleMode ? '' :
+					<g  transform={`translate(10,${height})`}>
+						{
+							labels.map((item, index)=>(
+								<text x={item.x-15} key={'t'+index} style={{fill: '#aaa',fontSize: 10,userSelect: 'none'}}>{item.text}</text>
+							))
+						}
+					</g>
+				}
+
 			</svg>
 		)
 	}

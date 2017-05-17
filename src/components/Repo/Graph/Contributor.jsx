@@ -1,11 +1,12 @@
 import React, {Component} from "react";
-import {withRouter} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import {Button, Select, Spin} from "antd";
+import formatDate from "../../../utils/formatDate"
 import {commonFetch, commonRelease} from "../../../views/RepoRedux";
 import addDataFetch from '../../../redux/addDataFetch'
 import {connect} from "react-redux";
 import Chart from "./Chart"
-import formatDate from "../../../utils/formatDate";
+import cls from "classnames"
 
 export const API = '/api/repos/getStatsContributors'
 
@@ -24,9 +25,63 @@ export default class extends Component{
 	render = () => {
 		const { owner, repo } = this.props
 		let contributor = this.getData(API)
+		let sumArr = [], start= '', end= '', series = []
+		if(contributor.result){
+			try{
+				series = contributor.result.data.data
+				series.forEach((item, index)=>{
+					if(index === 0){
+						start = formatDate(item.weeks[0].w * 1000, 4)
+						end = formatDate(item.weeks[item.weeks.length - 1].w * 1000, 4)
+
+						sumArr = item.weeks.slice()
+						//init the array and return to avoid loop
+						return
+					}
+					item.weeks.forEach((t, i)=>{
+						sumArr[i].a += t.a
+						sumArr[i].d += t.d
+						sumArr[i].c += t.c
+					})
+				})
+			}catch(e) {
+				console.error(e)
+			}
+
+		}
 
 		return (
-			<div><Chart data={contributor.result}/></div>
+			<div className="contributors" style={{marginTop: 20}}>
+				<h5 className={cls({"void": !start})}>{start + ' - ' + end}</h5>
+				<h6>Contributions to master, excluding merge commits</h6>
+				<Chart data={sumArr} type="smooth-path" className="main-chart" />
+				<div className="contribute-user">
+					<ul>
+						{
+							series.map((t,i)=>{
+								let a  = t.author, add = 0, del = 0
+								t.weeks.forEach((item => {
+									add += item.a
+									del += item.d
+								}))
+								return (
+									<li key={'li'+i}>
+										<img src={a.avatar_url} alt="face"/>
+										<section>
+											<Link to={'/profile/'+a.login} >{a.login}</Link>
+											<p className="details">
+												<span>Commits: {t.total}</span>
+												<span>/{add} ++/</span>
+												<span>{del} --</span></p>
+										</section>
+										<Chart data={t.weeks} type="smooth-path" level="simple" width={400} height={80} fill="#fb8532" className="c-small" />
+									</li>
+								)
+							})
+						}
+					</ul>
+				</div>
+			</div>
 		)
 	}
 }

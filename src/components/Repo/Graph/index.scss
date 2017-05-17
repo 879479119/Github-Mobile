@@ -1,0 +1,69 @@
+/**
+this file is the common style list for the graph tab
+ */
+
+.contributors{
+  h5{
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 10px;
+    &.void{
+      width: 400px;
+      background: #fafafa;
+      height: 20px;
+      color: transparent;
+    }
+  }
+
+  h6{
+    margin-bottom: 20px;
+    font-weight: normal;
+    &.void{
+      width: 500px;
+      background: #fafafa;
+      height: 16px;
+      color: transparent;
+    }
+  }
+  .main-chart{
+    background: #fafafa;
+  }
+  .contribute-user{
+    margin-top: 20px;
+    li{
+      display: inline-block;
+      padding: 10px;
+      border: solid 1px #eee;
+      border-radius: 4px;
+      img{
+        width: 40px;
+        height: 40px;
+      }
+      a{
+        font-size: 16px;
+      }
+      section{
+        display: inline-block;
+        .details{
+
+          :first-child{
+
+          }
+          :nth-child(2){
+            color: #28a745;
+          }
+          :last-child{
+            color: #cb2431;
+          }
+        }
+      }
+      .c-small{
+        width: 400px;
+      }
+    }
+  }
+}
+
+.traffic{
+
+}
