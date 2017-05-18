@@ -1,12 +1,11 @@
 import React, {Component} from "react";
 import {Link, withRouter} from "react-router-dom";
-import {Button, Select, Spin} from "antd";
-import formatDate from "../../../utils/formatDate"
+import formatDate from "../../../utils/formatDate";
 import {commonFetch, commonRelease} from "../../../views/RepoRedux";
-import addDataFetch from '../../../redux/addDataFetch'
+import addDataFetch from "../../../redux/addDataFetch";
 import {connect} from "react-redux";
-import Chart from "./Chart/Chart"
-import cls from "classnames"
+import Chart from "./Chart/Chart";
+import cls from "classnames";
 
 export const API = '/api/repos/getStatsContributors'
 

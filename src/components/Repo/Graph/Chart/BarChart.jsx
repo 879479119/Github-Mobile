@@ -132,13 +132,13 @@ export default class BarChart extends Component{
 
 				{
 					simpleMode ? '' :
-					<g  transform={`translate(10,${height-10})`}>
-						{
-							labels.map((item, index)=>(
-								<text x={item.x-15} key={'t'+index} style={{fill: '#aaa',fontSize: 10,userSelect: 'none'}}>{item.text}</text>
-							))
-						}
-					</g>
+						<g  transform={`translate(10,${height-10})`}>
+							{
+								labels.map((item, index)=>(
+									<text x={item.x-15} key={'t'+index} style={{fill: '#aaa',fontSize: 10,userSelect: 'none'}}>{item.text}</text>
+								))
+							}
+						</g>
 				}
 
 			</svg>

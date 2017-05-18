@@ -32,7 +32,7 @@ export default class extends Component{
 
 		return (
 			<div className="commits" style={{marginTop: 20}}>
-
+				<Chart data={t.weeks} type="bar" width={480} height={80} fill="#fb8532" className="c-small" />
 			</div>
 		)
 	}

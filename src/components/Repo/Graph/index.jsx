@@ -36,7 +36,7 @@ export default class extends Component{
 					{btn.map((item, index) => (
 						<Link
 							className={cls('ant-btn', 'ant-btn-lg', graph === keys[index] ? 'ant-btn-primary' : 'ant-btn-default')}
-							to={'/repo/'+owner+'/'+repo+'/'+keys[index]}
+							to={'/repo/'+owner+'/'+repo+'/graph/'+keys[index]}
 							key={'g-'+index}
 						>{item}</Link>
 					))}
