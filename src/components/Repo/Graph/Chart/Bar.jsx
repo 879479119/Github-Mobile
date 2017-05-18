@@ -1,21 +1,34 @@
 import React from "react";
+import { Tooltip } from 'antd';
 
 export default function (props) {
-	const {data, width, height, max: maxTop } = props
+	const {data, width, height, fill, gap=4 } = props
 
 	let arr = data.concat(),
 		len = arr.length
+	let max = 0
+
+	for(let i = 0;i < len;i ++){
+		if(arr[i].c > max) max = arr[i].c
+	}
+
+	let per = height / max,
+		w = width / len
 
 	return (
-		<g>
-			<g transform={`translate(0,${height-line*per+10})`} className="left">
-				<text>{line}</text>
-				<line x2={width} stroke="#ccc" strokeOpacity={0.5}  shapeRendering="crispEdges" />
-			</g>
-			<g transform={`translate(0,${height-line/2*per+10})`}  className="left">
-				<text>{line/2}</text>
-				<line x2={width} stroke="#ccc" strokeOpacity={0.5} shapeRendering="crispEdges" />
-			</g>
+		<g transform="translate(0,10)" fill={fill || "#fb8532"} fillOpacity={0.8}>
+			{arr.map((item, index)=>{
+				return (
+				<Tooltip key={'r'+index} overlay={item.c + 'commits'} placement="top">
+					<rect
+						width={w-gap/2}
+						height={per * item.c}
+						x={index*w+gap/2}
+						y={height - per * item.c}
+						 />
+				</Tooltip>
+				)
+			})}
 		</g>
 	)
 }

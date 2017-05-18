@@ -1,7 +1,7 @@
 import React from "react";
 import formatDate from "../../../../utils/formatDate";
 
-export default function ({data, width, height}) {
+export default function ({data, width, height, category= 8, selector}) {
 	let day = 60 * 60 * 24
 	let week = day * 7
 	//get the copy of the data, since we may render it again
@@ -17,7 +17,7 @@ export default function ({data, width, height}) {
 	let count = (end - start) / day
 	let everyday = width / count
 	//period means the gap between labels (day)
-	let period = (count / 8) >>> 0
+	let period = (count / category) >>> 0
 	let labels = []
 	//noinspection FallThroughInSwitchStatementJS
 	switch (true){
@@ -42,10 +42,17 @@ export default function ({data, width, height}) {
 			}
 			break
 		case count > 30:
-			let block = weeksCount / 8
-			for(let i = 1;i < 8;i ++){
-				let text = formatDate((start + i * period * day) * 1000, 1)
-				labels.push({x: (i) * block * span, text})
+			let block = weeksCount / category
+			if(selector){
+				for(let i = 0;i < len;i += selector + 1){
+					let text = formatDate((start + i * week) * 1000, 1)
+					labels.push({x: i * width / len, text})
+				}
+			}else{
+				for(let i = 1;i < category;i ++){
+					let text = formatDate((start + i * period * day) * 1000, 1)
+					labels.push({x: i * block * span, text})
+				}
 			}
 			break
 	}
