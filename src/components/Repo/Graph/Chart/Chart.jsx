@@ -2,6 +2,7 @@ import React from 'react'
 import { Icon } from 'antd'
 import AreaChart from './AreaChart'
 import BarChart from './BarChart'
+import LinearChart from './LinearChart'
 import "./Chart.scss"
 import cls from "classnames"
 
@@ -13,6 +14,8 @@ export default function ({data, width= 1000, height= 160, type, className, ...pr
 		innerContent = <AreaChart data={data} parent={{width, height}} {...props}/>
 	}else if(type === "bar"){
 		innerContent = <BarChart data={data} parent={{width, height}} {...props}/>
+	}else if(type === "linear"){
+		innerContent = <LinearChart data={data} parent={{width, height}} {...props}/>
 	}
 
 	return (

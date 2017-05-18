@@ -3,9 +3,9 @@ import cls from "classnames"
 
 import AxisX from "./AxisX";
 import AxisY from "./AxisY";
-import Bar from "./Bar"
+import Line from "./Line"
 
-export default class BarChart extends Component{
+export default class LinearChart extends Component{
 	render(){
 		let {data, className, parent: {width, height}, fill, ...props} = this.props
 
@@ -14,17 +14,22 @@ export default class BarChart extends Component{
 		//get the copy of the data, since we may render it again
 		let arr = data.concat()
 
-		//TODO: I'm confused about whether it's better to use 'context'
+		//TODO: bind the value with redux
+		let selected = arr[0]
+
+
+
 		return (
-			<svg width={width} height={height} {...props} className={cls("chart-bar", className)}>
+			<svg width={width} height={height} {...props} className={cls("chart-linear", className)}>
 				<AxisY data={arr} width={innerWidth} height={innerHeight} auto />
 				<g transform={`translate(0,${innerHeight+10})`} className="left">
 					<rect x={10} y={0} width={innerWidth} height={20} fill="#fafafa"/>
 					<text>0</text>
 					<line x2={innerWidth} stroke="#ccc" strokeOpacity={0.5}  shapeRendering="crispEdges" />
-					<AxisX data={arr}  width={innerWidth} height={innerHeight} selector={2} />
+					<AxisX width={innerWidth} height={innerHeight}
+					       exact={['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']} />
 				</g>
-				<Bar data={arr} width={innerWidth} height={innerHeight} fill={fill} />
+				<Line data={arr} width={innerWidth} height={innerHeight} fill={fill} />
 			</svg>
 		)
 	}

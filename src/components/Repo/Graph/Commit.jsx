@@ -45,7 +45,8 @@ export default class extends Component{
 
 		return (
 			<div className="commits" style={{marginTop: 20}}>
-				{ failed ? 'retry' : <Chart type="bar" data={dataByWeek} height={200} /> }
+				{ failed ? 'retry' :<Chart type="bar" data={dataByWeek} height={200} /> }
+				{ failed ? 'retry' :<Chart type="linear" data={dataByWeek} height={200} /> }
 			</div>
 		)
 	}

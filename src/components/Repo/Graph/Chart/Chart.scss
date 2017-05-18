@@ -42,3 +42,27 @@
     }
   }
 }
+
+.chart-linear{
+
+  user-select: none;
+  .left{
+    rect{
+      fill: #fff;
+    }
+    text{
+      font-size: 10px;
+      fill: #aaa;
+      transform: translateY(3px);
+    }
+    line{
+      transform: translateX(10px);
+    }
+  }
+  .bar{
+
+    rect{
+      fill: #fb8532;
+    }
+  }
+}

@@ -23,7 +23,7 @@ export default function (props) {
 					<rect
 						width={w-gap/2}
 						height={per * item.c}
-						x={index*w+gap/2}
+						x={(index+0.5)*w+gap/2}
 						y={height - per * item.c}
 						 />
 				</Tooltip>
