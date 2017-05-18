@@ -1,13 +1,16 @@
 import React, {Component} from "react";
-import {withRouter} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import {Button, Select, Spin} from "antd";
 import "./index.scss";
 import {commonFetch, commonRelease} from "../../../views/RepoRedux";
 import addDataFetch from '../../../redux/addDataFetch'
 import {connect} from "react-redux";
 import formatDate from "../../../utils/formatDate";
+import cls from "classnames"
 
 const ButtonGroup = Button.Group
+
+export const keys = ['contributor','traffic','commit','frequency','punch','network','member','dependent']
 
 @withRouter
 @connect(state=>({
@@ -15,9 +18,6 @@ const ButtonGroup = Button.Group
 }),{ commonFetch, commonRelease})
 @addDataFetch
 export default class extends Component{
-	drawGraph(){
-
-	}
 	componentDidMount(){
 		const { commonFetch, owner, repo } = this.props
 
@@ -26,16 +26,21 @@ export default class extends Component{
 		// 	else commonFetch(API[i], {owner, repo, path:''})
 		// }
 	}
+	//here is a hack trick, we just mount the style on "Link" rather than the "antd component"
 	render = () => {
-		const { owner, repo } = this.props
+		const { owner, repo, graph } = this.props
 		const btn = ['Contributors','Traffic','Commits','Code frequency','Punch card','Network','Members','Dependents']
 		return (
 			<div className="main-body">
-				<ButtonGroup onClick={::this.drawGraph}>
+				<div className="ant-btn-group">
 					{btn.map((item, index) => (
-						<Button key={'g-'+index} type={'default'} size={'large'}>{item}</Button>
+						<Link
+							className={cls('ant-btn', 'ant-btn-lg', graph === keys[index] ? 'ant-btn-primary' : 'ant-btn-default')}
+							to={'/repo/'+owner+'/'+repo+'/'+keys[index]}
+							key={'g-'+index}
+						>{item}</Link>
 					))}
-				</ButtonGroup>
+				</div>
 				{this.props.children}
 			</div>
 		)

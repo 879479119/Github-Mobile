@@ -79,11 +79,13 @@ function filter(props) {
 						let active = false
 						//single number
 						if(index === defaultSelected) active = true
+						else{
+							//array
+							try {
+								if(Array.isArray(defaultSelected) && defaultSelected.indexOf(index)) active = true
+							}catch (e) {console.log(e)}
+						}
 
-						//array
-						try {
-							if(defaultSelected.indexOf(index)) active = true
-						}catch (e) {console.log(e)}
 
 						return <li key={'f-'+index} className={cls('item', {active})} onClick={onClick} data-c={index}>{item}</li>
 					})

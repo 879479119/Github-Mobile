@@ -13,6 +13,7 @@ import Graph from '../components/Repo/Graph'
 
 //the graph parts
 import Contributor from '../components/Repo/Graph/Contributor'
+import Commit from '../components/Repo/Graph/Commit'
 
 
 export default function (props) {
@@ -39,16 +40,18 @@ export default function (props) {
 							let [,,owner,repo] = route
 
 							//dealing with the level3 router
-							let Content = undefined
+							let Content = undefined, graph = undefined
 							if(route[4] === 'graph'){
 								switch (route[5]){
 									case 'contributor': Content = Contributor; break
+									case 'commit': Content = Commit; break
 									default: Content = Contributor
 								}
+								graph = route[5] || 'contributor'
 							}
 
 							return (
-								<ShowComponent owner={owner} repo={repo}>
+								<ShowComponent owner={owner} repo={repo} graph={graph} >
 									{Content ? <Content owner={owner} repo={repo}/> : ''}
 								</ShowComponent>
 							)

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Bezier from "paths-js/bezier"
 import cls from "classnames"
-import formatDate from "../../../utils/formatDate"
+import formatDate from "../../../../utils/formatDate"
 
 export default class BarChart extends Component{
 	render(){
@@ -26,7 +26,7 @@ export default class BarChart extends Component{
 		//these are all the line types
 		let base = [1, 4, 10, 20, 40, 50, 80, 100, 160, 200, 300, 400, 500]
 		let line = 500
-		console.info(maxTop)
+
 		if(maxTop){
 			line = maxTop
 			max = maxTop

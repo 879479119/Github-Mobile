@@ -24,3 +24,9 @@ class Page extends Component{
 ReactDOM.render(
 		<Page/>
 	, document.getElementById("container"))
+
+//noinspection JSUnresolvedVariable
+if (module.hot) {
+	//noinspection JSUnresolvedVariable
+	module.hot.accept();
+}

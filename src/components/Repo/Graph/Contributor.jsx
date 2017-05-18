@@ -5,7 +5,7 @@ import formatDate from "../../../utils/formatDate"
 import {commonFetch, commonRelease} from "../../../views/RepoRedux";
 import addDataFetch from '../../../redux/addDataFetch'
 import {connect} from "react-redux";
-import Chart from "./Chart"
+import Chart from "./Chart/Chart"
 import cls from "classnames"
 
 export const API = '/api/repos/getStatsContributors'
@@ -25,13 +25,13 @@ export default class extends Component{
 	render = () => {
 		const { owner, repo } = this.props
 		let contributor = this.getData(API)
-		console.info('data',contributor)
-		let sumArr = [], start= '', end= '', series = [], max = 1
+
+		let sumArr = [], start= '', end= '', series = [], max = 1, failed = false
 		//FIXME: unknown error: contribution changes
 		if(contributor.result){
 			try{
 				series = contributor.result.data.data.concat().reverse()
-
+				console.info(series)
 				series.forEach((item, index)=>{
 					if(index === 0){
 						start = formatDate(item.weeks[0].w * 1000, 4)
@@ -51,6 +51,9 @@ export default class extends Component{
 				})
 			}catch(e) {
 				console.error(e)
+				if(contributor.result.data.meta.status === "202 Accepted"){
+					failed = true
+				}
 			}
 		}
 
@@ -58,7 +61,7 @@ export default class extends Component{
 			<div className="contributors" style={{marginTop: 20}}>
 				<h5 className={cls({"void": !start})}>{start + ' - ' + end}</h5>
 				<h6>Contributions to master, excluding merge commits</h6>
-				<Chart data={sumArr} type="smooth-path" className="main-chart" />
+				{ failed ? 'retry' : <Chart data={sumArr} type="smooth-path" className="main-chart" /> }
 				<div className="contribute-user">
 					<ul>
 						{
