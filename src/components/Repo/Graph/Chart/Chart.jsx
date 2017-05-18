@@ -1,6 +1,7 @@
 import React from 'react'
 import { Icon } from 'antd'
 import AreaChart from './AreaChart'
+import BarChart from './BarChart'
 import "./Chart.scss"
 import cls from "classnames"
 

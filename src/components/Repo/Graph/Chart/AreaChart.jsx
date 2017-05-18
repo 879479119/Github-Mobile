@@ -16,10 +16,10 @@ export default class AreaChart extends Component{
 		let arr = data.concat()
 
 		return (
-			<svg width={width} height={height} {...props} className={cls("chart-bar", className)}>
+			<svg width={width} height={height} {...props} className={cls("chart-area", className)}>
 				<AxisY data={arr} width={innerWidth} height={innerHeight} />
 				<Area data={arr} parent={{width:innerWidth, height:innerHeight}} fill={fill} />
-				<g transform={`translate(0,${innerHeight+10})`}  className="left">
+				<g transform={`translate(0,${innerHeight+10})`} className="left">
 					<rect x={10} y={0} width={innerWidth} height={20} fill="#fafafa"/>
 					<text>0</text>
 					<line x2={innerWidth} stroke="#ccc" strokeOpacity={0.5} />

@@ -8,7 +8,7 @@ import {connect} from "react-redux";
 import Chart from "./Chart/Chart"
 import cls from "classnames"
 
-export const API = '/api/repos/getStatsParticipation'
+export const API = '/api/repos/getStatsCommitActivity'
 
 @withRouter
 @connect(state=>({
@@ -25,14 +25,27 @@ export default class extends Component{
 	render = () => {
 		const { owner, repo } = this.props
 		let commit = this.getData(API)
-
+		let failed = false
+		let dataByWeek = []
 		if(commit.result){
+			console.info(commit.result.data.data)
+			if(!Array.isArray(commit.result.data.data)) failed = true
+			else{
+				let result = commit.result.data.data.concat()
+
+				result.map((item, index)=>{
+					dataByWeek[index] = {
+						c: item.total,
+						w: item.week
+					}
+				})
+			}
 
 		}
 
 		return (
 			<div className="commits" style={{marginTop: 20}}>
-				<Chart data={t.weeks} type="bar" width={480} height={80} fill="#fb8532" className="c-small" />
+				{ failed ? 'retry' : <Chart type="bar" data={dataByWeek} height={200} /> }
 			</div>
 		)
 	}

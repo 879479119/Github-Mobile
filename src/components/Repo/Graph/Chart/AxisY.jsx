@@ -34,11 +34,11 @@ export default function (props) {
 		<g>
 			<g transform={`translate(0,${height-line*per+10})`} className="left">
 				<text>{line}</text>
-				<line x2={width} stroke="#ccc" strokeOpacity={0.5} />
+				<line x2={width} stroke="#ccc" strokeOpacity={0.5}  shapeRendering="crispEdges" />
 			</g>
 			<g transform={`translate(0,${height-line/2*per+10})`}  className="left">
 				<text>{line/2}</text>
-				<line x2={width} stroke="#ccc" strokeOpacity={0.5} />
+				<line x2={width} stroke="#ccc" strokeOpacity={0.5} shapeRendering="crispEdges" />
 			</g>
 		</g>
 	)

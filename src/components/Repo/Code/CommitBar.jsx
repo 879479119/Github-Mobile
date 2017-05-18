@@ -10,7 +10,9 @@ export default function CommitBar(props) {
 	 * TODO: remember to optimize it
 	 */
 	let start = 52 - (Date.now() - new Date('2017-04-01T03:18:52Z')) / (1000*60*60*24*7) - 1
-	let max = data.all.reduce((p,c)=>c>p?c:p,-1)
+	let max = 10
+	//avoid the error when the data went wrong
+	if(Array.isArray(data.all)) max = data.all.reduce((p,c)=>c>p?c:p,-1)
 	return(
 		<div className="commit-bar" style={style}>
 			<svg style={{width: 520, height: 100}}>

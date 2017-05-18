@@ -3,7 +3,7 @@
   //background: #fafafa;
 }
 
-.chart-bar{
+.chart-area{
   background: #fafafa;
   user-select: none;
   .left{
@@ -14,6 +14,31 @@
     }
     line{
       transform: translateX(10px);
+    }
+  }
+}
+
+
+.chart-bar{
+
+  user-select: none;
+  .left{
+    rect{
+      fill: #fff;
+    }
+    text{
+      font-size: 10px;
+      fill: #aaa;
+      transform: translateY(3px);
+    }
+    line{
+      transform: translateX(10px);
+    }
+  }
+  .bar{
+
+    rect{
+      fill: #fb8532;
     }
   }
 }
