@@ -22,7 +22,7 @@ I will launch this project when there is not too many bugs, and move the backend
 Just take look at the package.json :kissing:
 
 ### Frame in work:
-![home](http://7xsm7w.com1.z0.glb.clouddn.com/github-preview.png)
+![home](https://github.com/879479119/Github-Mobile/raw/master/preview.png)
 
 **Finished:**
 + Home
