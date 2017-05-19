@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Link, withRouter} from "react-router-dom";
 import formatDate from "../../../utils/formatDate";
-import {commonFetch, commonRelease} from "../../../views/RepoRedux";
+import {commonFetch, commonRelease} from "../../../views/QueueRedux";
 import addDataFetch from "../../../redux/addDataFetch";
 import {connect} from "react-redux";
 import Chart from "./Chart/Chart";

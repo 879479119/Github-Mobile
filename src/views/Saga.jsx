@@ -3,7 +3,7 @@ import {COMMON_SEARCH, SEARCH_ERROR, SEARCH_LOADING, SEARCH_READY} from "./Searc
 import {LOGIN, LOGIN_ERROR, LOGIN_SUCCESS} from "./HomeRedux";
 import request, {login} from "../utils/request";
 import {message} from "antd";
-import {COMMON_FETCH, COMMON_ERROR, COMMON_LOADING, COMMON_READY} from './RepoRedux'
+import {COMMON_FETCH, COMMON_ERROR, COMMON_LOADING, COMMON_READY} from './QueueRedux'
 
 /**
  * export the default saga array to take the action we need

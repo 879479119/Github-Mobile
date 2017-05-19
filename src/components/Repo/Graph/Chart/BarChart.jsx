@@ -7,7 +7,7 @@ import Bar from "./Bar"
 
 export default class BarChart extends Component{
 	render(){
-		let {data, className, parent: {width, height}, fill, ...props} = this.props
+		let {data, className, parent: {width, height}, fill, callback, ...props} = this.props
 
 		let innerWidth = width - 20,
 			innerHeight = height - 40
@@ -24,7 +24,7 @@ export default class BarChart extends Component{
 					<line x2={innerWidth} stroke="#ccc" strokeOpacity={0.5}  shapeRendering="crispEdges" />
 					<AxisX data={arr}  width={innerWidth} height={innerHeight} selector={2} />
 				</g>
-				<Bar data={arr} width={innerWidth} height={innerHeight} fill={fill} />
+				<Bar data={arr} width={innerWidth} height={innerHeight} fill={fill} callback={callback} />
 			</svg>
 		)
 	}

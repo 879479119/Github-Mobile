@@ -3,7 +3,7 @@ import {Link, withRouter} from "react-router-dom";
 import {Icon, Layout, Menu, Button} from "antd";
 import "./Repo.scss";
 import { changeRouter } from "../views/HomeRedux";
-import { commonFetch, commonRelease} from "./RepoRedux";
+import { commonFetch, commonRelease} from "./QueueRedux";
 import {connect} from "react-redux";
 import addDataFetch from '../redux/addDataFetch'
 

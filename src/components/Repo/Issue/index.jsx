@@ -3,7 +3,7 @@ import {withRouter} from "react-router-dom";
 import {Button, Input, Select} from "antd";
 import "./index.scss";
 import addDataFetch from "../../../redux/addDataFetch";
-import {commonFetch, commonRelease} from "../../../views/RepoRedux";
+import {commonFetch, commonRelease} from "../../../views/QueueRedux";
 import {connect} from "react-redux";
 import ListModified from "./ListModified";
 import IssueList from "./IssueList"

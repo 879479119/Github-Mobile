@@ -2,8 +2,11 @@ import React from "react";
 import { Tooltip } from 'antd';
 
 export default function (props) {
-	const {data, width, height, fill, gap=4 } = props
-
+	const {data, width, height, fill, gap=4, callback } = props
+	//use the callback function to handle click
+	function handleClick(e) {
+		callback(+e.target.getAttribute('data-index'))
+	}
 	let arr = data.concat(),
 		len = arr.length
 	let max = 0
@@ -16,11 +19,12 @@ export default function (props) {
 		w = width / len
 
 	return (
-		<g transform="translate(0,10)" fill={fill || "#fb8532"} fillOpacity={0.8}>
+		<g transform="translate(0,10)" fill={fill || "#fb8532"} fillOpacity={0.8} onClick={handleClick}>
 			{arr.map((item, index)=>{
 				return (
 				<Tooltip key={'r'+index} overlay={item.c + 'commits'} placement="top">
 					<rect
+						data-index={index}
 						width={w-gap/2}
 						height={per * item.c}
 						x={(index+0.5)*w+gap/2}

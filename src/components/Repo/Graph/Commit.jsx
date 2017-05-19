@@ -2,7 +2,8 @@ import React, {Component} from "react";
 import {Link, withRouter} from "react-router-dom";
 import {Button, Select, Spin} from "antd";
 import formatDate from "../../../utils/formatDate"
-import {commonFetch, commonRelease} from "../../../views/RepoRedux";
+import {commonFetch, commonRelease} from "../../../views/QueueRedux";
+import {graph_commit_select} from "../../../views/RepoRedux";
 import addDataFetch from '../../../redux/addDataFetch'
 import {connect} from "react-redux";
 import Chart from "./Chart/Chart"
@@ -12,8 +13,9 @@ export const API = '/api/repos/getStatsCommitActivity'
 
 @withRouter
 @connect(state=>({
-	queue: state.queue
-}),{ commonFetch, commonRelease})
+	queue: state.queue,
+	repoState: state.repo
+}),{ commonFetch, commonRelease, graph_commit_select})
 @addDataFetch
 export default class extends Component{
 	componentDidMount(){
@@ -23,10 +25,11 @@ export default class extends Component{
 		else commonFetch(API, {owner, repo})
 	}
 	render = () => {
-		const { owner, repo } = this.props
+		const { owner, repo, repoState } = this.props
 		let commit = this.getData(API)
 		let failed = false
 		let dataByWeek = [], dataByDay = []
+
 		if(commit.result){
 
 			if(!Array.isArray(commit.result.data.data)) failed = true
@@ -40,14 +43,14 @@ export default class extends Component{
 					}
 				})
 
-				dataByDay = result[8].days
+				dataByDay = result[repoState.graph.commit].days
 			}
 		}
 
 		return (
-			<div className="commits" style={{marginTop: 20}}>
+			<div className="commits" style={{marginTop: 20}} >
 				<h2>Commits of the year</h2>
-				{ failed ? 'retry' :<Chart type="bar" data={dataByWeek} height={200} /> }
+				{ failed ? 'retry' :<Chart type="bar" data={dataByWeek} height={200} callback={::this.props.graph_commit_select} /> }
 				<h2 style={{marginTop: 20}} >Commits of the selected week</h2>
 				{ failed ? 'retry' :<Chart type="linear" data={dataByDay} height={200} /> }
 			</div>
