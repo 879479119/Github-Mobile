@@ -45,8 +45,8 @@ export default function ({data, width, height, category= 8, selector, exact}) {
 				//first year
 				if (offset - everyday * 183 > 0) labels.push({x: offset - everyday * 183, text: 'July'})
 				for (let k = 0; k <= last - year; k++) {
-					if (offset + k * everyday * 183 > width) break
-					labels.push({x: offset + k * everyday * 183, text: 'July'})
+					if (offset + (k + 0.5) * everyday * 365 > width) break
+					labels.push({x: offset + (k + 0.5) * everyday * 365, text: 'July'})
 				}
 				break
 			case count > 30:

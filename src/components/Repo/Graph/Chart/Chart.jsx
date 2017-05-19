@@ -16,6 +16,8 @@ export default function ({data, width= 1000, height= 160, type, className, ...pr
 		innerContent = <BarChart data={data} parent={{width, height}} {...props}/>
 	}else if(type === "linear"){
 		innerContent = <LinearChart data={data} parent={{width, height}} {...props}/>
+	}else if(type === "area"){
+		innerContent = <AreaChart smooth={false} data={data} parent={{width, height}} {...props}/>
 	}
 
 	return (

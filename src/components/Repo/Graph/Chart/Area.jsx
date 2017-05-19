@@ -1,8 +1,8 @@
 import React from "react";
+//TODO: read the core code and get rid of the lib
 import Bezier from "paths-js/bezier";
 
-export default function (props) {
-	let { data, parent: {width, height}, fill, max: maxTop } = props
+export default function ({data, parent: {width, height}, fill, max: maxTop, attr='c', reverse=false, smooth=true, ...props }) {
 
 	//get the copy of the data, since we may render it again
 	let arr = data.concat(),
@@ -18,34 +18,49 @@ export default function (props) {
 		max = maxTop
 	}else{
 		for(let i = 0;i < len;i ++){
-			if(arr[i].c > max) max = arr[i].c
+			if(arr[i][attr] > max) max = arr[i][attr]
 		}
 	}
 
 	//get how long the bar is
 	let per = height / max
-
+	let temp = arr.concat()
 	for(let p = 0;p < weeksCount;p ++){
 		let k = height
-		if(arr[0].w === start + p * week){
-			k = height - arr.shift().c * per
+		if(temp[0].w === start + p * week){
+			k = height - temp.shift().c * per
 		}
 		points.push([p * span, k])
 	}
 	points.push([weeksCount * span, height])
 
-	// points.push([weeksCount * span,height])
-	let curve = Bezier({
-		points: points,
-		tension: 0.4
-	})
+	let p = ""
 
-	//some preset of path
-	//noinspection JSUnresolvedVariable
-	let p = curve.path.print()
+	if(smooth === true){
+		//draw the path smoothly
+		let curve = Bezier({
+			points: points,
+			tension: 0.4
+		})
+		//some preset of path
+		//noinspection JSUnresolvedVariable
+		p = curve.path.print()
+	}else{
+		let w = width / len,
+			k = height - arr[0][attr] * per
+		let path = `M 0 ${reverse ? 0 : height} L 0 ${reverse ? height - k : k} `
+		//find the key points
+		arr.map((t,i)=>{
+			let h = per * t[attr]
+			if(i > 0) path += `L ${i * w} ${reverse ? h : height-h} `
+		})
+		path += `L ${len * w} ${reverse ? 0 : height} `
+		p = path
+	}
+
 	return (
-		<g transform={`translate(10,10)`}>
-			<path d={p.replace(/M 0 (\d+)/,`M -10 ${height} L 0 $1`)} fill={fill || "#28a745"} fillOpacity={0.4} style={{transform: 'translateX(10px)'}} />
+		<g transform={`translate(10,10)`} {...props}>
+			<path d={p} fill={fill || "#28a745"} fillOpacity={0.4} style={{transform: 'translateX(10px)'}} />
 		</g>
 	)
 }

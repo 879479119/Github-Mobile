@@ -19,18 +19,23 @@
 .chart-area{
   background: #fafafa;
   user-select: none;
-
 }
 
+.chart-area-two{
+  background: transparent;
+  rect{
+    fill: transparent;
+  }
+}
 
 .chart-bar{
-
   user-select: none;
-
   .bar{
-
     rect{
       fill: #fb8532;
+      &.active{
+        fill: #b31d28;
+      }
     }
   }
 }
