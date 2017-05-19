@@ -1,4 +1,4 @@
-const month = [
+export const month = [
 	'January',
 	'February',
 	'March',
@@ -12,6 +12,8 @@ const month = [
 	'November',
 	'December'
 ]
+
+export const weekday = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
 
 export default function (dateString, short= false) {
 	let date = new Date(dateString)
@@ -37,17 +39,24 @@ export function fromNow(dateString) {
 
 	let period = new Date() - date, p
 
+	//aha, it's a strange usage of switch
 	switch (true){
 		case period > (p = 1000*60*60*24*30): return `on ${F}-${Mo}-${D}`
 		case period > (p /= 30): return Math.floor(period/1000/60/60/24) + ' days ago'
-		case period > (p /= 24): return Math.floor(period/1000/60/60) + ' minutes ago'
-		case period > (p /= 60): return Math.floor(period/1000/60) + ' seconds ago'
+		case period > (p /= 24): return Math.floor(period/1000/60/60) + ' hours ago'
+		case period > (p /= 60): return Math.floor(period/1000/60) + ' minutes ago'
 		//just a hack for the ESlint
 		case period > (p /= (59+1)): return Math.floor(period/1000) + ' '
 		default:
 	}
 }
 
+/**
+ * add 0 before number you provide
+ * @param num
+ * @param n
+ * @return {string}
+ */
 function pad(num, n) {
 	return new Array(n>num?(n-(''+num).length+1):0).join('0')+num;
 }

@@ -3,6 +3,7 @@ import { Icon } from 'antd'
 import AreaChart from './AreaChart'
 import BarChart from './BarChart'
 import LinearChart from './LinearChart'
+import PunchChart from './PunchChart'
 import "./Chart.scss"
 import cls from "classnames"
 
@@ -18,6 +19,8 @@ export default function ({data, width= 1000, height= 160, type, className, ...pr
 		innerContent = <LinearChart data={data} parent={{width, height}} {...props}/>
 	}else if(type === "area"){
 		innerContent = <AreaChart smooth={false} data={data} parent={{width, height}} {...props}/>
+	}else if(type === "punch"){
+		innerContent = <PunchChart data={data} parent={{width, height}} {...props}/>
 	}
 
 	return (

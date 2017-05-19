@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import cls from "classnames"
+import {weekday} from "../../../../utils/formatDate"
 
 import AxisX from "./AxisX";
 import AxisY from "./AxisY";
@@ -23,7 +24,7 @@ export default class LinearChart extends Component{
 					<text>0</text>
 					<line x2={innerWidth} stroke="#ccc" strokeOpacity={0.5}  shapeRendering="crispEdges" />
 					<AxisX width={innerWidth} height={innerHeight}
-					       exact={['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']} />
+					       exact={weekday} />
 				</g>
 				<Line data={arr} width={innerWidth} height={innerHeight} />
 			</svg>

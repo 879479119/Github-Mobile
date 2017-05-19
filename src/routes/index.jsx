@@ -15,6 +15,7 @@ import Graph from '../components/Repo/Graph'
 import Contributor from '../components/Repo/Graph/Contributor'
 import Commit from '../components/Repo/Graph/Commit'
 import Frequency from '../components/Repo/Graph/Frequency'
+import Punch from '../components/Repo/Graph/Punch'
 
 
 export default function (props) {
@@ -47,6 +48,7 @@ export default function (props) {
 									case 'contributor': Content = Contributor; break
 									case 'commit': Content = Commit; break
 									case 'frequency': Content = Frequency; break
+									case 'punch': Content = Punch; break
 									default: Content = Contributor
 								}
 								graph = route[5] || 'contributor'
