@@ -1,34 +1,36 @@
 import React from "react";
-import { Tooltip } from 'antd';
 
 export default function (props) {
-	const {data, width, height, fill, gap=4 } = props
+	const { data, width, height, fill } = props
+
+	console.info(data)
 
 	let arr = data.concat(),
 		len = arr.length
-	let max = 0
-
-	for(let i = 0;i < len;i ++){
-		if(arr[i].c > max) max = arr[i].c
+	let per = 1
+	if(Math.max.apply(Math,arr) !== 0){
+		per = height / Math.max.apply(Math,arr)
 	}
 
-	let per = height / max,
-		w = width / len
+	let w = width / len,
+		points = []
+	let path = `M 0 ${height - arr[0] * per} `
+	//find the key points
+	arr.map((t,i)=>{
+		let x = i * w,
+			h = height - per * t
+		points.push({x ,h})
+		if(i > 0) path += `L ${x} ${h} `
+	})
 
 	return (
-		<g transform="translate(0,10)" fill={fill || "#fb8532"} fillOpacity={0.8}>
-			{arr.map((item, index)=>{
-				return (
-					<Tooltip key={'r'+index} overlay={item.c + 'commits'} placement="top">
-						<rect
-							width={w-gap/2}
-							height={per * item.c}
-							x={index*w+gap/2}
-							y={height - per * item.c}
-						/>
-					</Tooltip>
-				)
-			})}
+		<g transform={`translate(${w/2+10},10)`} fill="transparent" className="linear">
+			<path d={path} stroke={fill || "#28a745"} strokeWidth={2} />
+			{
+				points.map((item, i)=>{
+					return <circle key={i} r={4} cx={item.x} cy={item.h}/>
+				})
+			}
 		</g>
 	)
 }

@@ -1,27 +1,6 @@
 .common-chart{
   text-align: center;
   //background: #fafafa;
-}
-
-.chart-area{
-  background: #fafafa;
-  user-select: none;
-  .left{
-    text{
-      font-size: 10px;
-      fill: #aaa;
-      transform: translateY(3px);
-    }
-    line{
-      transform: translateX(10px);
-    }
-  }
-}
-
-
-.chart-bar{
-
-  user-select: none;
   .left{
     rect{
       fill: #fff;
@@ -35,6 +14,19 @@
       transform: translateX(10px);
     }
   }
+}
+
+.chart-area{
+  background: #fafafa;
+  user-select: none;
+
+}
+
+
+.chart-bar{
+
+  user-select: none;
+
   .bar{
 
     rect{
@@ -44,25 +36,11 @@
 }
 
 .chart-linear{
-
-  user-select: none;
-  .left{
-    rect{
-      fill: #fff;
-    }
-    text{
-      font-size: 10px;
-      fill: #aaa;
-      transform: translateY(3px);
-    }
-    line{
-      transform: translateX(10px);
-    }
-  }
-  .bar{
-
-    rect{
-      fill: #fb8532;
+  .linear{
+    circle{
+      fill: #28a745;
+      stroke: #1e7e34;
+      stroke-width: 2px;
     }
   }
 }

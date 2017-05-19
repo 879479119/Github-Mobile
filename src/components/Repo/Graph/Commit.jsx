@@ -26,9 +26,9 @@ export default class extends Component{
 		const { owner, repo } = this.props
 		let commit = this.getData(API)
 		let failed = false
-		let dataByWeek = []
+		let dataByWeek = [], dataByDay = []
 		if(commit.result){
-			console.info(commit.result.data.data)
+
 			if(!Array.isArray(commit.result.data.data)) failed = true
 			else{
 				let result = commit.result.data.data.concat()
@@ -39,14 +39,17 @@ export default class extends Component{
 						w: item.week
 					}
 				})
-			}
 
+				dataByDay = result[8].days
+			}
 		}
 
 		return (
 			<div className="commits" style={{marginTop: 20}}>
+				<h2>Commits of the year</h2>
 				{ failed ? 'retry' :<Chart type="bar" data={dataByWeek} height={200} /> }
-				{ failed ? 'retry' :<Chart type="linear" data={dataByWeek} height={200} /> }
+				<h2 style={{marginTop: 20}} >Commits of the selected week</h2>
+				{ failed ? 'retry' :<Chart type="linear" data={dataByDay} height={200} /> }
 			</div>
 		)
 	}

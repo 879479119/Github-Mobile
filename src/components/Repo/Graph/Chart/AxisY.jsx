@@ -18,7 +18,7 @@ export default function AxisY(props) {
 		max = maxTop
 	}else{
 		for(let i = 0;i < len;i ++){
-			if(arr[i].c > max) max = arr[i].c
+			if((arr[i].c || arr[i]) > max) max = (arr[i].c || arr[i])
 		}
 		for(let t = base.length - 1;t > 0;t --){
 			if(max >= base[t]){

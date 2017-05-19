@@ -7,17 +7,13 @@ import Line from "./Line"
 
 export default class LinearChart extends Component{
 	render(){
+
 		let {data, className, parent: {width, height}, fill, ...props} = this.props
 
 		let innerWidth = width - 20,
 			innerHeight = height - 40
 		//get the copy of the data, since we may render it again
 		let arr = data.concat()
-
-		//TODO: bind the value with redux
-		let selected = arr[0]
-
-
 
 		return (
 			<svg width={width} height={height} {...props} className={cls("chart-linear", className)}>
@@ -29,7 +25,7 @@ export default class LinearChart extends Component{
 					<AxisX width={innerWidth} height={innerHeight}
 					       exact={['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']} />
 				</g>
-				<Line data={arr} width={innerWidth} height={innerHeight} fill={fill} />
+				<Line data={arr} width={innerWidth} height={innerHeight} />
 			</svg>
 		)
 	}

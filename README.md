@@ -1,8 +1,10 @@
 # Github-Mobile
-Application built with React, Redux, data powered by github
+Application built with React, Redux, data powered by github,
+
+I will launch this project when there is not too many bugs, and move the backend part to **another private repo**.
 
 ---
-Something you need to know
+### Something you need to know
 
 + `webpack@2.0.0` instead of `1.0.0`
 + `react-router-dom` instead of `react-router@4.0.0`
@@ -15,6 +17,10 @@ Something you need to know
 + `cheerio` providing some info only from the pages
 + `paths-js` to build the path of charts
 
+### Run it
+
+Just take look at the package.json :kissing:
+
 ### Frame in work:
 ![home](http://7xsm7w.com1.z0.glb.clouddn.com/github-preview.png)
 
@@ -22,7 +28,12 @@ Something you need to know
 + Home
   - Profile
 + Repo
-  - Code Tab
+  - Code
+  - Issues
+  - Pull requests
+  - ~~Projects~~
+  - ~~Wiki~~
+  - Graphs
 + Search
   - Advanced Search
   - Repo
