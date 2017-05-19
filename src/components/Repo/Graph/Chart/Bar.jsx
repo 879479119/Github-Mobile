@@ -1,8 +1,9 @@
 import React from "react";
 import { Tooltip } from 'antd';
+import cls from "classnames"
 
 export default function (props) {
-	const {data, width, height, fill, gap=4, callback } = props
+	const {data, width, height, fill, gap=4, callback, active } = props
 	//use the callback function to handle click
 	function handleClick(e) {
 		callback(+e.target.getAttribute('data-index'))
@@ -19,7 +20,7 @@ export default function (props) {
 		w = width / len
 
 	return (
-		<g transform="translate(0,10)" fill={fill || "#fb8532"} fillOpacity={0.8} onClick={handleClick}>
+		<g transform="translate(0,10)"  fillOpacity={0.8} onClick={handleClick}>
 			{arr.map((item, index)=>{
 				return (
 				<Tooltip key={'r'+index} overlay={item.c + 'commits'} placement="top">
@@ -29,7 +30,8 @@ export default function (props) {
 						height={per * item.c}
 						x={(index+0.5)*w+gap/2}
 						y={height - per * item.c}
-						 />
+						fill={active === index ? "#b31d28" : "#fb8532"}
+					/>
 				</Tooltip>
 				)
 			})}

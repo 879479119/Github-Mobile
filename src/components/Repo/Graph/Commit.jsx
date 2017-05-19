@@ -50,7 +50,7 @@ export default class extends Component{
 		return (
 			<div className="commits" style={{marginTop: 20}} >
 				<h2>Commits of the year</h2>
-				{ failed ? 'retry' :<Chart type="bar" data={dataByWeek} height={200} callback={::this.props.graph_commit_select} /> }
+				{ failed ? 'retry' :<Chart type="bar" data={dataByWeek} height={200} callback={::this.props.graph_commit_select} active={repoState.graph.commit} /> }
 				<h2 style={{marginTop: 20}} >Commits of the selected week</h2>
 				{ failed ? 'retry' :<Chart type="linear" data={dataByDay} height={200} /> }
 			</div>
