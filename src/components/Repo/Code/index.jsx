@@ -10,6 +10,7 @@ import User from "./User";
 import LanguageBar from "./LanguageBar";
 import CommitBar from "./CommitBar";
 import formatDate from "../../../utils/formatDate";
+import {FormattedMessage} from "react-intl"
 
 const Option = Select.Option
 const ButtonGroup = Button.Group

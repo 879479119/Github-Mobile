@@ -14,15 +14,19 @@ import 'antd/dist/antd.min.css'
 const store = configStore(rootStore, {})
 
 class Page extends Component{
+	static propTypes = {
+		store: React.PropTypes.object.isRequired,
+		history: React.PropTypes.object.isRequired
+	}
 	render = () => (
-		<Provider store={store}>
-			{Router({history})}
+		<Provider store={this.props.store}>
+			{Router({history: this.props.history})}
 		</Provider>
 	)
 }
 
 ReactDOM.render(
-		<Page/>
+		<Page store={store} history={history} />
 	, document.getElementById("container"))
 
 //noinspection JSUnresolvedVariable

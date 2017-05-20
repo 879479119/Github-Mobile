@@ -1,9 +1,9 @@
 import React, {Component} from "react";
 import "./Home.scss";
 import {connect} from "react-redux";
-import {changeRouter, login} from "../views/HomeRedux";
+import {changeRouter, login, changeLanguage} from "../views/HomeRedux";
 import {withRouter} from "react-router-dom";
-import {Icon, Input, Layout, Menu, message} from "antd";
+import {Icon, Input, Layout, Menu, message, Button} from "antd";
 import AutoBreadcrumb from "../components/Common/AutoBreadcrumb";
 const { SubMenu } = Menu
 const { Search } = Input
@@ -11,9 +11,10 @@ const { Header, Sider } = Layout;
 
 @withRouter
 @connect(state=>({
+	language: state.common.language,
 	route: state.common.route,
 	loginStatus: state.common.loginStatus
-}), { changeRouter, login })
+}), { changeRouter, login, changeLanguage })
 export default class Home extends Component{
 	componentWillMount(){
 		let code = null
@@ -64,7 +65,7 @@ export default class Home extends Component{
 		this.props.changeRouter(`/search?query=${encodeURI(val)}`)
 	}
 	render = () => {
-		const {route} = this.props
+		const {route, language, changeLanguage} = this.props
 		return (
 			<Layout>
 				<Header className="header">
@@ -87,8 +88,12 @@ export default class Home extends Component{
 						style={{ lineHeight: '64px' }}
 						className="right-menu"
 					>
-						<Menu.Item key="1">Pull requests</Menu.Item>
-						<Menu.Item key="2">Issues</Menu.Item>
+						<Menu.Item key="0" style={{display: 'table', height: 64}}>
+							<p style={{display: 'table-cell',verticalAlign: 'middle'}}>
+								<Button ghost type="dashed" size="small"
+								        onClick={()=>{changeLanguage(language === 'en' ? 'zh' : 'en')}}>中文/English</Button>
+							</p>
+						</Menu.Item>
 					</Menu>
 				</Header>
 				<Layout style={{minHeight:1000}}>

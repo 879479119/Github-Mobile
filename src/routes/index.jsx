@@ -1,6 +1,6 @@
 import React from "react";
-
 import {HashRouter, Route} from "react-router-dom";
+import Internationalization from "../i18n/Internationalization"
 
 import Home from "../views/Home";
 import Profile from "../components/Home/Profile";
@@ -21,49 +21,51 @@ import Punch from '../components/Repo/Graph/Punch'
 export default function (props) {
 	return (
 		<HashRouter history={props.history}>
-			<Home>
-				<Route path="/" exact={true} component={Profile}/>
-				<Route path="/search" component={SearchResult}/>
-				<Route path="/repo">
-					<Repo>
-						<Route render={(e) => {
-							let ShowComponent = Code,
-								route = e.location.pathname.split('/')
+			<Internationalization>
+				<Home>
+					<Route path="/" exact={true} component={Profile}/>
+					<Route path="/search" component={SearchResult}/>
+					<Route path="/repo">
+						<Repo>
+							<Route render={(e) => {
+								let ShowComponent = Code,
+									route = e.location.pathname.split('/')
 
-							//the basic router
-							switch (route[4]){
-								case 'code': ShowComponent = Code; break
-								case 'issue': ShowComponent = Issue; break
-								case 'pr': ShowComponent = PullRequest; break
-								//we cannot wrap the graph contents in the route when it's rendered via function
-								case 'graph': ShowComponent = Graph; break
-								default: ShowComponent = Code
-							}
-							let [,,owner,repo] = route
-
-							//dealing with the level3 router
-							let Content = undefined, graph = undefined
-							if(route[4] === 'graph'){
-								switch (route[5]){
-									case 'contributor': Content = Contributor; break
-									case 'commit': Content = Commit; break
-									case 'frequency': Content = Frequency; break
-									case 'punch': Content = Punch; break
-									default: Content = Contributor
+								//the basic router
+								switch (route[4]){
+									case 'code': ShowComponent = Code; break
+									case 'issue': ShowComponent = Issue; break
+									case 'pr': ShowComponent = PullRequest; break
+									//we cannot wrap the graph contents in the route when it's rendered via function
+									case 'graph': ShowComponent = Graph; break
+									default: ShowComponent = Code
 								}
-								graph = route[5] || 'contributor'
-							}
+								let [,,owner,repo] = route
 
-							return (
-								<ShowComponent owner={owner} repo={repo} graph={graph} >
-									{Content ? <Content owner={owner} repo={repo}/> : ''}
-								</ShowComponent>
-							)
-						}}/>
-					</Repo>
-				</Route>
-				<Route path="/home" component={Profile}/>
-			</Home>
+								//dealing with the level3 router
+								let Content = undefined, graph = undefined
+								if(route[4] === 'graph'){
+									switch (route[5]){
+										case 'contributor': Content = Contributor; break
+										case 'commit': Content = Commit; break
+										case 'frequency': Content = Frequency; break
+										case 'punch': Content = Punch; break
+										default: Content = Contributor
+									}
+									graph = route[5] || 'contributor'
+								}
+
+								return (
+									<ShowComponent owner={owner} repo={repo} graph={graph} >
+										{Content ? <Content owner={owner} repo={repo}/> : ''}
+									</ShowComponent>
+								)
+							}}/>
+						</Repo>
+					</Route>
+					<Route path="/home" component={Profile}/>
+				</Home>
+			</Internationalization>
 		</HashRouter>
 	)
 }

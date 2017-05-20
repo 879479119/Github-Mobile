@@ -16,12 +16,13 @@ I will launch this project when there is not too many bugs, and move the backend
 + `express` based server
 + `cheerio` providing some info only from the pages
 + `paths-js` to build the path of charts
++ `react-intl` for i18n
 
 ### Run it
 
 Just take look at the package.json :kissing:
 
-### Frame in work:
+### Pages already built:
 ![home](https://github.com/879479119/Github-Mobile/raw/master/preview.png)
 
 **Finished:**
