@@ -1,11 +1,16 @@
-import React from "react";
-import {HashRouter, Route} from "react-router-dom";
+import React from "react"
+import {HashRouter, Route} from "react-router-dom"
 import Internationalization from "../i18n/Internationalization"
 
-import Home from "../views/Home";
-import Profile from "../components/Home/Profile";
-import SearchResult from "../views/SearchResult";
+import Home from "../views/Home"
+import Profile from "../components/Home/Profile"
+import SearchResult from "../views/SearchResult"
+import Trending from "../views/Trending"
 import Repo from '../views/Repo'
+
+import TrendingList from "../components/Trending/TrendingList"
+import DeveloperList from "../components/Trending/DeveloperList"
+
 import Issue from '../components/Repo/Issue'
 import Code from '../components/Repo/Code'
 import PullRequest from '../components/Repo/PullRequest'
@@ -64,6 +69,29 @@ export default function (props) {
 						</Repo>
 					</Route>
 					<Route path="/home" component={Profile}/>
+					<Route path="/trending">
+						<Trending>
+							{/*{TODO: It's strange that the following route doesn't work as thought}*/}
+							{/*<Route path="/developers" component={DeveloperList} />*/}
+							{/*<Route path="/repo" component={TrendingList} />*/}
+							<Route render={(e) => {
+								let ShowComponent = TrendingList,
+									route = e.location.pathname.split('/'),
+									language = route[2] || '',
+									span = e.location.search.match(/span=(\w*)/)[1] || 'daily'
+
+								if(route[2] === 'developers'){
+									//noinspection JSUnusedAssignment
+									ShowComponent = DeveloperList
+									language = route[3] || ''
+								}
+
+								return (
+									<ShowComponent language={language} span={span}/>
+								)
+							}}/>
+						</Trending>
+					</Route>
 				</Home>
 			</Internationalization>
 		</HashRouter>

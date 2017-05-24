@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import "./Home.scss";
 import {connect} from "react-redux";
 import {changeRouter, login, changeLanguage} from "../views/HomeRedux";
-import {withRouter} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import {Icon, Input, Layout, Menu, message, Button} from "antd";
 import AutoBreadcrumb from "../components/Common/AutoBreadcrumb";
 const { SubMenu } = Menu
@@ -122,9 +122,7 @@ export default class Home extends Component{
 								<Menu.Item key="7">Follow</Menu.Item>
 								<Menu.Item key="8">History</Menu.Item>
 							</SubMenu>
-							<SubMenu key="sub3" title={<span><Icon type="notification" />Trending</span>}>
-								<Menu.Item key="9">This Week</Menu.Item>
-							</SubMenu>
+							<Menu.Item key="8"><Link to={'/trending'}><Icon type="notification" />Trending</Link></Menu.Item>
 						</Menu>
 					</Sider>
 					<Layout style={{ padding: '0 24px 24px' }}>

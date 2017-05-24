@@ -18,6 +18,8 @@ I will launch this project when there is not too many bugs, and move the backend
 + `paths-js` to build the path of charts
 + `react-intl` for i18n
 
+*Thanks for [mingjunli's API of trending](https://github.com/mingjunli/GithubTrending)*
+
 ### Run it
 
 Just take look at the package.json :kissing:

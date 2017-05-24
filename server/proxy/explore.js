@@ -44,6 +44,6 @@ function getPageInHtml(relativeUrl = "/"){
 
 module.exports = getPageInHtml
 
-getPageInHtml("/search?utf8=✓&q=cdn").then(function (e) {
+getPageInHtml("/explore").then(function (e) {
 	console.log(e)
 })
