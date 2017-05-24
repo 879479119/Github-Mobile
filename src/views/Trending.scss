@@ -1,0 +1,15 @@
+.trending{
+  margin-top: 10px;
+  .t-left-part{
+    width: 800px;
+    background: #fafafa;
+    li:nth-child(3){
+      float: right;
+    }
+  }
+  .t-right-part{
+    width: 200px;
+    background: #fcfcfc;
+    float: right;
+  }
+}

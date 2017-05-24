@@ -78,14 +78,15 @@ export default function (props) {
 								let ShowComponent = TrendingList,
 									route = e.location.pathname.split('/'),
 									language = route[2] || '',
-									span = e.location.search.match(/span=(\w*)/)[1] || 'daily'
+									p = e.location.search.match(/span=(\w*)/),
+									span = p ? p[1] : 'daily'
 
 								if(route[2] === 'developers'){
 									//noinspection JSUnusedAssignment
 									ShowComponent = DeveloperList
 									language = route[3] || ''
 								}
-
+								console.info(language, span)
 								return (
 									<ShowComponent language={language} span={span}/>
 								)

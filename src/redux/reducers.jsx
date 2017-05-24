@@ -3,6 +3,7 @@ import common from '../views/HomeRedux'
 import search from '../views/SearchResultRedux'
 import queue from '../views/QueueRedux'
 import repo from '../views/RepoRedux'
+import trending from '../views/TrendingRedux'
 import { routerReducer } from 'react-router-redux'
 
 export default combineReducers({
@@ -10,5 +11,6 @@ export default combineReducers({
 	search,
 	queue,
 	repo,
+	trending,
 	router: routerReducer
 })
