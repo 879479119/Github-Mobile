@@ -25,8 +25,8 @@ import Punch from '../components/Repo/Graph/Punch'
 
 export default function (props) {
 	return (
-		<HashRouter history={props.history}>
-			<Internationalization>
+		<Internationalization>
+			<HashRouter history={props.history}>
 				<Home>
 					<Route path="/" exact={true} component={Profile}/>
 					<Route path="/search" component={SearchResult}/>
@@ -93,7 +93,7 @@ export default function (props) {
 						</Trending>
 					</Route>
 				</Home>
-			</Internationalization>
-		</HashRouter>
+			</HashRouter>
+		</Internationalization>
 	)
 }
