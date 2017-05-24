@@ -1,9 +1,9 @@
 .trending{
   margin-top: 10px;
   .t-left-part{
+    float: left;
     width: 800px;
-    background: #fafafa;
-    li:nth-child(3){
+    >ul>li:nth-child(3){
       float: right;
     }
   }

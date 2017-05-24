@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {Icon, Layout, Menu} from "antd";
+import {Icon, Layout, Menu, Affix} from "antd";
 import "./Trending.scss";
 import {changeRouter} from "../views/HomeRedux";
 import Filter from "../components/Common/Filter";
@@ -51,9 +51,12 @@ export default class  SearchResult extends Component{
 						</Menu>
 						{children}
 					</section>
-					<section className="t-right-part">
-						<Filter type="filter" data={['123','234','345']} />
-					</section>
+					<Affix>
+						<section className="t-right-part">
+							<Filter type="filter" data={['123','234','345']} />
+						</section>
+					</Affix>
+
 				</div>
 			</Content>
 		)
