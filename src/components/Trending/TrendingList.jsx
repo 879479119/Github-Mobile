@@ -15,17 +15,10 @@ export default class TrendingList extends Component {
 		const {language, span, fetchTrending} = this.props
 		fetchTrending('repo', language, span)
 	}
-	// componentWillReceiveProps(next){
-	// 	// console.info(next)
-	// 	const {language, span, fetchTrending} = next
-	// 	if(span !== this.props.trending.span || language !== this.props.trending.language){
-	// 		fetchTrending('repo', language, span)
-	// 		console.info(this.props.trending.span, span)
-	// 	}
-	// }
+
 	render(){
 		const {language, span, trending} = this.props
-		let content = ''
+		let content = <p>123</p>
 
 		if(trending.status === 0){
 			content = (

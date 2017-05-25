@@ -28,6 +28,7 @@ function * trendingFetch(action) {
 			yield put({type: REPO_OR_DEV_READY, payload: {data}})
 		}
 	}catch (e){
+		console.info(e)
 		yield put({type: REPO_OR_DEV_ERROR})
 	}
 }

@@ -13,9 +13,24 @@ export function fetchTrending(type, language, span) {
 export const CHANGE_TREND_SPAN = "CHANGE_TREND_SPAN"
 export const CHANGE_TREND_LANG = "CHANGE_TREND_LANG"
 
-export const changeSpan = span => dispatch => dispatch({type: CHANGE_TREND_SPAN, payload: span})
-export const changeLang = lang => dispatch => dispatch({type: CHANGE_TREND_LANG, payload: lang})
+export const changeSpan = span => (dispatch, getStore) => {
+	const {language, type} = getStore().trending
+	console.info(span)
+	dispatch({type: CHANGE_TREND_SPAN, payload: span})
+	dispatch({
+		type: REPO_OR_DEV_FETCH,
+		payload: {type, language, span}
+	})
+}
 
+export const changeLang = language => (dispatch, getStore) => {
+	const {span, type} = getStore().trending
+	dispatch({type: CHANGE_TREND_LANG, payload: span})
+	dispatch({
+		type: REPO_OR_DEV_FETCH,
+		payload: {type, language, span}
+	})
+}
 const initialState = {
 	status: 0,
 	type: 'repo',
@@ -26,7 +41,7 @@ const initialState = {
 
 export default function trending(state= initialState, action) {
 	switch (action.type){
-		case REPO_OR_DEV_FETCH: return Object.assign({}, state, {type: action.payload.type})
+		case REPO_OR_DEV_FETCH: return Object.assign({}, state, {type: action.payload.type, status: 0})
 		case REPO_OR_DEV_LOADING: return Object.assign({}, state, {status: 1})
 		case REPO_OR_DEV_READY: return Object.assign({}, state, {status: 2, result: action.payload.data})
 		case REPO_OR_DEV_ERROR: return Object.assign({}, state, {status: 3, result: action.data})

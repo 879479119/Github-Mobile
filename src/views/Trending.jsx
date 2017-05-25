@@ -17,13 +17,16 @@ const SubMenu = Menu.SubMenu
 })), {changeRouter, changeSpan, changeLang, fetchTrending})
 export default class Trending extends Component{
 	changeSpan(e){
-		const { location, children, trending: {language, span} } = this.props
-
 		//I don't like the design of selection, so it's replaced with menu
 		if(['daily','weekly','monthly'].indexOf(e.key) > -1){
 			this.props.changeSpan(e.key)
-			setTimeout(()=>{this.props.fetchTrending('repo', language, this.props.trending.span)},0)
 		}
+	}
+
+	changeLang(e){
+		//I don't like the design of selection, so it's replaced with menu
+		if(e.target.getAttribute('data-lang') === void 0) return
+		this.props.changeLang(e.target.getAttribute('data-lang'))
 	}
 
 	render = () => {
@@ -37,6 +40,13 @@ export default class Trending extends Component{
 		if(route[2] === 'developers'){
 			language = route[3] || ''
 			developer = true
+		}
+
+		//TODO: get the shown ones from server as the user like
+		let shownLanguages = ['C','HTML','Java','Javascript','Python','Ruby','TypeScript']
+
+		let LinkWrap = function ({lang, span, text}) {
+			return <Link to={`/trending${developer ? '/developers' : ''}/${lang}?span=${span}`} data-lang={lang}>{text}</Link>
 		}
 
 		return (
@@ -64,12 +74,19 @@ export default class Trending extends Component{
 						</Menu>
 						{children}
 					</section>
-					<Affix>
+					<Affix offsetTop={20}>
 						<section className="t-right-part">
-							<Filter type="filter" data={['123','234','345']} />
+							<ul onClick={::this.changeLang}>
+								<li key=''><LinkWrap span={span} lang="" text="All languages" /></li>
+								<li key='unknown'><LinkWrap span={span} lang="unknown" text="Unknown languages" /></li>
+								{
+									shownLanguages.map((item, index)=>(
+										<li key={item.toLowerCase()}><LinkWrap span={span} lang={item.toLowerCase().replace(' ','+')} text={item} /></li>
+									))
+								}
+							</ul>
 						</section>
 					</Affix>
-
 				</div>
 			</Content>
 		)

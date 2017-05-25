@@ -8,8 +8,19 @@
     }
   }
   .t-right-part{
-    width: 200px;
+    width: 240px;
     background: #fcfcfc;
     float: right;
+    ul{
+
+      li{
+        margin: 10px;
+        a{
+          display: block;
+          background: #eee;
+          padding: 4px 10px;
+        }
+      }
+    }
   }
 }
