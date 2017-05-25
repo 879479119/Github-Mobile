@@ -86,7 +86,7 @@ export default function (props) {
 									ShowComponent = DeveloperList
 									language = route[3] || ''
 								}
-								console.info(language, span)
+
 								return (
 									<ShowComponent language={language} span={span}/>
 								)

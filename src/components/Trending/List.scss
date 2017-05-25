@@ -3,13 +3,13 @@
   ul{
 
     li{
-      margin: 10px;
+      margin: 16px 0;
       border: solid 1px #eee;
       border-radius: 5px;
       padding: 10px 20px;
-      background: #fafafa;
       h4{
         //margin-top: 10px;
+        font-size: 20px;
       }
       .desc{
         //padding: 10px;
@@ -40,6 +40,10 @@
                 margin-left: 6px;
               }
             }
+          }
+          &.addition{
+            float: right;
+            margin-right: 0;
           }
           i{
             margin-right: 4px;

@@ -15,9 +15,18 @@ export default class TrendingList extends Component {
 		const {language, span, fetchTrending} = this.props
 		fetchTrending('repo', language, span)
 	}
+	// componentWillReceiveProps(next){
+	// 	// console.info(next)
+	// 	const {language, span, fetchTrending} = next
+	// 	if(span !== this.props.trending.span || language !== this.props.trending.language){
+	// 		fetchTrending('repo', language, span)
+	// 		console.info(this.props.trending.span, span)
+	// 	}
+	// }
 	render(){
 		const {language, span, trending} = this.props
 		let content = ''
+
 		if(trending.status === 0){
 			content = (
 				<section>
@@ -43,13 +52,20 @@ function List({data}) {
 			<ul>
 				{
 					data.map((item, index)=>{
-						let [,owner,repo] = item.repo.split('/')
+						let [,owner,repo] = item.repo.split('/'), stars
+						if('daily' in item){
+							stars = item.daily + ' stars today'
+						}else if('weekly' in item){
+							stars = item.weekly + ' stars this week'
+						}else if('monthly' in item){
+							stars = item.monthly + ' stars this month'
+						}
 						return (
 							<li key={index}>
 								<h4>
-									<Link to={`/profile/${owner}`}>{owner}</Link> / &nbsp;
+									<Link to={`/profile/${owner}`}>{owner}</Link> /&nbsp;
 									<Link to={`/repo${item.repo}`}>{repo}</Link>
-									<Button size="small">Star</Button>
+									<Button size="small" style={{float: 'right', marginTop: 8}}><Icon type="star-o" />Star</Button>
 								</h4>
 								<p className="desc">{item.description}</p>
 								<p className="detail">
@@ -64,6 +80,10 @@ function List({data}) {
 												</Tooltip>
 											))
 										}
+									</span>
+									<span className="addition">
+										<Icon type="star"/>
+										{stars}
 									</span>
 								</p>
 							</li>

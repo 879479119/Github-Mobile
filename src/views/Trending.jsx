@@ -1,9 +1,10 @@
 import React, {Component} from "react";
-import {withRouter} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {Icon, Layout, Menu, Affix} from "antd";
+import {Icon, Layout, Menu, Affix, Button} from "antd";
 import "./Trending.scss";
 import {changeRouter} from "../views/HomeRedux";
+import {changeLang, changeSpan, fetchTrending} from "../views/TrendingRedux"
 import Filter from "../components/Common/Filter";
 
 const {Content} = Layout
@@ -12,8 +13,19 @@ const SubMenu = Menu.SubMenu
 @withRouter
 @connect((state=>({
 	route: state.common.route,
-})), {changeRouter})
-export default class  SearchResult extends Component{
+	trending: state.trending
+})), {changeRouter, changeSpan, changeLang, fetchTrending})
+export default class Trending extends Component{
+	changeSpan(e){
+		const { location, children, trending: {language, span} } = this.props
+
+		//I don't like the design of selection, so it's replaced with menu
+		if(['daily','weekly','monthly'].indexOf(e.key) > -1){
+			this.props.changeSpan(e.key)
+			setTimeout(()=>{this.props.fetchTrending('repo', language, this.props.trending.span)},0)
+		}
+	}
+
 	render = () => {
 		const { location, children } = this.props
 		let route = location.pathname.split('/'),
@@ -36,17 +48,18 @@ export default class  SearchResult extends Component{
 						<Menu
 							selectedKeys={[developer ? 'dev' : 'repo']}
 							mode="horizontal"
+						    onClick={::this.changeSpan}
 						>
 							<Menu.Item key="repo">
-								<Icon type="book" />Repository
+								<Link to={'/trending'} style={{color: developer ? '' : '#108ee9'}}><Icon type="book" />Repository</Link>
 							</Menu.Item>
 							<Menu.Item key="dev">
-								<Icon type="user" />Developer
+								<Link to={'/trending/developers'} style={{color: developer ? '#108ee9' : ''}}><Icon type="user" />Developer</Link>
 							</Menu.Item>
 							<SubMenu title={<span><Icon type="filter" />Time</span>}>
-								<Menu.Item key="daily">by Daily</Menu.Item>
-								<Menu.Item key="weekly">by Weekly</Menu.Item>
-								<Menu.Item key="monthly">by Monthly</Menu.Item>
+								<Menu.Item key="daily"><Link to={`/trending${developer ? '/developers' : ''}/${language}?span=daily`}>by Daily</Link></Menu.Item>
+								<Menu.Item key="weekly"><Link to={`/trending${developer ? '/developers' : ''}/${language}?span=weekly`}>by Weekly</Link></Menu.Item>
+								<Menu.Item key="monthly"><Link to={`/trending${developer ? '/developers' : ''}/${language}?span=monthly`}>by Monthly</Link></Menu.Item>
 							</SubMenu>
 						</Menu>
 						{children}
