@@ -11,14 +11,13 @@ I will launch this project when there is not too many bugs, and move the backend
 + `redux-saga` instead of `redux-thunk` or `redux-promise`
 + Chrome `Redux DevTool` extension instead of `redux-dev-tool` kit
 + `antd` in use
-+ generator & async,await & decorator supported
++ Generator & async,await & decorator supported
 + `github` to authenticate and get some info
 + `express` based server
 + `cheerio` providing some info only from the pages
 + `paths-js` to build the path of charts
 + `react-intl` for i18n
-
-*Thanks for [mingjunli's API of trending](https://github.com/mingjunli/GithubTrending)*
++ The API of Trending comes from my service `Github-Trending-API`
 
 ### Run it
 
@@ -40,6 +39,11 @@ Just take look at the package.json :kissing:
 + Search
   - Advanced Search
   - Repo
++ Trending
+  - Repository
+  
+**Simple Preview: [http://120.24.49.153:4000](http://120.24.49.153:4000/#/)**
+*There are so many pages to work at, you can just take a look of it*
 
 ### Some Help I Need
 + `syntaxhighlighter` doesn't work on windows 10, built package in need

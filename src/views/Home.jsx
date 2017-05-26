@@ -99,7 +99,7 @@ export default class Home extends Component{
 				<Layout style={{minHeight:1000}}>
 					<Sider width={200} style={{ background: '#fff', height: '100vh' }}>
 						<div className="user-face-main">
-							<img src="/assets/face.jpg" alt="face" className="uf-pic"/>
+							<img src="https://avatars1.githubusercontent.com/u/12726506?v=3" alt="face" className="uf-pic"/>
 							<h4>RockSAMA</h4>
 							<h5>879479119</h5>
 							<p>Tech Otaku Save World</p>
