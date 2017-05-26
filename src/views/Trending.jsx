@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import {Icon, Layout, Menu, Affix, Button} from "antd";
 import "./Trending.scss";
 import {changeRouter} from "../views/HomeRedux";
-import {changeLang, changeSpan, fetchTrending} from "../views/TrendingRedux"
+import {changeLang, changeSpan, changeType, fetchTrending} from "../views/TrendingRedux"
 import Filter from "../components/Common/Filter";
 
 const {Content} = Layout
@@ -14,12 +14,14 @@ const SubMenu = Menu.SubMenu
 @connect((state=>({
 	route: state.common.route,
 	trending: state.trending
-})), {changeRouter, changeSpan, changeLang, fetchTrending})
+})), {changeRouter, changeSpan, changeLang, changeType, fetchTrending})
 export default class Trending extends Component{
-	changeSpan(e){
+	changeSpanOrType(e){
 		//I don't like the design of selection, so it's replaced with menu
 		if(['daily','weekly','monthly'].indexOf(e.key) > -1){
 			this.props.changeSpan(e.key)
+		}else if(['dev','repo'].indexOf(e.key) > -1){
+			this.props.changeType(e.key)
 		}
 	}
 
@@ -58,7 +60,7 @@ export default class Trending extends Component{
 						<Menu
 							selectedKeys={[developer ? 'dev' : 'repo']}
 							mode="horizontal"
-						    onClick={::this.changeSpan}
+						    onClick={::this.changeSpanOrType}
 						>
 							<Menu.Item key="repo">
 								<Link to={'/trending'} style={{color: developer ? '' : '#108ee9'}}><Icon type="book" />Repository</Link>
@@ -74,7 +76,7 @@ export default class Trending extends Component{
 						</Menu>
 						{children}
 					</section>
-					<Affix offsetTop={20}>
+					{/*<Affix offsetTop={20}>*/}
 						<section className="t-right-part">
 							<ul onClick={::this.changeLang}>
 								<li key=''><LinkWrap span={span} lang="" text="All languages" /></li>
@@ -86,7 +88,7 @@ export default class Trending extends Component{
 								}
 							</ul>
 						</section>
-					</Affix>
+					{/*</Affix>*/}
 				</div>
 			</Content>
 		)

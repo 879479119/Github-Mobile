@@ -53,3 +53,44 @@
     }
   }
 }
+
+.developer-list{
+
+  ul{
+    //display: flex;
+    li{
+      position: relative;
+      display: inline-block;
+      width: 360px;
+      margin: 20px 0 0 20px;
+      height: 100px;
+      background: #fff;
+      border-radius: 5px;
+      border: solid 1px #eee;
+      padding: 10px;
+      img{
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+      }
+      h4{
+        display: inline-block;
+        vertical-align: top;
+        margin-left: 20px;
+        margin-bottom: 16px;
+      }
+      p{
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        height: 18px;
+        min-width: 1px;
+      }
+      .star{
+        position: absolute;
+        top: 10px;
+        right: 10px;
+      }
+    }
+  }
+}
