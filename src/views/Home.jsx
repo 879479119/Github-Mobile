@@ -3,7 +3,7 @@ import "./Home.scss";
 import {connect} from "react-redux";
 import {changeRouter, login, changeLanguage} from "../views/HomeRedux";
 import {Link, withRouter} from "react-router-dom";
-import {Icon, Input, Layout, Menu, message, Button} from "antd";
+import {Icon, Input, Layout, Menu, message, Button, notification} from "antd";
 import AutoBreadcrumb from "../components/Common/AutoBreadcrumb";
 const { SubMenu } = Menu
 const { Search } = Input
