@@ -35,14 +35,15 @@ Just take look at the package.json :kissing:
   - Pull requests
   - ~~Projects~~
   - ~~Wiki~~
-  - Graphs
+  - Graphs(four charts)
 + Search
   - Advanced Search
   - Repo
 + Trending
   - Repository
+  - Developer
   
-**Simple Preview: [http://120.24.49.153:4000](http://120.24.49.153:4000/#/)**
+**Simple Preview: [http://120.24.49.153:800](http://120.24.49.153:800/#/)**
 *There are so many pages to work at, you can just take a look of it*
 
 ### Some Help I Need
