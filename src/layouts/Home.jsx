@@ -1,10 +1,11 @@
 import React, {Component} from "react";
 import "./Home.scss";
 import {connect} from "react-redux";
-import {changeRouter, login, changeLanguage} from "../views/HomeRedux";
+import {changeRouter, login, changeLanguage, register} from "./HomeRedux";
 import {Link, withRouter} from "react-router-dom";
 import {Icon, Input, Layout, Menu, message, Button, notification} from "antd";
 import AutoBreadcrumb from "../components/Common/AutoBreadcrumb";
+import {getCookie} from "../utils/cookie"
 const { SubMenu } = Menu
 const { Search } = Input
 const { Header, Sider } = Layout;
@@ -14,9 +15,21 @@ const { Header, Sider } = Layout;
 	language: state.common.language,
 	route: state.common.route,
 	loginStatus: state.common.loginStatus
-}), { changeRouter, login, changeLanguage })
+}), { changeRouter, login, changeLanguage, register })
 export default class Home extends Component{
-	componentWillMount(){
+	_checkCookie(){
+		let gname = getCookie('gname')
+		if(gname === -1){
+			this._checkCode()
+			// window.location = "https://github.com/login/oauth/authorize?scope=admin&client_id=af4fdd0b77c3a4073f0c"
+			return 0
+		}else{
+			this.props.login()
+			return 1
+		}
+	}
+
+	_checkCode(){
 		let code = null
 		try{
 			code = location.search.match(/code=(\w*)/)[1]
@@ -24,26 +37,24 @@ export default class Home extends Component{
 			code = null
 		}
 
-		//TODO: fix this
-		if(code){
-			fetch("/user/register",{
-				method: "POST",
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded'
-				},
-				credentials: 'include',
-				body: "code=" + code
-			}).then(res => res.text()).then(res=>{
-				message.success(res,3)
-			}).catch(e=>{
-				message.error(e,3)
-				setTimeout(()=>{
-					window.location = "https://github.com/login/oauth/authorize?scope=admin&client_id=af4fdd0b77c3a4073f0c"
-				},3000)
-			})
+		if(code !== null){
+			this.props.register(code)
 		}else{
-			this.props.login()
+			window.location = "https://github.com/login/oauth/authorize?scope=admin&client_id=af4fdd0b77c3a4073f0c"
 		}
+	}
+	// componentWillRecieveProps(nextProps){
+	// 	//exactly get login error from server
+	// 	if(nextProps.loginStatus === false){
+	// 		this._checkCode()
+	// 	}
+	// }
+	componentWillMount(){
+		/**
+		 * Step.1 check cookie
+		 * Step.2 try registering with code
+		 * Step.3 no code or error => redirect to auth page
+		 */
 	}
 	componentDidMount(){
 		//the application needs auth, or it cannot fetch data as the frequency we want
@@ -60,12 +71,16 @@ export default class Home extends Component{
 				dom.nextSibling.style.marginLeft = 0
 			}
 		})
+
+		//login and redirect
+		this._checkCookie()
 	}
 	searchContent(val){
 		this.props.changeRouter(`/search?query=${encodeURI(val)}`)
 	}
 	render = () => {
-		const {route, language, changeLanguage} = this.props
+		const { route, language, changeLanguage} = this.props
+
 		return (
 			<Layout>
 				<Header className="header">

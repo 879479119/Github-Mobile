@@ -13,7 +13,7 @@ module.exports = {
 				function (err, data) {
 					if(err) reject(STDR.databaseError(err))
 					else if(data.length >= 1){
-						reject(STDR.success('user already existed',1))
+						resolve(obj, true)
 					}else{
 						resolve(obj)
 					}

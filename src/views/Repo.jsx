@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Link, withRouter} from "react-router-dom";
 import {Icon, Layout, Menu, Button} from "antd";
 import "./Repo.scss";
-import { changeRouter } from "../views/HomeRedux";
+import { changeRouter } from "../layouts/HomeRedux";
 import { commonFetch, commonRelease} from "./QueueRedux";
 import {connect} from "react-redux";
 import addDataFetch from '../redux/addDataFetch'
@@ -19,7 +19,7 @@ const API = [
 	route: state.common.route
 }),{ commonFetch, commonRelease, changeRouter})
 @addDataFetch
-export default class extends Component{
+export default class Repo extends Component{
 	constructor(...props){
 		super(...props)
 	}

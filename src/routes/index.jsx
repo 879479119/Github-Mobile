@@ -2,7 +2,7 @@ import React from "react"
 import {HashRouter, Route} from "react-router-dom"
 import Internationalization from "../i18n/Internationalization"
 
-import Home from "../views/Home"
+import Home from "../layouts/Home"
 import Profile from "../components/Home/Profile"
 import SearchResult from "../views/SearchResult"
 import Trending from "../views/Trending"

@@ -24,3 +24,7 @@ export default function request (url, body) {
 export function login() {
 	return request('/user/login')
 }
+
+export function register(code) {
+	return request('/user/register', 'code='+code)
+}

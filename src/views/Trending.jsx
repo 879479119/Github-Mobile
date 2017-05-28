@@ -3,7 +3,7 @@ import {Link, withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {Icon, Layout, Menu, Affix, Button} from "antd";
 import "./Trending.scss";
-import {changeRouter} from "../views/HomeRedux";
+import {changeRouter} from "../layouts/HomeRedux";
 import {changeLang, changeSpan, changeType, fetchTrending} from "../views/TrendingRedux"
 import Filter from "../components/Common/Filter";
 

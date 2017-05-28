@@ -19,7 +19,7 @@ module.exports = function (code) {
 			let token = res.access_token
 
 			if(token === undefined){
-				reject("undefined token")
+				reject("Wrong code given")
 			}
 
 			syncAuth(token)
@@ -32,7 +32,12 @@ module.exports = function (code) {
 		})
 	}).then(function (obj) {
 		return DataQuery.chkUserExist(obj)
-	}).then(function (obj) {
+	}).then(function (obj, exist) {
+		if(exist === true) return {
+			gid: obj.res.data.id,
+			gname: obj.res.data.name,
+			key: obj.token
+		}
 		return DataQuery.addUser(obj.res.data.id, obj.res.data.name, obj.token)
 	})
 }

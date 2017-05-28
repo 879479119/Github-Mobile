@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import common from '../views/HomeRedux'
+import common from '../layouts/HomeRedux'
 import search from '../views/SearchResultRedux'
 import queue from '../views/QueueRedux'
 import repo from '../views/RepoRedux'

@@ -1,17 +1,17 @@
 import {call, put, takeEvery} from "redux-saga/effects";
 import {COMMON_SEARCH, SEARCH_ERROR, SEARCH_LOADING, SEARCH_READY} from "./SearchResultRedux";
-import {LOGIN, LOGIN_ERROR, LOGIN_SUCCESS} from "./HomeRedux";
-import request, {login} from "../utils/request";
-import {message} from "antd";
+import {LOGIN, LOGIN_ERROR, LOGIN_SUCCESS, NETWORK_ERROR, REG, REG_ERROR, REG_SUCCESS} from "../layouts/HomeRedux";
+import request, {login, register} from "../utils/request";
 import {COMMON_FETCH, COMMON_ERROR, COMMON_LOADING, COMMON_READY} from './QueueRedux'
 
 /**
  * export the default saga array to take the action we need
  */
 export default [
-	takeEvery(COMMON_SEARCH,commonSearch),
-	takeEvery(LOGIN,loginSaga),
-	takeEvery(COMMON_FETCH,commonFetch),
+	takeEvery(COMMON_SEARCH, commonSearch),
+	takeEvery(LOGIN, loginSaga),
+	takeEvery(REG, registerSaga),
+	takeEvery(COMMON_FETCH, commonFetch),
 ]
 
 /**
@@ -45,20 +45,25 @@ function* loginSaga() {
 		let data = yield res.json()
 		if(data.code >= 20000){
 			yield put({type: LOGIN_ERROR})
-			message.error('Re:login in 3s',3)
-			setTimeout(()=>{
-				window.location = ""
-			},3000)
 		}else{
 			yield put({type: LOGIN_SUCCESS})
-			message.success('Login success!',2)
 		}
 	}catch (e){
-		yield put({type: LOGIN_ERROR})
-		message.error('Re:login in 3s',3)
-		setTimeout(()=>{
-			window.location = ""
-		},3000)
+		yield put({type: NETWORK_ERROR})
+	}
+}
+
+function* registerSaga(action) {
+	try {
+		let res = yield call(register, action.payload.code)
+		let data = yield res.json()
+		if(data.code >= 20000){
+			yield put({type: REG_ERROR})
+		}else{
+			yield put({type: REG_SUCCESS})
+		}
+	}catch (e){
+		yield put({type: NETWORK_ERROR})
 	}
 }
 

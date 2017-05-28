@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import {Input, Layout, Menu, Pagination} from "antd";
 import {commonSearch} from "./SearchResultRedux";
 import "./SearchResult.scss";
-import {changeRouter} from "../views/HomeRedux";
+import {changeRouter} from "../layouts/HomeRedux";
 import repo from "../utils/repos";
 import Repo from "../components/Search/Repo";
 import Filter from '../components/Common/Filter'

@@ -23,7 +23,7 @@ router.post('/register', (req, respond)=>{
 		respond.send(STDR.success('register success'))
 	}).catch(e=>{
 		log(e,1)
-		respond.send(e)
+		respond.send(STDR.argvError(e))
 	})
 
 }).post('/login', (req, respond)=>{
