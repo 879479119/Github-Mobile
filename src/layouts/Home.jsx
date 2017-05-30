@@ -6,16 +6,23 @@ import {Link, withRouter} from "react-router-dom";
 import {Icon, Input, Layout, Menu, message, Button, notification} from "antd";
 import AutoBreadcrumb from "../components/Common/AutoBreadcrumb";
 import {getCookie} from "../utils/cookie"
+import addDataFetch from '../redux/addDataFetch'
+
 const { SubMenu } = Menu
 const { Search } = Input
 const { Header, Sider } = Layout;
+
+//the API is called in saga, here is just a key to fetch the value
+export const API_AUTH_INFO = '/api/users/get'
 
 @withRouter
 @connect(state=>({
 	language: state.common.language,
 	route: state.common.route,
-	loginStatus: state.common.loginStatus
+	loginStatus: state.common.loginStatus,
+	queue: state.queue
 }), { changeRouter, login, changeLanguage, register })
+@addDataFetch
 export default class Home extends Component{
 	_checkCookie(){
 		let gname = getCookie('gname')
@@ -81,6 +88,32 @@ export default class Home extends Component{
 	render = () => {
 		const { route, language, changeLanguage} = this.props
 
+		let authInfo = this.getData(API_AUTH_INFO)
+		let user = {
+			avatar_url: '',
+			bio: '',
+			blog: "",
+			company: "@CQUPTBee ",
+			created_at:	"2015-06-03T06:35:45Z",
+			email: "767444690@qq.com",
+			events_url:	"https://api.github.com/users/879479119/events{/privacy}",
+			followers: 24,
+			followers_url: "https://api.github.com/users/879479119/followers",
+			following: 13,
+			id: 12726506,
+			location: "Chongqin,China",
+			login: "",
+			name: "",
+			public_gists: 0,
+			public_repos: 18,
+			type: "User",
+		}
+
+		if(authInfo.status === 3){
+			console.info(authInfo)
+			user = Object.assign(user, authInfo.result.data.data)
+		}
+
 		return (
 			<Layout>
 				<Header className="header">
@@ -114,10 +147,10 @@ export default class Home extends Component{
 				<Layout style={{minHeight:1000}}>
 					<Sider width={200} style={{ background: '#fff', height: '100vh' }}>
 						<div className="user-face-main">
-							<img src="https://avatars1.githubusercontent.com/u/12726506?v=3" alt="face" className="uf-pic"/>
-							<h4>RockSAMA</h4>
-							<h5>879479119</h5>
-							<p>Tech Otaku Save World</p>
+							<img src={user.avatar_url} alt="face" className="uf-pic"/>
+							<h4>{user.name}</h4>
+							<h5>{user.login}</h5>
+							<p>{user.bio}</p>
 						</div>
 						<Menu
 							mode="inline"
