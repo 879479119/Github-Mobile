@@ -1,8 +1,8 @@
 import React from 'react'
 import './RecentEvent.scss'
-import temp from '../../utils/template'
-import formatDate from '../../utils/formatDate'
-import emojizer from '../../utils/emojizer'
+import temp from '../../../utils/template'
+import formatDate from '../../../utils/formatDate'
+import emojizer from '../../../utils/emojizer'
 
 /**
  * all the event types here

@@ -62,26 +62,6 @@
 .main-body{
   position: relative;
   margin-top: 16px;
-  .repos{
-    width: 760px;
-    display: inline-block;
-    .ant-card{
-      display: inline-block;
-      margin-right: 20px;
-      margin-bottom: 20px;
-      .ant-card-body{
-        padding: 12px;
-        h5 a{
-          font-size: 16px;
-        }
-        p{
-          margin-top: 4px;
-          max-height: 36px;
-          overflow: hidden;
-        }
-      }
-    }
-  }
   .aside{
     width: 290px;
     float: right;

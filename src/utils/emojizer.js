@@ -1,6 +1,6 @@
 import reflect from './emojiReflect'
 
-export default function (str){
+export default function (str, html=true){
 	if(!str) return ''
 	let arr = str.split(':')
 	let prevCover = false
@@ -11,7 +11,8 @@ export default function (str){
 				return ':'+item
 			}
 			prevCover = true
-			return `<span class="emoji">${reflect[item]}</span>`
+			if(html === true) return `<span class="emoji">${reflect[item]}</span>`
+			else return reflect[item]
 		}else{
 			if(prevCover === true) prevCover = false
 			return item

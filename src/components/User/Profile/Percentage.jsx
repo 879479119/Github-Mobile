@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {spring, StaggeredMotion} from "react-motion"
-import getSeriesColor from '../../utils/colors'
+import getSeriesColor from '../../../utils/colors'
 import './Percentage.scss'
 
 function genePath(lang, conf) {
