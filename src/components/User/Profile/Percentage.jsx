@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {spring, StaggeredMotion} from "react-motion"
 import getSeriesColor from '../../../utils/colors'
 import './Percentage.scss'
+import Tooltip from "antd";
 
 function genePath(lang, conf) {
 
@@ -11,8 +12,8 @@ function genePath(lang, conf) {
 
 	let result = []
 	lang.map((item, index)=>{
-		if (item <= 100) {
-			let progress = item / 100
+		if (item.count <= 100) {
+			let progress = item.count / 100
 			let degrees = progress * 360
 			let rad = degrees * (Math.PI / 180)
 			let x = (Math.sin(rad) * r).toFixed(2)
@@ -20,7 +21,7 @@ function genePath(lang, conf) {
 			let length = window.Number(degrees > 180)
 			let descriptions = ['M', cx, cy-r, 'A', r, r, 0, length, 1, +x+cx, +y+cy];
 			result.push({
-				r: index === 0 ? 0 : lang[index - 1] * 3.6,
+				r: index === 0 ? 0 : lang[index - 1].count * 3.6,
 				path: descriptions.join(' '),
 				width: width * 2,
 				center: `${cx}px ${cy}px 0`,
@@ -31,7 +32,7 @@ function genePath(lang, conf) {
 	return result
 }
 
-function geneText(percentage, keys, conf) {
+function geneText(percentage, conf) {
 	const { color, text: {
 		x, y, size, col, row,
 		paddingCol,
@@ -46,7 +47,7 @@ function geneText(percentage, keys, conf) {
 			y: py,
 			size,
 			color:color[index],
-			text: keys[index]
+			text: item.name
 		}
 	})
 }
@@ -73,21 +74,28 @@ export default function (props) {
 		}
 		conf.color = getSeriesColor(percentage.length, conf.style || defaultConf.style)
 
+		let sum = 0
+		for(let i = 0;i < percentage.length;i ++) sum += percentage[i].count
+		for(let i = 0;i < percentage.length;i ++) percentage[i].count = percentage[i].count / sum * 100
+		console.info(percentage)
 		let path = genePath(percentage, Object.assign(defaultConf, conf))
-		let text = geneText(percentage, ['Javascript','Java','C','C++','Ruby','Python'], Object.assign(defaultConf, conf))
+		let text = geneText(percentage, Object.assign(defaultConf, conf))
 
 
 		let pathLabels = path.map((item,index)=>{
 			return (circle) => {
 				return (
-			<path className="path"
-			      d={item.path}
-			      key={'g'+index}
-			      fill="transparent"
-			      stroke={item.color}
-			      strokeWidth={item.width}
-			      style={{transformOrigin:item.center,transform:`rotate(${circle}deg)`}}
-			/>
+				<Tooltip overlay={123}>
+					<path className="path"
+					      d={item.path}
+					      key={'g'+index}
+					      fill="transparent"
+					      stroke={item.color}
+					      strokeWidth={item.width}
+					      style={{transformOrigin:item.center,transform:`rotate(${circle}deg)`}}
+					/>
+				</Tooltip>
+
 			)}
 		})
 
@@ -104,7 +112,7 @@ export default function (props) {
 					<text x={item.x}
 					      y={item.y}
 					      fontSize={item.size}
-					      color="#000"
+					      color="#333"
 					      alignmentBaseline={'middle'}
 					>{item.text}</text>
 				</g>

@@ -6,7 +6,7 @@ import {commonFetch, commonRelease} from "./QueueRedux";
 import {userChangeSelection} from "./UserRedux"
 import addDataFetch from '../redux/addDataFetch'
 
-import { Layout, Menu, Icon, Card } from 'antd'
+import { Layout, Menu, Icon, Badge } from 'antd'
 const { Content } = Layout
 
 export const API = [
@@ -35,23 +35,36 @@ export default class User extends Component{
 		}
 	}
 	render = () => {
+
+		let userInfo = this.getData(API[1])
+		let info = {
+			followers: 0,
+			following: 0,
+			public_repos: 0,
+		}
+
+		if(userInfo.status === 3){
+			info = Object.assign(info, userInfo.result.data.data)
+		}
+
 		return (
 			<Content style={{ background: '#fff', padding: 24, paddingTop: 0, margin: 0, minHeight: 400 }}>
 				<Menu
 					selectedKeys={['overview']}
 					mode="horizontal"
+				    className="user-header"
 				>
 					<Menu.Item key="overview">
 						<Icon type="idcard" />Overview
 					</Menu.Item>
 					<Menu.Item key="repo">
-						<Icon type="database" />Repositories
+						<Icon type="database" />Repositories<Badge className="badge" count={info.public_repos} style={{backgroundColor: '#eee'}}/>
 					</Menu.Item>
 					<Menu.Item key="star">
 						<Icon type="star-o" />Stars
 					</Menu.Item>
-					<Menu.Item key="follower">Followers</Menu.Item>
-					<Menu.Item key="following">Following</Menu.Item>
+					<Menu.Item key="follower">Followers<Badge className="badge" count={info.followers} style={{backgroundColor: '#eee'}}/></Menu.Item>
+					<Menu.Item key="following">Following<Badge className="badge" count={info.following} style={{backgroundColor: '#eee'}}/></Menu.Item>
 				</Menu>
 				{this.props.children}
 			</Content>

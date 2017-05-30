@@ -29,9 +29,12 @@ export default class Profile extends Component{
 		let repos = this.getData(API[0])
 		let userInfo = this.getData(API[1])
 		let content = ''
+		let percentage = []
 
 		if(repos.status === 3){
 			let arr = repos.result.data.data.concat()
+
+			//prepare for the repo part
 			arr.sort((prev, cur) => {
 				if(prev.stargazers_count > cur.stargazers_count) return -1
 				else return 1
@@ -49,6 +52,20 @@ export default class Profile extends Component{
 					</Card>
 				)
 			})
+
+			//prepare for the percentage part
+			let lang = {}
+			arr.forEach((item, i)=>{
+				if(item.language in lang){
+					percentage[lang[item.language]].count ++
+				}else{
+					lang[item.language] = i
+					percentage.push({
+						name: item.language,
+						count: 1
+					})
+				}
+			})
 		}
 
 		return (
@@ -58,7 +75,7 @@ export default class Profile extends Component{
 						<CommitTable/>
 					</div>
 					<div className="aside">
-						<Percentage percentage={[25,20,20,15,10,10]}>
+						<Percentage percentage={percentage}>
 							<p className="chart-lang">Language Chart</p>
 						</Percentage>
 						<RecentEvent/>
