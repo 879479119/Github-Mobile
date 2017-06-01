@@ -50,6 +50,7 @@ export default function (props) {
 							</User>
 						</Route>
 						<Route path="/search" component={SearchResult}/>
+						{/*TODO: format the routes in a more gentle way*/}
 						<Route path="/repo">
 							<Repo>
 								<Route render={(e) => {

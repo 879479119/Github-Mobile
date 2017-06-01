@@ -6,12 +6,76 @@
   border-radius: 50%;
 }
 
+.main-part{
+  float: left;
+
+}
+
+.user-info{
+  //border-bottom: solid 1px #eee;
+  //margin-bottom: 20px;
+  //padding-bottom: 12px;
+  padding-right: 20px;
+  ul{
+    display: flex;
+    border-bottom: solid 1px #eee;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    li{
+      flex: 1;
+      margin: 0 20px;
+      &.face{
+        width: 100px;
+        flex: none;
+        margin-left: 10px;
+        margin-right: 10px;
+        img{
+          width: 100px;
+          height: 100px;
+          border-radius: 8px;
+        }
+      }
+
+      .org{
+        p{
+          margin-bottom: 6px;
+          margin-top: 9px;
+        }
+        section{
+          display: inline-block;
+          margin-right: 6px;
+        }
+        img{
+          width: 20px;
+          height: 20px;
+          border-radius: 4px;
+        }
+      }
+
+      p{
+        a{
+          float: right;
+          &.blog{
+            display: inline-block;
+            max-width: 160px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+        span{
+          float: right;
+          font-style: oblique;
+        }
+      }
+
+    }
+  }
+}
 
 .user-repos{
   width: 760px;
   display: flex;
   flex-wrap: wrap;
-  float: left;
   .ant-card{
     display: inline-block;
     margin-right: 20px;

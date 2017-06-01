@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {spring, StaggeredMotion} from "react-motion"
 import getSeriesColor from '../../../utils/colors'
 import './Percentage.scss'
-import Tooltip from "antd";
 
 function genePath(lang, conf) {
 
@@ -85,7 +84,6 @@ export default function (props) {
 		let pathLabels = path.map((item,index)=>{
 			return (circle) => {
 				return (
-				<Tooltip overlay={123}>
 					<path className="path"
 					      d={item.path}
 					      key={'g'+index}
@@ -94,8 +92,6 @@ export default function (props) {
 					      strokeWidth={item.width}
 					      style={{transformOrigin:item.center,transform:`rotate(${circle}deg)`}}
 					/>
-				</Tooltip>
-
 			)}
 		})
 
@@ -124,7 +120,7 @@ export default function (props) {
 				{children}
 				<svg  style={{width,height}}>
 					<StaggeredMotion
-						defaultStyles={(new Array(path.length)).fill({h:0})}
+						defaultStyles={new Array(path.length).fill({h:0})}
 						styles={prevInterpolatedStyles => prevInterpolatedStyles.map((_, i) => {
 							return i === 0
 								? {h: spring(path[i].r)}
@@ -140,7 +136,7 @@ export default function (props) {
 						}
 					</StaggeredMotion>
 					<StaggeredMotion
-						defaultStyles={(new Array(text.length)).fill({o:0})}
+						defaultStyles={new Array(text.length).fill({o:0})}
 						styles={prevInterpolatedStyles => prevInterpolatedStyles.map((_, i) => {
 							return i === 0
 								? {o: spring(1)}
