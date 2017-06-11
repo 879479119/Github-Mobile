@@ -1,8 +1,8 @@
 import React from 'react'
 import './RecentEvent.scss'
-import temp from '../../utils/template'
-import formatDate from '../../utils/formatDate'
-import emojizer from '../../utils/emojizer'
+import temp from '../../../utils/template'
+import formatDate from '../../../utils/formatDate'
+import emojizer from '../../../utils/emojizer'
 
 /**
  * all the event types here
@@ -134,8 +134,8 @@ export default function (props) {
 		pushEvent = PushEvent(),
 		createEvent = CreateEvent(),
 		forkEvent = ForkEvent()
-	data = temp
-	data.map((item, index)=>{
+	// data = temp
+	data.forEach((item, index)=>{
 		switch (item.type){
 			case "PushEvent": return pushEvent.add(item, index)
 			case "CreateEvent": return createEvent.add(item, index)

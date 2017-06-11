@@ -1,8 +1,10 @@
 import {call, put, takeEvery} from "redux-saga/effects";
 import {COMMON_SEARCH, SEARCH_ERROR, SEARCH_LOADING, SEARCH_READY} from "./SearchResultRedux";
-import {LOGIN, LOGIN_ERROR, LOGIN_SUCCESS, NETWORK_ERROR, REG, REG_ERROR, REG_SUCCESS} from "../layouts/HomeRedux";
+import {LOGIN, LOGIN_ERROR, LOGIN_SUCCESS, NETWORK_ERROR, REG, REG_ERROR, REG_SUCCESS, AUTH_FETCH_INFO} from "../layouts/HomeRedux";
 import request, {login, register} from "../utils/request";
 import {COMMON_FETCH, COMMON_ERROR, COMMON_LOADING, COMMON_READY} from './QueueRedux'
+
+import {API_AUTH_INFO} from "../layouts/Home"
 
 /**
  * export the default saga array to take the action we need
@@ -47,6 +49,8 @@ function* loginSaga() {
 			yield put({type: LOGIN_ERROR})
 		}else{
 			yield put({type: LOGIN_SUCCESS})
+			//once we login, get the detail
+			yield put({type: COMMON_FETCH, payload: {url: API_AUTH_INFO}})
 		}
 	}catch (e){
 		yield put({type: NETWORK_ERROR})

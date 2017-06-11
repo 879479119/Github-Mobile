@@ -20,6 +20,13 @@ export const LOGIN_SUCCESS = "LOGIN_SUCCESS"
 export const NETWORK_ERROR = "NETWORK_ERROR"
 
 /**
+ * user controller
+ */
+export const AUTH_FETCH_INFO = "AUTH_FETCH_INFO"
+export const AUTH_FETCH_INFO_READY = "AUTH_FETCH_INFO_READY"
+export const AUTH_FETCH_INFO_ERROR = "AUTH_FETCH_INFO_ERROR"
+
+/**
  * language controller
  */
 export const CHANGE_LANGUAGE = "CHANGE_LANGUAGE"
