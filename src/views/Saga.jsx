@@ -81,7 +81,7 @@ function *commonFetch(action) {
 	try {
 		let res = yield call(request, ...[action.payload.url, action.payload.data])
 		let data = yield res.json()
-		// console.info(123,data)
+
 		if(data.code >= 20000){
 			yield put({type: COMMON_ERROR, payload: {url, data}})
 		}else{

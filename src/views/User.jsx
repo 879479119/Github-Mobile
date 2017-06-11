@@ -34,6 +34,12 @@ export default class User extends Component{
 			else commonFetch(API[i], {username})
 		}
 	}
+	menuHandler(e){
+		const {changeRouter} = this.props
+		let username = this.props.match.params.username
+
+		changeRouter(`/user/${username}/${e.key}`)
+	}
 	render = () => {
 
 		let userInfo = this.getData(API[1])
@@ -43,6 +49,8 @@ export default class User extends Component{
 			public_repos: 0,
 		}
 
+		let selected = this.props.match.params.tab || 'profile'
+
 		if(userInfo.status === 3){
 			info = Object.assign(info, userInfo.result.data.data)
 		}
@@ -50,11 +58,12 @@ export default class User extends Component{
 		return (
 			<Content style={{ background: '#fff', padding: 24, paddingTop: 0, margin: 0, minHeight: 400 }}>
 				<Menu
-					selectedKeys={['overview']}
+					selectedKeys={[selected]}
 					mode="horizontal"
 				    className="user-header"
+				    onclick={::this.menuHandler}
 				>
-					<Menu.Item key="overview">
+					<Menu.Item key="profile">
 						<Icon type="idcard" />Overview
 					</Menu.Item>
 					<Menu.Item key="repo">

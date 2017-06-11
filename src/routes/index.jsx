@@ -1,5 +1,5 @@
 import React from "react"
-import {HashRouter } from "react-router-dom"
+import { HashRouter } from "react-router-dom"
 import Internationalization from "../i18n/Internationalization"
 
 import Home from "../layouts/Home"
@@ -10,6 +10,7 @@ import Repo from '../views/Repo'
 
 //the user parts
 import Profile from "../components/User/Profile/index"
+import UserRepo from "../components/User/Repo/index"
 
 //the trending parts
 import TrendingList from "../components/Trending/TrendingList"
@@ -40,12 +41,15 @@ export default function (props) {
 				<Home>
 					<Switch>
 						<Route path="/" exact={true} component={User}/>
-						<Route path="/user/:username">
+						<Route path="/user/:username/:tab">
 							<User>
 								<Switch>
 									<Route path="/user/:username/profile" component={Profile}/>
-									<Route path="/user/:username/home" component={Home}/>
-									<Route path="/:p" render={e=>{console.info(e);return <p>123</p>}}/>
+									<Route path="/user/:username/repo" component={UserRepo}/>
+									<Route path="/user/:username/star" component={Home}/>
+									<Route path="/user/:username/follower" component={Home}/>
+									<Route path="/user/:username/following" component={Home}/>
+									<Route path="/:p" render={e=>{console.info(e);return <p>ERROR</p>}}/>
 								</Switch>
 							</User>
 						</Route>
