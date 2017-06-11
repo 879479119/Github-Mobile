@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PureComponent } from 'react'
 import {spring, StaggeredMotion} from "react-motion"
 import getSeriesColor from '../../../utils/colors'
 import './Percentage.scss'
@@ -51,7 +51,13 @@ function geneText(percentage, conf) {
 	})
 }
 
-export default function (props) {
+export default class Percentage extends PureComponent{
+	render(){
+		return ren(this.props)
+	}
+}
+
+function ren (props) {
 
 		const { width= 290, height= 'auto', conf= {}, percentage, children } = props
 		const defaultConf ={
