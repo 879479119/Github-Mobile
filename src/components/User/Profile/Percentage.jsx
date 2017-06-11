@@ -1,16 +1,17 @@
-import React, { Component, PureComponent } from 'react'
+import React, {Component, PureComponent} from 'react'
+import {Icon} from "antd"
 import {spring, StaggeredMotion} from "react-motion"
 import getSeriesColor from '../../../utils/colors'
 import './Percentage.scss'
 
 function genePath(lang, conf) {
 
-	let { outR,innerR,cx,cy,color } = conf,
+	let {outR, innerR, cx, cy, color} = conf,
 		width = (outR - innerR) / 2,
 		r = innerR + width
 
 	let result = []
-	lang.map((item, index)=>{
+	lang.map((item, index) => {
 		if (item.count <= 100) {
 			let progress = item.count / 100
 			let degrees = progress * 360
@@ -18,7 +19,7 @@ function genePath(lang, conf) {
 			let x = (Math.sin(rad) * r).toFixed(2)
 			let y = -(Math.cos(rad) * r).toFixed(2)
 			let length = window.Number(degrees > 180)
-			let descriptions = ['M', cx, cy-r, 'A', r, r, 0, length, 1, +x+cx, +y+cy];
+			let descriptions = ['M', cx, cy - r, 'A', r, r, 0, length, 1, +x + cx, +y + cy];
 			result.push({
 				r: index === 0 ? 0 : lang[index - 1].count * 3.6,
 				path: descriptions.join(' '),
@@ -32,11 +33,13 @@ function genePath(lang, conf) {
 }
 
 function geneText(percentage, conf) {
-	const { color, text: {
-		x, y, size, col, row,
-		paddingCol,
-		paddingRow
-	} } = conf
+	const {
+		color, text: {
+			x, y, size, col, row,
+			paddingCol,
+			paddingRow
+		}
+	} = conf
 
 	return percentage.map((item, index) => {
 		let px = x + ((index / row) >>> 0) * paddingCol
@@ -45,68 +48,69 @@ function geneText(percentage, conf) {
 			x: px,
 			y: py,
 			size,
-			color:color[index],
+			color: color[index],
 			text: item.name
 		}
 	})
 }
 
-export default class Percentage extends PureComponent{
-	render(){
+export default class Percentage extends PureComponent {
+	render() {
 		return ren(this.props)
 	}
 }
 
-function ren (props) {
+function ren(props) {
 
-		const { width= 290, height= 'auto', conf= {}, percentage, children } = props
-		const defaultConf ={
-			color: [],
-			style: 'blue',
-			cx: 60,
-			cy: 60,
-			outR: 60,
-			innerR: 30,
-			text: {
-				x: 150,
-				y: 50,
-				size: 12,
-				col: 2,
-				row: 3,
-				paddingCol: 70,
-				paddingRow: 20
-			}
+	const {width = 290, height = 'auto', conf = {}, percentage, children} = props
+	const defaultConf = {
+		color: [],
+		style: 'blue',
+		cx: 60,
+		cy: 60,
+		outR: 60,
+		innerR: 30,
+		text: {
+			x: 150,
+			y: 50,
+			size: 12,
+			col: 2,
+			row: 3,
+			paddingCol: 70,
+			paddingRow: 20
 		}
-		conf.color = getSeriesColor(percentage.length, conf.style || defaultConf.style)
+	}
+	conf.color = getSeriesColor(percentage.length, conf.style || defaultConf.style)
 
-		let sum = 0
-		for(let i = 0;i < percentage.length;i ++) sum += percentage[i].count
-		for(let i = 0;i < percentage.length;i ++) percentage[i].count = percentage[i].count / sum * 100
-		console.info(percentage)
-		let path = genePath(percentage, Object.assign(defaultConf, conf))
-		let text = geneText(percentage, Object.assign(defaultConf, conf))
+	let sum = 0
+	for (let i = 0; i < percentage.length; i++) sum += percentage[i].count
+	for (let i = 0; i < percentage.length; i++) percentage[i].count = percentage[i].count / sum * 100
+	console.info(percentage)
+	let path = genePath(percentage, Object.assign(defaultConf, conf))
+	let text = geneText(percentage, Object.assign(defaultConf, conf))
 
 
-		let pathLabels = path.map((item,index)=>{
-			return (circle) => {
-				return (
-					<path className="path"
-					      d={item.path}
-					      key={'g'+index}
-					      fill="transparent"
-					      stroke={item.color}
-					      strokeWidth={item.width}
-					      style={{transformOrigin:item.center,transform:`rotate(${circle}deg)`}}
-					/>
-			)}
-		})
+	let pathLabels = path.map((item, index) => {
+		return (circle) => {
+			return (
+				<path className="path"
+				      d={item.path}
+				      key={'g' + index}
+				      fill="transparent"
+				      stroke={item.color}
+				      strokeWidth={item.width}
+				      style={{transformOrigin: item.center, transform: `rotate(${circle}deg)`}}
+				/>
+			)
+		}
+	})
 
-		let textLabels = text.map((item,index)=>{
-			return (opacity) => {
-				return (
-				<g key={'text'+index} className="label" style={{opacity}} color={opacity}>
-					<rect x={item.x-15}
-					      y={item.y-7}
+	let textLabels = text.map((item, index) => {
+		return (opacity) => {
+			return (
+				<g key={'text' + index} className="label" style={{opacity}} color={opacity}>
+					<rect x={item.x - 15}
+					      y={item.y - 7}
 					      width={10}
 					      height={10}
 					      fill={item.color}
@@ -118,46 +122,55 @@ function ren (props) {
 					      alignmentBaseline={'middle'}
 					>{item.text}</text>
 				</g>
-			)}
-		})
+			)
+		}
+	})
 
+	if(path.length === 0){
 		return (
-			<div className="percentage" style={{width,height,display:'inline-block',verticalAlign:'top'}}>
-				{children}
-				<svg  style={{width,height}}>
-					<StaggeredMotion
-						defaultStyles={new Array(path.length).fill({h:0})}
-						styles={prevInterpolatedStyles => prevInterpolatedStyles.map((_, i) => {
-							return i === 0
-								? {h: spring(path[i].r)}
-								: {h: spring(prevInterpolatedStyles[i - 1].h+path[i].r)}
-						})}>
-						{
-							interpolatingStyles =>
-								<g>
+			<div className="percentage" style={{width, height, display: 'inline-block', verticalAlign: 'top'}}>
+				<Icon type="loading"/>
+			</div>
+		)
+	}
+
+	return (
+		<div className="percentage" style={{width, height, display: 'inline-block', verticalAlign: 'top'}}>
+			{children}
+			<svg style={{width, height}}>
+				<StaggeredMotion
+					defaultStyles={new Array(path.length).fill({h: 0})}
+					styles={prevInterpolatedStyles => prevInterpolatedStyles.map((_, i) => {
+						return i === 0
+							? {h: spring(path[i].r)}
+							: {h: spring(prevInterpolatedStyles[i - 1].h + path[i].r)}
+					})}>
+					{
+						interpolatingStyles =>
+							<g>
 								{interpolatingStyles.map((style, i) =>
 									pathLabels[i](style.h)
 								)}
-								</g>
-						}
-					</StaggeredMotion>
-					<StaggeredMotion
-						defaultStyles={new Array(text.length).fill({o:0})}
-						styles={prevInterpolatedStyles => prevInterpolatedStyles.map((_, i) => {
-							return i === 0
-								? {o: spring(1)}
-								: {o: spring(prevInterpolatedStyles[i - 1].o)}
-						})}>
-						{
-							interpolatingStyles =>
-								<g>
+							</g>
+					}
+				</StaggeredMotion>
+				<StaggeredMotion
+					defaultStyles={new Array(text.length).fill({o: 0})}
+					styles={prevInterpolatedStyles => prevInterpolatedStyles.map((_, i) => {
+						return i === 0
+							? {o: spring(1)}
+							: {o: spring(prevInterpolatedStyles[i - 1].o)}
+					})}>
+					{
+						interpolatingStyles =>
+							<g>
 								{interpolatingStyles.map((style, i) =>
 									textLabels[i](style.o)
 								)}
-								</g>
-						}
-					</StaggeredMotion>
-				</svg>
-			</div>
+							</g>
+					}
+				</StaggeredMotion>
+			</svg>
+		</div>
 	)
 }
