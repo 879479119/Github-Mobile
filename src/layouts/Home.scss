@@ -9,8 +9,11 @@
     background: url('https://developer.github.com/assets/images/status-icon-good.png') no-repeat;
     background-size: contain;
   }
-  .ant-input-search{
+  .ant-input-affix-wrapper .ant-input-search{
     opacity: 0.4;
+    //here is just a hack for mac
+    //it's ridiculous that the min-height appears to be 100% on mac
+    min-height: unset;
   }
 }
 
