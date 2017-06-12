@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, PureComponent} from 'react'
 import {connect} from 'react-redux'
 import {fetchTrending} from "../../views/TrendingRedux"
 import {Link} from "react-router-dom";
@@ -38,7 +38,15 @@ export default class DeveloperList extends Component {
 	}
 }
 
-function List({data}) {
+export class List extends PureComponent {
+
+	render(){
+		const {data, simple= false} = this.props
+		return renderList({data, simple})
+	}
+}
+
+function renderList({data, simple}) {
 	return (
 		<section className="developer-list">
 			<ul>
@@ -47,14 +55,14 @@ function List({data}) {
 
 						return (
 							<li key={index}>
-								<img src={item.avatar} alt=""/>
+								<img src={item.avatar || item.avatar_url} alt=""/>
 								<h4>
-									<Link to={`/profile/${item.name}`} style={{fontSize: 16}}>{item.name}</Link>
+									<Link to={`/user/${item.name || item.login}/profile`} style={{fontSize: 16}}>{item.name || item.login}</Link>
 									{item.full_name ? `(${item.full_name})` : ''}
 									<br/>
-									<Link to={`/repo/${item.name}/${item.repo}`}>{item.repo}</Link>
+									<Link to={`/repo/${item.name || item.login}/${item.repo}`}>{item.repo}</Link>
 								</h4>
-								<p>{item.description}</p>
+								{simple ? '' : <p>{item.description}</p>}
 								{item.type === 'User' ? <Button className="star" key={item.name} size="small" ><Icon type="user" />Follow</Button> : ''}
 							</li>
 						)

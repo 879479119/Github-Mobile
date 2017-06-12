@@ -12,6 +12,8 @@ import Repo from '../views/Repo'
 import Profile from "../components/User/Profile/index"
 import UserRepo from "../components/User/Repo/index"
 import StarRepo from "../components/User/Star/index"
+import Follower from "../components/User/Follower/index"
+import Following from "../components/User/Following/index"
 
 //the trending parts
 import TrendingList from "../components/Trending/TrendingList"
@@ -48,8 +50,8 @@ export default function (props) {
 									<Route path="/user/:username/profile" component={Profile}/>
 									<Route path="/user/:username/repo" component={UserRepo}/>
 									<Route path="/user/:username/star" component={StarRepo}/>
-									<Route path="/user/:username/follower" component={Home}/>
-									<Route path="/user/:username/following" component={Home}/>
+									<Route path="/user/:username/follower" component={Follower}/>
+									<Route path="/user/:username/following" component={Following}/>
 									<Route path="/:p" render={e=>{console.info(e);return <p>ERROR</p>}}/>
 								</Switch>
 							</User>

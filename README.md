@@ -29,6 +29,12 @@ Just take look at the package.json :kissing:
 **Finished:**
 + Home
   - Profile
++ User
+  - Profile
+  - Repository
+  - Stars
+  - Followers
+  - Following
 + Repo
   - Code
   - Issues
@@ -43,7 +49,7 @@ Just take look at the package.json :kissing:
   - Repository
   - Developer
   
-**Simple Preview: [http://120.24.49.153:800](http://120.24.49.153:800/#/)**
+**Simple Preview: [http://github.jian-gamestudio.cn](http://github.jian-gamestudio.cn)**
 *There are so many pages to work at, you can just take a look of it*
 
 ### Some Help I Need

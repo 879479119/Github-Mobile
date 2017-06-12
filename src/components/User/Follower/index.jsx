@@ -4,10 +4,10 @@ import {connect} from "react-redux";
 import "./index.scss";
 import {commonFetch, commonRelease} from "../../../views/QueueRedux";
 import addDataFetch from "../../../redux/addDataFetch";
-import RepoList from "../../Search/Repo"
+import {List as FollowerList} from "../../Trending/DeveloperList"
 import {Card, Icon, Tooltip} from "antd";
 export const API = [
-	'/api/activity/getStarredReposForUser',
+	'/api/users/getFollowersForUser',
 ]
 
 @withRouter
@@ -24,12 +24,12 @@ export default class Profile extends Component{
 		else commonFetch(API[0], {username})
 	}
 	render = () => {
-		let repos = this.getData(API[0])
+		let followers = this.getData(API[0])
 
 		let username = this.props.match.params.username
-		if(repos.status === 3){
+		if(followers.status === 3){
 			return (
-				<RepoList result={repos.result.data.data} className="user-repo-list" />
+				<FollowerList data={followers.result.data.data} simple={true}/>
 			)
 		}
 		return (
