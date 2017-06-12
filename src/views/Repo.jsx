@@ -59,7 +59,7 @@ export default class Repo extends Component{
 
 		return (
 			<Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 400 }}>
-				<h2><Link to={'/Profile/'+owner}>{owner}</Link>/<Link to={'/repo/'+owner+'/'+repo}>{repo}</Link></h2>
+				<h2><Link to={`/user/${owner}/profile`}>{owner}</Link>/<Link to={'/repo/'+owner+'/'+repo}>{repo}</Link></h2>
 				<section className="title-panel">
 					<ButtonGroup>
 						<Button size={'small'}><Icon type="eye-o" />Watch</Button>

@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import "./User.scss"
 import {commonFetch, commonRelease} from "./QueueRedux";
 import {userChangeSelection} from "./UserRedux"
+import {changeRouter} from "../layouts/HomeRedux";
 import addDataFetch from '../redux/addDataFetch'
 
 import { Layout, Menu, Icon, Badge } from 'antd'
@@ -19,7 +20,7 @@ export const API = [
 	queue: state.queue,
 	common: state.common,
 	user: state.user.username
-}),{ commonFetch, commonRelease, userChangeSelection})
+}),{ commonFetch, commonRelease, userChangeSelection, changeRouter})
 @addDataFetch
 export default class User extends Component{
 	componentDidMount(){
@@ -37,7 +38,7 @@ export default class User extends Component{
 	menuHandler(e){
 		const {changeRouter} = this.props
 		let username = this.props.match.params.username
-
+		console.info(`/user/${username}/${e.key}`)
 		changeRouter(`/user/${username}/${e.key}`)
 	}
 	render = () => {
@@ -61,7 +62,7 @@ export default class User extends Component{
 					selectedKeys={[selected]}
 					mode="horizontal"
 				    className="user-header"
-				    onclick={::this.menuHandler}
+				    onClick={::this.menuHandler}
 				>
 					<Menu.Item key="profile">
 						<Icon type="idcard" />Overview
