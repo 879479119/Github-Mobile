@@ -19,16 +19,13 @@ export const keys = ['contributor','traffic','commit','frequency','punch','netwo
 @addDataFetch
 export default class extends Component{
 	componentDidMount(){
-		const { commonFetch, owner, repo } = this.props
-
-		// for(let i = 0;i < API.length;i ++){
-		// 	if(this.getData(API[i]).status === 3){}
-		// 	else commonFetch(API[i], {owner, repo, path:''})
-		// }
+		const { commonFetch } = this.props,
+			owner = this.props.match.params.username,
+			repo = this.props.match.params.repo
 	}
 	//here is a hack trick, we just mount the style on "Link" rather than the "antd component"
 	render = () => {
-		const { owner, repo, graph } = this.props
+		const { graph, owner, repo } = this.props.match.params
 		const btn = ['Contributors','Traffic','Commits','Code frequency','Punch card','Network','Members','Dependents']
 		return (
 			<div className="main-body">

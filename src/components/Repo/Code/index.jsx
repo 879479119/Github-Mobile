@@ -33,7 +33,9 @@ export default class extends Component{
 		details: PropTypes.object
 	}
 	componentDidMount(){
-		const { commonFetch, owner, repo } = this.props
+		const { commonFetch } = this.props,
+			owner = this.props.match.params.username,
+			repo = this.props.match.params.repo
 
 		for(let i = 0;i < API.length;i ++){
 			//noinspection JSUnfilteredForInLoop
@@ -44,8 +46,8 @@ export default class extends Component{
 		}
 	}
 	render = () => {
-		const { owner, repo } = this.props,
-			{ details } = this.context
+		const { details } = this.context
+
 		let content = this.getData(API[0])
 		let languages = this.getData(API[1])
 		let readme = this.getData(API[2])

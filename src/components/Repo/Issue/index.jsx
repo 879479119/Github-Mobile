@@ -23,7 +23,10 @@ const API = [
 @addDataFetch
 export default class extends Component{
 	componentDidMount(){
-		const { commonFetch, owner, repo } = this.props
+		const { commonFetch } = this.props,
+			owner = this.props.match.params.username,
+			repo = this.props.match.params.repo
+
 
 		for(let i = 0;i < API.length;i ++){
 			if(this.getData(API[i]).status === 3){}
@@ -31,8 +34,8 @@ export default class extends Component{
 		}
 	}
 	render = () => {
-		const { owner, repo } = this.props,
-			{ details } = this.context
+		const owner = this.props.match.params.username,
+			repo = this.props.match.params.repo
 		let issues = this.getData(API[0])
 		let labels = this.getData(API[1])
 		let base = `/repo/${owner}/${repo}/issue`

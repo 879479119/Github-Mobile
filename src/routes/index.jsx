@@ -25,6 +25,8 @@ import Code from '../components/Repo/Code'
 import PullRequest from '../components/Repo/PullRequest'
 import Graph from '../components/Repo/Graph'
 
+import IssueContent from '../components/Repo/Issue/IssueContent'
+
 //the graph parts
 import Contributor from '../components/Repo/Graph/Contributor'
 import Commit from '../components/Repo/Graph/Commit'
@@ -60,40 +62,29 @@ export default function (props) {
 						{/*TODO: format the routes in a more gentle way*/}
 						<Route path="/repo">
 							<Repo>
-								<Route render={(e) => {
-									let ShowComponent = Code,
-										route = e.location.pathname.split('/')
-
-									//the basic router
-									switch (route[4]){
-										case 'code': ShowComponent = Code; break
-										case 'issue': ShowComponent = Issue; break
-										case 'pr': ShowComponent = PullRequest; break
-										//we cannot wrap the graph contents in the route when it's rendered via function
-										case 'graph': ShowComponent = Graph; break
-										default: ShowComponent = Code
-									}
-									let [,,owner,repo] = route
-
-									//dealing with the level3 router
-									let Content = undefined, graph = undefined
-									if(route[4] === 'graph'){
-										switch (route[5]){
-											case 'contributor': Content = Contributor; break
-											case 'commit': Content = Commit; break
-											case 'frequency': Content = Frequency; break
-											case 'punch': Content = Punch; break
-											default: Content = Contributor
-										}
-										graph = route[5] || 'contributor'
-									}
-
-									return (
-										<ShowComponent owner={owner} repo={repo} graph={graph} >
-											{Content ? <Content owner={owner} repo={repo}/> : ''}
-										</ShowComponent>
-									)
-								}}/>
+								<Switch>
+									<Route path="/repo/:username/:repo" exact={true} component={Code}/>
+									<Route path="/repo/:username/:repo/code" component={Code}/>
+									<Route path="/repo/:username/:repo/issue">
+										<Switch>
+											<Route path="/repo/:username/:repo/issue" exact={true} component={Issue}/>
+											<Route path="/repo/:username/:repo/issue/:sid" component={IssueContent}/>
+										</Switch>
+									</Route>
+									<Route path="/repo/:username/:repo/pr" component={PullRequest}/>
+									<Route path="/repo/:username/:repo/graph/:graph">
+										<Graph>
+											<Switch>
+												<Route path="/repo/:username/:repo/graph/contributor" component={Contributor}/>
+												<Route path="/repo/:username/:repo/graph/commit" component={Commit}/>
+												<Route path="/repo/:username/:repo/graph/frequency" component={Frequency}/>
+												<Route path="/repo/:username/:repo/graph/punch" component={Punch}/>
+												<Route path="/repo/:username/:repo/graph" component={Contributor}/>
+											</Switch>
+										</Graph>
+									</Route>
+									<Route path="/:p" render={e=>{console.info(e);return <p>ERROR</p>}}/>
+								</Switch>
 							</Repo>
 						</Route>
 						<Route path="/home" component={User}/>

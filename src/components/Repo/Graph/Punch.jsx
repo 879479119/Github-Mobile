@@ -14,7 +14,9 @@ export const API = '/api/repos/getStatsPunchCard'
 @addDataFetch
 export default class extends Component{
 	componentDidMount(){
-		const { commonFetch, owner, repo } = this.props
+		const { commonFetch } = this.props,
+			owner = this.props.match.params.username,
+			repo = this.props.match.params.repo
 
 		if(this.getData(API).status === 3){}
 		else commonFetch(API, {owner, repo})

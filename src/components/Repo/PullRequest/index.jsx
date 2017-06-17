@@ -23,7 +23,9 @@ const API = [
 @addDataFetch
 export default class extends Component{
 	componentDidMount(){
-		const { commonFetch, owner, repo } = this.props
+		const { commonFetch } = this.props,
+			owner = this.props.match.params.username,
+			repo = this.props.match.params.repo
 
 		for(let i = 0;i < API.length;i ++){
 			if(this.getData(API[i]).status === 3){}

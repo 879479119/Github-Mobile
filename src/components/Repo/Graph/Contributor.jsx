@@ -16,13 +16,14 @@ export const API = '/api/repos/getStatsContributors'
 @addDataFetch
 export default class extends Component{
 	componentDidMount(){
-		const { commonFetch, owner, repo } = this.props
+		const { commonFetch } = this.props,
+			owner = this.props.match.params.username,
+			repo = this.props.match.params.repo
 
 		if(this.getData(API).status === 3){}
 		else commonFetch(API, {owner, repo})
 	}
 	render = () => {
-		const { owner, repo } = this.props
 		let contributor = this.getData(API)
 
 		let sumArr = [], start= '', end= '', series = [], max = 1, failed = false
