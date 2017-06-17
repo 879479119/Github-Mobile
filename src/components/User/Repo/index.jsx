@@ -21,7 +21,6 @@ export default class Profile extends Component{
 	}
 	render = () => {
 		let repos = this.getData(API[0])
-		console.info(repos)
 		let username = this.props.match.params.username
 		if(repos.status === 3){
 			return (

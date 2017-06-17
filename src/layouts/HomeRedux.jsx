@@ -1,5 +1,6 @@
 import {push} from "react-router-redux"
-import {message} from "antd";
+import {message} from "antd"
+import {getItem, setItem} from "../utils/storage"
 
 export const ROUTE = "ROUTE"
 
@@ -26,6 +27,10 @@ export const AUTH_FETCH_INFO = "AUTH_FETCH_INFO"
 export const AUTH_FETCH_INFO_READY = "AUTH_FETCH_INFO_READY"
 export const AUTH_FETCH_INFO_ERROR = "AUTH_FETCH_INFO_ERROR"
 
+export const AUTH_FETCH_FOLLOWING = "AUTH_FETCH_FOLLOWING"
+export const AUTH_FETCH_FOLLOWING_READY = "AUTH_FETCH_FOLLOWING_READY"
+export const AUTH_FETCH_FOLLOWING_ERROR = "AUTH_FETCH_FOLLOWING_ERROR"
+
 /**
  * language controller
  */
@@ -34,7 +39,10 @@ export const CHANGE_LANGUAGE = "CHANGE_LANGUAGE"
 const initialState = {
 	route: '/home',
 	loginStatus: null,
-	language: 'en'
+	language: 'en',
+	name: undefined,
+	following: getItem('following') || [],
+	stared: getItem('stared') || []
 }
 
 export default function common(state = initialState, action) {
@@ -71,6 +79,14 @@ export default function common(state = initialState, action) {
 			message.error('Please check your network',3)
 			return Object.assign({}, state, {loginStatus: null})
 		/**
+		 * local data storage and initialize
+		 */
+		case AUTH_FETCH_FOLLOWING_READY:
+			message.success('Your following list is initialized',3)
+			const followingList = action.payload.data.data
+			setItem('following', followingList)
+			return Object.assign({}, state, {following: followingList})
+		/**
 		 * others
 		 */
 		case CHANGE_LANGUAGE:
@@ -90,7 +106,7 @@ export const changeRouter = (route) => {
 	}
 }
 
-export const login = () => dispatch => dispatch({type: LOGIN})
+export const login = (gname) => dispatch => dispatch({type: LOGIN, payload: {gname}})
 
 export const register = code => dispatch => dispatch({type: REG, payload: {code}})
 

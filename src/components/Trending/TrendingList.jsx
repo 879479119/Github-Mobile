@@ -40,7 +40,6 @@ export default class TrendingList extends Component {
 }
 
 function List({data}) {
-	console.info(data)
 	return (
 		<section className="trending-list">
 			<ul>

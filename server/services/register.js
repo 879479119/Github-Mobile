@@ -38,6 +38,6 @@ module.exports = function (code) {
 			gname: obj.res.data.name,
 			key: obj.token
 		}
-		return DataQuery.addUser(obj.res.data.id, obj.res.data.name, obj.token)
+		return DataQuery.addUser(obj.res.data.id, obj.res.data.username, obj.token)
 	})
 }

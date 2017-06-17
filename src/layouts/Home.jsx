@@ -1,12 +1,12 @@
 import React, {Component} from "react";
 import "./Home.scss";
 import {connect} from "react-redux";
-import {changeRouter, login, changeLanguage, register} from "./HomeRedux";
+import {changeLanguage, changeRouter, login, register} from "./HomeRedux";
 import {Link, withRouter} from "react-router-dom";
-import {Icon, Input, Layout, Menu, message, Button, notification} from "antd";
+import {Button, Icon, Input, Layout, Menu} from "antd";
 import AutoBreadcrumb from "../components/Common/AutoBreadcrumb";
-import {getCookie} from "../utils/cookie"
-import addDataFetch from '../redux/addDataFetch'
+import {getCookie} from "../utils/cookie";
+import addDataFetch from "../redux/addDataFetch";
 
 const { SubMenu } = Menu
 const { Search } = Input

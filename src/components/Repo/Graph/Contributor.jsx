@@ -30,7 +30,6 @@ export default class extends Component{
 		if(contributor.result){
 			try{
 				series = contributor.result.data.data.concat().reverse()
-				console.info(series)
 				series.forEach((item, index)=>{
 					if(index === 0){
 						start = formatDate(item.weeks[0].w * 1000, 4)
@@ -49,7 +48,6 @@ export default class extends Component{
 					})
 				})
 			}catch(e) {
-				console.error(e)
 				if(contributor.result.data.meta.status === "202 Accepted"){
 					failed = true
 				}

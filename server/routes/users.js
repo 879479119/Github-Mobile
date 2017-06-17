@@ -10,6 +10,7 @@ let register = require('../services/register')
 let getLang = require('../services/langInfo')
 let syncAuth = require('../proxy/syncAuth')
 let followingInit = require('../services/following.init')
+let addFollowingForUser = require('../dao/followAccess').addFollowingForUser
 
 router.post('/register', (req, respond)=>{
 
@@ -38,7 +39,11 @@ router.post('/register', (req, respond)=>{
 	}
 
 	login(gid, key).then((token)=>{
+		//store the login state
 		req.session.token = token
+		req.session.gname = gname
+
+		//refresh the cookies
 		respond.cookie('gid', gid, { maxAge: 30*24*60*60*1000 })
 		respond.cookie('gname', gname, { maxAge: 30*24*60*60*1000 })
 		respond.cookie('key',key, { maxAge: 30*24*60*60*1000, httpOnly: true })
@@ -101,11 +106,20 @@ router.post('/register', (req, respond)=>{
 		log(e, 1)
 		res.send(e)
 	})
-}).get('/getFollowing', (req, res) => {
-	let gname = req.query.name
-	console.info(gname)
-	//TODO: you should give me a gname instead of token here
+}).post('/getFollowing', (req, res) => {
+	//we will get the authorized user's info
+	let gname = req.query.name || req.session.gname
 	followingInit(gname).then((arr)=>{
+		res.send(STDR.success(arr))
+	}).catch(e=>{
+		log(e, 1)
+		res.send(e)
+	})
+}).post('/addFollowing', (req, res) => {
+	let gname = req.body.name
+	let following = req.body.follow
+
+	addFollowingForUser(gname, following).then((arr)=>{
 		res.send(STDR.success(arr))
 	}).catch(e=>{
 		log(e, 1)

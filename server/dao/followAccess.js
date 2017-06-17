@@ -9,26 +9,13 @@ let simpleQuery = require('./simpleQuery')
 const stringify = require('../helper/stringify')
 
 module.exports = {
-	addRepoInfo(repoArr){
-		let values = repoArr.map(item=>{
-			return '('+stringify(item)+')'
-		})
-		let query = `INSERT INTO t_repo VALUES ${values.join(',')}`
-
+	addFollowingForUser(gname, userInfo){
 		return new Promise(function(resolve, reject){
-			basicQuery(query, (err)=>{
+			simpleQuery('INSERT INTO t_following (NULL, ? , ? , ?)',
+				...userInfo, (err)=>{
 				if(err)	reject(STDR.databaseError(err))
-				else resolve(repoArr)
+				else resolve(100)
 			})
-		})
-	},
-	getRepoInfo(gname, repo){
-		return new Promise((resolve, reject)=>{
-			simpleQuery('SELECT * FROM t_repo WHERE git_name = ? AND repo_name = ?',
-				[gname, repo], (err, rows)=>{
-					if(err)	reject(STDR.databaseError(err))
-					else resolve(rows)
-				})
 		})
 	},
 	//get all the following people of user

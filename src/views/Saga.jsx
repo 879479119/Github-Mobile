@@ -1,6 +1,6 @@
-import {call, put, takeEvery} from "redux-saga/effects";
+import {call, put, takeEvery, select} from "redux-saga/effects";
 import {COMMON_SEARCH, SEARCH_ERROR, SEARCH_LOADING, SEARCH_READY} from "./SearchResultRedux";
-import {LOGIN, LOGIN_ERROR, LOGIN_SUCCESS, NETWORK_ERROR, REG, REG_ERROR, REG_SUCCESS, AUTH_FETCH_INFO} from "../layouts/HomeRedux";
+import {LOGIN, LOGIN_ERROR, LOGIN_SUCCESS, NETWORK_ERROR, REG, REG_ERROR, REG_SUCCESS, AUTH_FETCH_INFO, AUTH_FETCH_FOLLOWING, AUTH_FETCH_FOLLOWING_READY, AUTH_FETCH_FOLLOWING_ERROR} from "../layouts/HomeRedux";
 import request, {login, register} from "../utils/request";
 import {COMMON_FETCH, COMMON_ERROR, COMMON_LOADING, COMMON_READY} from './QueueRedux'
 
@@ -14,13 +14,14 @@ export default [
 	takeEvery(LOGIN, loginSaga),
 	takeEvery(REG, registerSaga),
 	takeEvery(COMMON_FETCH, commonFetch),
+	takeEvery(AUTH_FETCH_FOLLOWING, userSaga),
 ]
 
 /**
  * handle the search action
  * @param action
  */
-function* commonSearch(action) {
+function * commonSearch(action) {
 	//return when there is nothing to do
 	if(!action.payload.q) return
 
@@ -41,7 +42,7 @@ function* commonSearch(action) {
 /**
  * init the server when open a page
  */
-function* loginSaga() {
+function * loginSaga(action) {
 	try {
 		let res = yield call(login)
 		let data = yield res.json()
@@ -51,13 +52,22 @@ function* loginSaga() {
 			yield put({type: LOGIN_SUCCESS})
 			//once we login, get the detail
 			yield put({type: COMMON_FETCH, payload: {url: API_AUTH_INFO}})
+
+			let following = yield select(s => s.common.following)
+
+			if(following.length === 0){
+				//get the following people of us
+				yield put({type: AUTH_FETCH_FOLLOWING})
+			}
+			//get the stared repos the authorized person need
+
 		}
 	}catch (e){
 		yield put({type: NETWORK_ERROR})
 	}
 }
 
-function* registerSaga(action) {
+function * registerSaga(action) {
 	try {
 		let res = yield call(register, action.payload.code)
 		let data = yield res.json()
@@ -75,7 +85,7 @@ function* registerSaga(action) {
  * the most common way to release a request
  * @param action
  */
-function *commonFetch(action) {
+function * commonFetch(action) {
 	let {url} = action.payload
 	yield put({type: COMMON_LOADING, payload: {url}})
 	try {
@@ -92,3 +102,20 @@ function *commonFetch(action) {
 	}
 }
 
+
+/**
+ * init the server when open a page
+ */
+function * userSaga() {
+	try {
+		let res = yield call(request, ...['/user/getFollowing'])
+		let data = yield res.json()
+		if(data.code >= 20000){
+			yield put({type: AUTH_FETCH_FOLLOWING_ERROR})
+		}else{
+			yield put({type: AUTH_FETCH_FOLLOWING_READY, payload: {data}})
+		}
+	}catch (e){
+		yield put({type: AUTH_FETCH_FOLLOWING_ERROR})
+	}
+}
