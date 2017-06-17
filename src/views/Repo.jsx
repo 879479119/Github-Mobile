@@ -6,6 +6,8 @@ import { changeRouter } from "../layouts/HomeRedux";
 import { commonFetch, commonRelease} from "./QueueRedux";
 import {connect} from "react-redux";
 import addDataFetch from '../redux/addDataFetch'
+import PropTypes from "prop-types"
+
 
 const {Content} = Layout
 const ButtonGroup = Button.Group
@@ -25,7 +27,7 @@ export default class Repo extends Component{
 	}
 	//noinspection JSUnusedGlobalSymbols
 	static childContextTypes = {
-		details: React.PropTypes.object
+		details: PropTypes.object
 	}
 	//noinspection JSUnusedGlobalSymbols
 	getChildContext(){

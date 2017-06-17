@@ -95,7 +95,7 @@ export default class Home extends Component{
 			blog: "",
 			company: "@CQUPTBee ",
 			created_at:	"2015-06-03T06:35:45Z",
-			email: "767444690@qq.com",
+			email: "",
 			events_url:	"https://api.github.com/users/879479119/events{/privacy}",
 			followers: 24,
 			followers_url: "https://api.github.com/users/879479119/followers",
@@ -110,7 +110,6 @@ export default class Home extends Component{
 		}
 
 		if(authInfo.status === 3){
-			console.info(authInfo)
 			user = Object.assign(user, authInfo.result.data.data)
 		}
 

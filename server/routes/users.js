@@ -9,6 +9,7 @@ let commitService = require('../services/commit.optimize')
 let register = require('../services/register')
 let getLang = require('../services/langInfo')
 let syncAuth = require('../proxy/syncAuth')
+let followingInit = require('../services/following.init')
 
 router.post('/register', (req, respond)=>{
 
@@ -95,6 +96,16 @@ router.post('/register', (req, respond)=>{
 	}
 
 	commitService(gname, ['repo_name', 'time']).then((arr)=>{
+		res.send(STDR.success(arr))
+	}).catch(e=>{
+		log(e, 1)
+		res.send(e)
+	})
+}).get('/getFollowing', (req, res) => {
+	let gname = req.query.name
+	console.info(gname)
+	//TODO: you should give me a gname instead of token here
+	followingInit(gname).then((arr)=>{
 		res.send(STDR.success(arr))
 	}).catch(e=>{
 		log(e, 1)

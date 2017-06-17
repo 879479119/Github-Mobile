@@ -11,6 +11,8 @@ import LanguageBar from "./LanguageBar";
 import CommitBar from "./CommitBar";
 import formatDate from "../../../utils/formatDate";
 import {FormattedMessage} from "react-intl"
+import PropTypes from "prop-types"
+
 
 const Option = Select.Option
 const ButtonGroup = Button.Group
@@ -28,7 +30,7 @@ export const API = [
 @addDataFetch
 export default class extends Component{
 	static contextTypes = {
-		details: React.PropTypes.object
+		details: PropTypes.object
 	}
 	componentDidMount(){
 		const { commonFetch, owner, repo } = this.props

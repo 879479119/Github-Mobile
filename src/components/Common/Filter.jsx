@@ -1,6 +1,7 @@
 import React from "react";
 import "./Filter.scss";
 import cls from "classnames"
+import PropTypes from "prop-types"
 
 /**
  * the filter or sortable box
@@ -17,7 +18,7 @@ export default function Filter(props) {
 }
 
 Filter.prototype.propTypes = {
-	type: React.PropTypes.string.isRequired
+	type: PropTypes.string.isRequired
 }
 
 function sort(props) {

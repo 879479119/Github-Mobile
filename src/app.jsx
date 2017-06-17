@@ -10,13 +10,15 @@ import {history} from './redux/store'
 
 import './styles/common.scss'
 import 'antd/dist/antd.min.css'
+import PropTypes from "prop-types"
+
 
 const store = configStore(rootStore, {})
 
 class Page extends Component{
 	static propTypes = {
-		store: React.PropTypes.object.isRequired,
-		history: React.PropTypes.object.isRequired
+		store: PropTypes.object.isRequired,
+		history: PropTypes.object.isRequired
 	}
 	render = () => (
 		<Provider store={this.props.store}>
