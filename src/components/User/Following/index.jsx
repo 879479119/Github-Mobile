@@ -12,7 +12,8 @@ export const API = [
 
 @withRouter
 @connect(state=>({
-	queue: state.queue
+	queue: state.queue,
+	list: state.common.following
 }),{ commonFetch, commonRelease})
 @addDataFetch
 export default class Profile extends Component{
@@ -29,7 +30,7 @@ export default class Profile extends Component{
 		let username = this.props.match.params.username
 		if(following.status === 3){
 			return (
-				<FollowerList data={following.result.data.data} simple={true}/>
+				<FollowerList data={following.result.data.data} simple={true} list={this.props.list} />
 			)
 		}
 		return (
