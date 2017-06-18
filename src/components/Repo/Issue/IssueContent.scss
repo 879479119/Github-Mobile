@@ -1,0 +1,16 @@
+.timeline{
+  position: relative;
+  z-index: 1;
+  //I learned this trick from github
+  &::before{
+    content: '';
+    width: 2px;
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 70px;
+    overflow: hidden;
+    background: #eee;
+  }
+}

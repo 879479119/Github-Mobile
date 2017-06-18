@@ -5,8 +5,10 @@ import "./index.scss";
 import addDataFetch from "../../../redux/addDataFetch";
 import {commonFetch, commonRelease} from "../../../views/QueueRedux";
 import {connect} from "react-redux";
+import "./IssueContent.scss"
 import Header from "./IssueDetail/Header"
 import Comment from "./IssueDetail/Comment"
+import Event from "./IssueDetail/Event"
 import ListModified from "./ListModified";
 import IssueList from "./IssueList"
 
@@ -48,12 +50,23 @@ export default class extends Component{
 			header = <Header issue={issue.result.data.data} />
 		}
 
-		if(comments.status === 3){
-			list = comments.result.data.data.map((item, index) => {
-
-				return (
-					<p key={index}>{item.updated_at}</p>
-				)
+		if(comments.status === 3 && timeline.status === 3){
+			let time = comments.result.data.data.concat(timeline.result.data.data)
+			time.sort((prev, cur)=> {
+				if(prev.created_at > cur.created_at) return 1
+				if(prev.created_at < cur.created_at) return -1
+				return 0
+			})
+			list = time.map((item, index) => {
+				if(item.event){
+					return (
+						<Event key={item.id} detail={item}/>
+					)
+				}else{
+					return (
+						<Comment key={item.id} detail={item}/>
+					)
+				}
 			})
 		}
 
@@ -65,10 +78,12 @@ export default class extends Component{
 		 *  - text editor, add your comment
 		 */
 		return (
-			<div className="main-body">
+			<div className="main-body " style={{position: "relative"}}>
 				{header}
-				<Comment detail={issue.result ? issue.result.data.data : {}}/>
-				{list}
+				<div className="timeline">
+					<Comment detail={issue.result ? issue.result.data.data : {}}/>
+					{list}
+				</div>
 			</div>
 		)
 	}

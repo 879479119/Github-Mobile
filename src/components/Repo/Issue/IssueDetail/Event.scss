@@ -1,0 +1,45 @@
+.cross-referenced{
+  display: flex;
+  width: 800px;
+  position: relative;
+  z-index: 1;
+  margin-top: 10px;
+  .icon{
+    background: #eee;
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    border-radius: 50%;
+    font-size: 16px;
+    margin-left: 55px;
+    text-align: center;
+  }
+  .state{
+    position: absolute;
+    right: 10px;
+    bottom: 4px;
+    background: mediumpurple;
+    padding: 4px 10px;
+    color: #fff;
+    border-radius: 4px;
+  }
+  section{
+
+    img{
+      margin: 0 10px;
+      vertical-align: top;
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+    }
+    p{
+      font-size: 16px;
+      font-weight: bold;
+      margin-left: 10px;
+      margin-top: 4px;
+    }
+    span{
+      color: #999;
+    }
+  }
+}

@@ -5,6 +5,8 @@ import {Link} from "react-router-dom";
 import {fromNow} from "../../../../utils/formatDate"
 import {Icon} from "antd";
 import "./Comment.scss"
+import showdown from "showdown"
+import "../../../Common/markdown.scss"
 
 export default class Comment extends Component {
 	static propType = {}
@@ -22,6 +24,8 @@ export default class Comment extends Component {
 			return <p>loading</p>
 		}
 		const {detail} = this.props
+		const converter = new showdown.Converter()
+
 		return (
 			<div className="comment-card">
 				<div className="cc-face">
@@ -39,10 +43,8 @@ export default class Comment extends Component {
 							<Icon type="smile-o" />
 						</p>
 					</section>
-					<section className="cc-body">
-						<p>
-							{detail.body}
-						</p>
+					<section className="cc-body markdown">
+						<p dangerouslySetInnerHTML={{__html: converter.makeHtml(detail.body)}}/>
 					</section>
 				</div>
 			</div>
