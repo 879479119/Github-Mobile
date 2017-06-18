@@ -1,0 +1,33 @@
+.issue-c-header{
+  display: flex;
+  border-bottom: #eee solid 1px;
+
+  .ich-title{
+    flex: 1;
+    .number{
+      color: #888
+    }
+  }
+  .control-panel{
+    width: 300px;
+  }
+
+  p{
+    margin: 10px 0;
+    .ich-state{
+      display: inline-block;
+      margin-right: 10px;
+      border-radius: 4px;
+      padding: 4px 6px;
+      color: #fff;
+    }
+    .open{
+      background: #00a854;
+    }
+    .closed{
+      background: #d73435;
+    }
+  }
+
+
+}

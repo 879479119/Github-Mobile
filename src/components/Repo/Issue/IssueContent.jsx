@@ -6,6 +6,7 @@ import addDataFetch from "../../../redux/addDataFetch";
 import {commonFetch, commonRelease} from "../../../views/QueueRedux";
 import {connect} from "react-redux";
 import Header from "./IssueDetail/Header"
+import Comment from "./IssueDetail/Comment"
 import ListModified from "./ListModified";
 import IssueList from "./IssueList"
 
@@ -56,9 +57,17 @@ export default class extends Component{
 			})
 		}
 
+		/**
+		 * combine all the factors into a timeline
+		 *  - header, general information of this issue
+		 *  - first comment, the issue itself
+		 *  - comments, the comments array mix with all the timeline events
+		 *  - text editor, add your comment
+		 */
 		return (
 			<div className="main-body">
 				{header}
+				<Comment detail={issue.result ? issue.result.data.data : {}}/>
 				{list}
 			</div>
 		)

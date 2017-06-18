@@ -37,7 +37,7 @@ Just take look at the package.json :kissing:
   - Following
 + Repo
   - Code
-  - Issues
+  - Issues(issue timeline building)
   - Pull requests
   - ~~Projects~~
   - ~~Wiki~~

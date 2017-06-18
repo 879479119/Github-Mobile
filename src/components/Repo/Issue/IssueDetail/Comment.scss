@@ -1,0 +1,44 @@
+.comment-card{
+  margin-top: 10px;
+  display: flex;
+  width: 800px;
+  .cc-face{
+    img{
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+      border-radius: 4px;
+    }
+  }
+  .cc-cell{
+    position: relative;
+    flex: 1;
+    border-radius: 4px;
+    border: solid 1px #eee;
+    &::before{
+      content: "";
+      display: block;
+      position: absolute;
+      top: 8px;
+      left: -6px;
+      width: 0;
+      height: 0;
+      border-top: solid 5px transparent;
+      border-bottom: solid 5px transparent;
+      border-right: solid 5px #eee;
+    }
+
+    .cc-header{
+
+      background: #f1f1f1;
+      padding: 4px 12px;
+      p{
+        display: inline-block;
+      }
+    }
+    .cc-body{
+
+      padding: 10px;
+    }
+  }
+}
