@@ -50,21 +50,23 @@ export default class extends Component{
 			header = <Header issue={issue.result.data.data} />
 		}
 
+		//updated to use only the timeline data
 		if(comments.status === 3 && timeline.status === 3){
-			let time = comments.result.data.data.concat(timeline.result.data.data)
-			time.sort((prev, cur)=> {
-				if(prev.created_at > cur.created_at) return 1
-				if(prev.created_at < cur.created_at) return -1
-				return 0
-			})
+			// let time = comments.result.data.data.concat(timeline.result.data.data)
+			// time.sort((prev, cur)=> {
+			// 	if(prev.created_at > cur.created_at) return 1
+			// 	if(prev.created_at < cur.created_at) return -1
+			// 	return 0
+			// })
+			let time = timeline.result.data.data
 			list = time.map((item, index) => {
-				if(item.event){
+				if(item.event === "commented"){
 					return (
-						<Event key={item.id} detail={item}/>
+						<Comment key={index} detail={item}/>
 					)
 				}else{
 					return (
-						<Comment key={item.id} detail={item}/>
+						<Event key={index} detail={item}/>
 					)
 				}
 			})
