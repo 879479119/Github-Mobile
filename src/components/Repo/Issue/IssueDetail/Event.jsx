@@ -52,12 +52,23 @@ class Reference extends PureComponent{
 		super(...props)
 		this.state = {
 			data: {},
-			loading: true
+			loading: true,
+			base: {
+				owner: null,
+				repo: null
+			},
+			shown: false
 		}
 	}
 	componentDidMount() {
 		const {detail: {commit_id, url}} = this.props
 		let [,owner, repo] = url.match(/\/repos\/([^/]+)\/([^/]+)/)
+		//change the state detail
+		this.setState({
+			base: {
+				owner, repo
+			}
+		})
 		request(`/api/repos/getCommit`, {
 			owner, repo, sha: commit_id
 		}).then(res => res.json()).then(json => {
@@ -65,10 +76,35 @@ class Reference extends PureComponent{
 				data: json.data.data,
 				loading: false
 			})
+			console.info(123,json)
+		})
+	}
+	toggle(){
+		this.setState({
+			shown: !this.state.shown
 		})
 	}
 	render(){
 		const {detail} = this.props
+
+		let Detail = () => {
+			let msg = this.state.data.commit.message
+			let [,pr_number, owner, branch, title, issue_number] = msg.match(/#(\d+) from ([^/]+)\/([^/\n↵]+)[↵\n]*(.*)#(\d+)$/)
+
+			return (
+				<div className="referenced-detail-item">
+					<Icon type="swap-right"/>
+					<img src={detail.actor.avatar_url} alt="face"/>
+					<Link to={`/repo/${this.state.owner}/${this.state.repo}/commit/${this.state.data.sha}`}>Merge Pull Request From </Link>
+					<Link to={`/user/${owner}/profile`}>{owner}</Link>/
+					<Link to={`/repo/${owner}/${this.state.repo}/branch/${branch}`}>{branch}</Link>
+					<span onClick={::this.toggle}><Icon type="ellipsis" /></span>
+					<p style={{display: this.state.shown ? 'block' : 'none'}}>
+						{title} <Link to={`/repo/${this.state.owner}/${this.state.repo}/issue/${issue_number}`}>#{issue_number}</Link>
+					</p>
+				</div>
+			)
+		}
 
 		return (
 			<div className="referenced">
@@ -85,20 +121,7 @@ class Reference extends PureComponent{
 			</div>
 		)
 
-		function Detail() {
-			let msg = this.state.data.commit.message
-			let [,issue_number, owner, branch, title, pr_number] = msg.match(/#(\d+) from ([^/]+)\/([^/\n↵]+)↵*(.*)#(\d+)$/)
 
-			return (
-				<p>
-					<Icon type="swap-right"/>
-					<img src={detail.actor.avatar_url} alt="face"/>
-					<Link to={`/`}>Merge Pull Request From </Link>
-					<Link to={`/user/${owner}/profile`}>{owner}</Link>/
-					<Link to={`/user/${owner}/profile`}>{branch}</Link>
-				</p>
-			)
-		}
 	}
 }
 

@@ -86,6 +86,32 @@
   }
   .referenced-detail{
     margin-left: 130px;
+    .referenced-detail-item{
+      a{
+        color: #333333;
+        &:hover{
+          text-decoration: underline;
+        }
+      }
+      span{
+        display: inline-block;
+        padding: 0 2px;
+        background: #ddd;
+        color: #222;
+        margin-left: 10px;
+        &:hover{
+          background: #234f79;
+          color: #ddd;
+          cursor: pointer;
+        }
+      }
+      p{
+        margin-left: 16px;
+        a{
+          color: #00a2ae;
+        }
+      }
+    }
   }
   img{
     margin: 0 10px;
