@@ -1,11 +1,10 @@
-.cross-referenced{
+.issue-event{
   display: flex;
   width: 800px;
   position: relative;
   z-index: 1;
   margin-top: 10px;
   .icon{
-    background: #eee;
     width: 30px;
     height: 30px;
     vertical-align: middle;
@@ -13,12 +12,14 @@
     font-size: 16px;
     margin-left: 55px;
     text-align: center;
+    i{
+      margin-top: 7px;
+    }
   }
   .state{
     position: absolute;
     right: 10px;
     bottom: 4px;
-    background: mediumpurple;
     padding: 4px 10px;
     color: #fff;
     border-radius: 4px;
@@ -41,5 +42,56 @@
     span{
       color: #999;
     }
+  }
+}
+
+
+.cross-referenced{
+  .icon{
+    background: #eee;
+  }
+  .state{
+    background: mediumpurple;
+  }
+}
+
+.closed{
+  .icon{
+    background: #cb2431;
+    color: #fff;
+  }
+  section{
+    margin-top: 7px;
+  }
+  .hr{
+    height: 3px;
+    background: #eee;
+    margin-top: 10px;
+    width: 800px;
+  }
+}
+
+.referenced{
+  .icon{
+    background: #eee;
+  }
+  section{
+    margin-top: 7px;
+  }
+  .hr{
+    height: 3px;
+    background: #eee;
+    margin-top: 10px;
+    width: 800px;
+  }
+  .referenced-detail{
+    margin-left: 130px;
+  }
+  img{
+    margin: 0 10px;
+    vertical-align: top;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
   }
 }
