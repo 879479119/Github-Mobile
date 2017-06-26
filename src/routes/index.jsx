@@ -25,6 +25,7 @@ import Code from '../components/Repo/Code'
 import PullRequest from '../components/Repo/PullRequest'
 import Graph from '../components/Repo/Graph'
 
+import Catalog from '../components/Repo/Code/Catalog'
 import IssueContent from '../components/Repo/Issue/IssueContent'
 
 //the graph parts
@@ -59,12 +60,12 @@ export default function (props) {
 							</User>
 						</Route>
 						<Route path="/search" component={SearchResult}/>
-						{/*TODO: format the routes in a more gentle way*/}
 						<Route path="/repo">
 							<Repo>
 								<Switch>
 									<Route path="/repo/:username/:repo" exact={true} component={Code}/>
-									<Route path="/repo/:username/:repo/code" component={Code}/>
+									<Route path="/repo/:username/:repo/code" exact={true} component={Code}/>
+									<Route path="/repo/:username/:repo/code/:branch" component={Catalog}/>
 									<Route path="/repo/:username/:repo/issue">
 										<Switch>
 											<Route path="/repo/:username/:repo/issue" exact={true} component={Issue}/>
@@ -91,8 +92,6 @@ export default function (props) {
 						<Route path="/trending">
 							<Trending>
 								{/*{TODO: It's strange that the following route doesn't work as thought}*/}
-								{/*<Route path="/developers" component={DeveloperList} />*/}
-								{/*<Route path="/repo" component={TrendingList} />*/}
 								<Route render={(e) => {
 									let ShowComponent = TrendingList,
 										route = e.location.pathname.split('/'),

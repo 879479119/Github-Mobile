@@ -12,6 +12,11 @@ const initialState = {
 		star: false,
 		fork: false,
 	},
+	code: {
+		branch: 'master',
+		path: '',
+		sha: ''
+	},
 	issue: {
 		page: 1,
 		label: undefined,
