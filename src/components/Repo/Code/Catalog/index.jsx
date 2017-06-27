@@ -3,6 +3,7 @@ import {withRouter} from "react-router-dom";
 import {Button, Select, Spin} from "antd";
 import "./index.scss";
 import {commonFetch, commonRelease} from "../../../../views/QueueRedux";
+import {repoContentInit} from "../../../../views/RepoRedux";
 import addDataFetch from '../../../../redux/addDataFetch'
 import {connect} from "react-redux";
 import CodeTree from "../CodeTree";
@@ -18,31 +19,24 @@ export const API = [
 
 @withRouter
 @connect(state=>({
-	queue: state.queue
-}),{ commonFetch, commonRelease})
+	code: state.repo.code
+}),{ commonFetch, commonRelease, repoContentInit})
 @addDataFetch
 export default class extends Component{
 	static contextTypes = {
 		details: PropTypes.object
 	}
 	componentDidMount(){
-		const { commonFetch } = this.props,
-			owner = this.props.match.params.username,
-			repo = this.props.match.params.repo
-
-		for(let i = 0;i < API.length;i ++){
-			//noinspection JSUnfilteredForInLoop
-			if(this.getData(API[i]).status === 3){}
-			else { //noinspection JSUnfilteredForInLoop
-				commonFetch(API[i], {owner, repo, path:''})
-			}
-		}
+		const { repoContentInit } = this.props
+		let [, branch, path] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/)
+		repoContentInit(path)
 	}
 	render = () => {
 		const { details } = this.context
+		const {code} = this.props
 		const { username, repo } = this.props.match.params
 
-		let content = this.getData(API[0])
+		console.info(312, code)
 
 		return (
 			<div className="main-body">
@@ -61,17 +55,17 @@ export default class extends Component{
 						<Button>History</Button>
 					</ButtonGroup>
 				</section>
-				{(()=> {
-					let fragment
-					if (content.status === 3) {
-						fragment = <CodeTree list={content.result.data.data} style={{display: 'inline-block', width: 'auto'}} simple={true} />
-					} else if (content.status === 2) {
-						fragment = <p>error</p>
-					} else {
-						fragment = <section className="loading" style={{minHeight: 250, textAlign: 'center', display: 'inline-block'}}><Spin style={{marginTop: 100}}/></section>
-					}
-					return fragment
-				})()}
+				{/*{(()=> {*/}
+					{/*let fragment*/}
+					{/*if (content.status === 3) {*/}
+						{/*fragment = <CodeTree list={content.result.data.data} style={{display: 'inline-block', width: 'auto'}} simple={true} />*/}
+					{/*} else if (content.status === 2) {*/}
+						{/*fragment = <p>error</p>*/}
+					{/*} else {*/}
+						{/*fragment = <section className="loading" style={{minHeight: 250, textAlign: 'center', display: 'inline-block'}}><Spin style={{marginTop: 100}}/></section>*/}
+					{/*}*/}
+					{/*return fragment*/}
+				{/*})()}*/}
 			</div>
 		)
 	}

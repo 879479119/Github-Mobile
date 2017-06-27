@@ -3,6 +3,7 @@ import {Link, withRouter} from "react-router-dom";
 import {Icon, Layout, Menu, Button} from "antd";
 import "./Repo.scss";
 import { changeRouter } from "../layouts/HomeRedux";
+import { repoChangeSelf } from "../views/RepoRedux";
 import { commonFetch, commonRelease} from "./QueueRedux";
 import {connect} from "react-redux";
 import addDataFetch from '../redux/addDataFetch'
@@ -18,8 +19,10 @@ const API = [
 @withRouter
 @connect(state=>({
 	queue: state.queue,
-	route: state.common.route
-}),{ commonFetch, commonRelease, changeRouter})
+	route: state.common.route,
+	owner: state.repo.owner,
+	repo: state.repo.repo
+}),{ commonFetch, commonRelease, changeRouter, repoChangeSelf})
 @addDataFetch
 export default class Repo extends Component{
 	constructor(...props){
@@ -34,27 +37,25 @@ export default class Repo extends Component{
 		return {details: this.getData(API[0])}
 	}
 	menuHandler(e){
-		const {changeRouter} = this.props,
-			{owner, repo} = this.data
+		const {changeRouter, repo, owner} = this.props
 		const map = ['code','issue','pr','project','pulse','graph']
 		changeRouter(`/repo/${owner}/${repo}/${e.key}`)
 	}
+	// Any problem ?
 	componentWillMount(){
-		const {location} = this.props
+		const { location,repoChangeSelf } = this.props
 		let [,,owner,repo] = location.pathname.split('/')
-		//store it, maybe in other ways
-		this.data = {
+		repoChangeSelf({
 			owner, repo
-		}
+		})
 	}
 	componentDidMount(){
-		const { commonFetch } = this.props,
-			{ owner, repo } = this.data
+		const { commonFetch,location } = this.props
+		let [,,owner,repo] = location.pathname.split('/')
 		commonFetch(API[0], {owner, repo})
 	}
 	render = () => {
-		const { location } = this.props
-		const { owner, repo } = this.data
+		const { location, repo, owner } = this.props
 		let details = this.getData(API[0])
 
 		let [,,,,tab='code'] = location.pathname.split('/')

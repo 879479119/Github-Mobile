@@ -3,6 +3,7 @@ import {COMMON_SEARCH, SEARCH_ERROR, SEARCH_LOADING, SEARCH_READY} from "./Searc
 import {LOGIN, LOGIN_ERROR, LOGIN_SUCCESS, NETWORK_ERROR, REG, REG_ERROR, REG_SUCCESS, AUTH_FETCH_INFO, AUTH_FETCH_FOLLOWING, AUTH_FETCH_FOLLOWING_READY, AUTH_FETCH_FOLLOWING_ERROR} from "../layouts/HomeRedux";
 import request, {login, register} from "../utils/request";
 import {COMMON_FETCH, COMMON_ERROR, COMMON_LOADING, COMMON_READY} from './QueueRedux'
+import {REPO_CONTENT_INIT, REPO_CONTENT_READY} from './RepoRedux'
 
 import {API_AUTH_INFO} from "../layouts/Home"
 
@@ -15,6 +16,7 @@ export default [
 	takeEvery(REG, registerSaga),
 	takeEvery(COMMON_FETCH, commonFetch),
 	takeEvery(AUTH_FETCH_FOLLOWING, userSaga),
+	takeEvery(REPO_CONTENT_INIT, codeSaga),
 ]
 
 /**
@@ -117,5 +119,35 @@ function * userSaga() {
 		}
 	}catch (e){
 		yield put({type: AUTH_FETCH_FOLLOWING_ERROR})
+	}
+}
+
+
+function * codeSaga(action) {
+	try {
+		let repo = yield select(s => s.repo)
+		let data = []
+		/**
+		 * get the detail iterator
+		 *  we just need the last three contents
+		 */
+		let path = action.payload.path
+
+		for(let i = 0;i < 3;i ++){
+			let res = yield call(request, ...["/api/repos/getContent", {
+				owner: repo.owner,
+				repo: repo.repo,
+				path: path
+			}])
+			let temp = yield res.json()
+			data.push(temp)
+
+			if(path === '') break
+			path = path.replace(/\/([^/]*)$/,'')
+		}
+
+		yield put({type: REPO_CONTENT_READY, payload: {data}})
+	}catch (e){
+		yield put({type: NETWORK_ERROR, payload: {}})
 	}
 }
