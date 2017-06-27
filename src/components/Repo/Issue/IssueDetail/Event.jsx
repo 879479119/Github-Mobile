@@ -76,7 +76,6 @@ class Reference extends PureComponent{
 				data: json.data.data,
 				loading: false
 			})
-			console.info(123,json)
 		})
 	}
 	toggle(){

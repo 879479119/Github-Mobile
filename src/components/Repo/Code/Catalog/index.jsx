@@ -7,8 +7,6 @@ import addDataFetch from '../../../../redux/addDataFetch'
 import {connect} from "react-redux";
 import CodeTree from "../CodeTree";
 import PathBreadcrumb from "../../../Common/Path"
-import User from "../User";
-import formatDate from "../../../../utils/formatDate";
 import PropTypes from "prop-types"
 
 
@@ -53,7 +51,7 @@ export default class extends Component{
 						<Option value="master">Master</Option>
 						<Option value="lucy">Others</Option>
 					</Select>
-					<section style={{display: 'inline-block'}}>
+					<section style={{display: 'inline-block', marginLeft: 20}}>
 						<PathBreadcrumb user={username} repo={repo} />
 					</section>
 					<ButtonGroup style={{float:'right'}}>
@@ -66,7 +64,7 @@ export default class extends Component{
 				{(()=> {
 					let fragment
 					if (content.status === 3) {
-						fragment = <CodeTree list={content.result.data.data} style={{display: 'inline-block'}}/>
+						fragment = <CodeTree list={content.result.data.data} style={{display: 'inline-block', width: 'auto'}} simple={true} />
 					} else if (content.status === 2) {
 						fragment = <p>error</p>
 					} else {
