@@ -3,7 +3,7 @@ import {COMMON_SEARCH, SEARCH_ERROR, SEARCH_LOADING, SEARCH_READY} from "./Searc
 import {LOGIN, LOGIN_ERROR, LOGIN_SUCCESS, NETWORK_ERROR, REG, REG_ERROR, REG_SUCCESS, AUTH_FETCH_INFO, AUTH_FETCH_FOLLOWING, AUTH_FETCH_FOLLOWING_READY, AUTH_FETCH_FOLLOWING_ERROR} from "../layouts/HomeRedux";
 import request, {login, register} from "../utils/request";
 import {COMMON_FETCH, COMMON_ERROR, COMMON_LOADING, COMMON_READY} from './QueueRedux'
-import {REPO_CONTENT_INIT, REPO_CONTENT_READY} from './RepoRedux'
+import {REPO_CONTENT_INIT, REPO_CONTENT_READY, REPO_CONTENT_SHOW_FILE, REPO_CONTENT_CHANGE} from './RepoRedux'
 
 import {API_AUTH_INFO} from "../layouts/Home"
 
@@ -17,6 +17,7 @@ export default [
 	takeEvery(COMMON_FETCH, commonFetch),
 	takeEvery(AUTH_FETCH_FOLLOWING, userSaga),
 	takeEvery(REPO_CONTENT_INIT, codeSaga),
+	takeEvery(REPO_CONTENT_CHANGE, codeSaga),
 ]
 
 /**
@@ -140,7 +141,17 @@ function * codeSaga(action) {
 				path: path
 			}])
 			let temp = yield res.json()
-			data.push(temp)
+
+			/**
+			 * render the file content while starting with a file
+			 */
+			if(!Array.isArray(temp.data.data)){
+				yield put({type: REPO_CONTENT_SHOW_FILE, payload: {file: temp.data.data}})
+			}else{
+				//when meet the directory, we push it into the array
+				data.push(temp)
+			}
+
 
 			if(path === '') break
 			path = path.replace(/\/([^/]*)$/,'')

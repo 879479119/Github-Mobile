@@ -14,7 +14,9 @@ export const GRAPH_COMMIT_SELECT = "GRAPH_COMMIT_SELECT"
  * @param index
  */
 export const REPO_CONTENT_INIT = 'REPO_CONTENT_INIT'
+export const REPO_CONTENT_CHANGE = 'REPO_CONTENT_CHANGE'
 export const REPO_CONTENT_READY = 'REPO_CONTENT_READY'
+export const REPO_CONTENT_SHOW_FILE = 'REPO_CONTENT_SHOW_FILE'
 
 
 export const repoChangeSelf = (detail) => dispatch => dispatch({
@@ -27,10 +29,19 @@ export const graph_commit_select = (index) => dispatch => dispatch({
 	payload: {index}
 })
 
-export const repoContentInit = (path) => dispatch => dispatch({
-	type: REPO_CONTENT_INIT,
-	payload: {path}
-})
+export const repoContentInit = (path, init= false) => dispatch => {
+	if(init === true){
+		dispatch({
+			type: REPO_CONTENT_INIT,
+			payload: {path}
+		})
+	}else{
+		dispatch({
+			type: REPO_CONTENT_CHANGE,
+			payload: {path}
+		})
+	}
+}
 
 
 const initialState = {
@@ -45,7 +56,8 @@ const initialState = {
 		branch: 'master',
 		path: '',
 		detail: [],
-		sha: ''
+		sha: '',
+		file: undefined
 	},
 	issue: {
 		page: 1,
@@ -74,17 +86,37 @@ export default function repo(state= initialState, action) {
 				commit: action.payload.index
 			}
 		})
+		//this is the first time when user enter the page
 		case REPO_CONTENT_INIT: return Object.assign({}, state, {
 			code: {
 				branch: "master",
-				path: action.payload.path
+				path: action.payload.path,
+				file: undefined
+			}
+		})
+		//when click the link
+		case REPO_CONTENT_CHANGE: return Object.assign({}, state, {
+			code: {
+				branch: "master",
+				path: action.payload.path,
+				detail: state.code.detail,
+				file: undefined
 			}
 		})
 		case REPO_CONTENT_READY: return Object.assign({}, state, {
 			code: {
 				branch: "master",
 				path: state.code.path,
-				detail: action.payload.data
+				detail: action.payload.data,
+				file: state.code.file,
+			}
+		})
+		case REPO_CONTENT_SHOW_FILE: return Object.assign({}, state, {
+			code: {
+				branch: "master",
+				path: state.code.path,
+				detail: state.code.detail,
+				file: action.payload.file
 			}
 		})
 	}

@@ -23,20 +23,31 @@ export const API = [
 }),{ commonFetch, commonRelease, repoContentInit})
 @addDataFetch
 export default class extends Component{
+	constructor(...props){
+		super(...props)
+	}
 	static contextTypes = {
 		details: PropTypes.object
 	}
 	componentDidMount(){
 		const { repoContentInit } = this.props
 		let [, branch, path] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/)
-		repoContentInit(path)
+		repoContentInit(path, true)
+	}
+	callbackLink(path){
+		const { repoContentInit } = this.props
+		repoContentInit(path, false)
 	}
 	render = () => {
 		const { details } = this.context
-		const {code} = this.props
+		const { code } = this.props
 		const { username, repo } = this.props.match.params
 
-		console.info(312, code)
+		let file = null
+		if(code.file){
+			let buffer = new Buffer(code.file.content, 'base64')
+			file = buffer.toString()
+		}
 
 		return (
 			<div className="main-body">
@@ -55,17 +66,20 @@ export default class extends Component{
 						<Button>History</Button>
 					</ButtonGroup>
 				</section>
-				{/*{(()=> {*/}
-					{/*let fragment*/}
-					{/*if (content.status === 3) {*/}
-						{/*fragment = <CodeTree list={content.result.data.data} style={{display: 'inline-block', width: 'auto'}} simple={true} />*/}
-					{/*} else if (content.status === 2) {*/}
-						{/*fragment = <p>error</p>*/}
-					{/*} else {*/}
-						{/*fragment = <section className="loading" style={{minHeight: 250, textAlign: 'center', display: 'inline-block'}}><Spin style={{marginTop: 100}}/></section>*/}
-					{/*}*/}
-					{/*return fragment*/}
-				{/*})()}*/}
+				<section className="file-content">
+					{(()=> {
+						let fragment = null
+						if (code.detail && code.detail.length > 0) {
+							fragment = code.detail.reverse().map((item, index) => (
+								<CodeTree key={index} list={item.data.data} className="tree" simple={true} callback={::this.callbackLink} />
+							))
+						}
+						return fragment
+					})()}
+				</section>
+				<div>
+					<pre dangerouslySetInnerHTML={{__html: file}} />
+				</div>
 			</div>
 		)
 	}

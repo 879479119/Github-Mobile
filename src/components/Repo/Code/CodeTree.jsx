@@ -1,4 +1,4 @@
-import React, {PureComponent} from "react";
+import React, {PureComponent, Component} from "react";
 import PropTypes from "prop-types"
 import {Link} from "react-router-dom";
 import "./CodeTree.scss";
@@ -7,7 +7,18 @@ import request from "../../../utils/request"
 import formatSize from '../../../utils/formatSize'
 import cls from "classnames"
 
-export default class CodeTree extends PureComponent{
+export default class CodeTree extends Component{
+	constructor(...props){
+		super(...props)
+	}
+
+	clickHandler(event){
+		let path = ''
+		if(event.target.href && (path = event.target.href.replace(/.*code\/master/,''))){
+			const { callback } = this.props
+			callback(path)
+		}
+	}
 
 	render(){
 		const { list, style, simple= false, className } = this.props
@@ -15,7 +26,7 @@ export default class CodeTree extends PureComponent{
 			if(list[i].type === 'dir') list.unshift(...list.splice(i,1))
 		}
 		return(
-			<div className={cls("code-tree", className)} style={style}>
+			<div className={cls("code-tree", className)} style={style} onClick={::this.clickHandler}>
 				<ul>{
 					list.map((item, i)=>{
 						return <Item key={i} item={item} simple={simple} />
@@ -57,7 +68,7 @@ class Item extends PureComponent{
 		let f = item.url.match(/repos\/(.+)\?ref/)[1].replace(/contents/,'code/master')
 		return (
 			<li className={item.type}>
-				<Link to={`/repo/${f}`}>
+				<Link to={`/repo/${f}`} key={`/repo/${f}`}>
 					<Icon type={item.type==='file'?'file-text':'folder'}/>{item.name}
 				</Link>
 				{simple ? null : <Link to={`/commit/${item.sha}`}>{item.sha}</Link>}
