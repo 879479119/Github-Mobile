@@ -84,7 +84,6 @@ export default function (props) {
 											</Switch>
 										</Graph>
 									</Route>
-									<Route path="/:p" render={e=>{console.info(e);return <p>ERROR</p>}}/>
 								</Switch>
 							</Repo>
 						</Route>

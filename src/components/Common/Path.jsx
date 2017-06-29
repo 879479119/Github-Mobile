@@ -36,7 +36,7 @@ export default class Path extends PureComponent {
 
 		function PLink({p, children}) {
 			return (
-				<Link to={`/repo/${_this.props.user}/${_this.props.repo}/${branch}`+p}>{children}</Link>
+				<Link to={`/repo/${_this.props.user}/${_this.props.repo}/code/${branch}`+p}>{children}</Link>
 			)
 		}
 	}

@@ -2,7 +2,7 @@ import React, {PureComponent, Component} from "react";
 import PropTypes from "prop-types"
 import {Link} from "react-router-dom";
 import "./CodeTree.scss";
-import {Icon} from "antd";
+import {Icon, Spin} from "antd";
 import request from "../../../utils/request"
 import formatSize from '../../../utils/formatSize'
 import cls from "classnames"
@@ -10,6 +10,61 @@ import cls from "classnames"
 export default class CodeTree extends Component{
 	constructor(...props){
 		super(...props)
+		this.state = {
+			directory: [],
+			loading: true
+		}
+	}
+
+	async updatePath(path){
+		const {owner, repo} = this.props
+
+		this.setState({
+			loading: true
+		})
+
+		let content = await request("/api/repos/getContent",{
+			owner: owner,
+			repo: repo,
+			path: path
+		})
+
+		this.setState({
+			loading: false
+		})
+
+		return await content.json()
+	}
+
+	async componentDidMount() {
+		const {path} = this.props
+
+		let result = await this.updatePath(path)
+
+		if(result.data.data.length){
+			this.setState({
+				directory: result.data.data
+			})
+		}
+
+		console.info('mounted')
+
+	}
+
+	async componentWillReceiveProps(nextProps){
+
+		if(nextProps.path !== this.props.path){
+
+			let result = await this.updatePath(nextProps.path)
+
+			if(result.data.data.length){
+				this.setState({
+					directory: result.data.data
+				})
+			}
+
+			console.info('updated')
+		}
 	}
 
 	clickHandler(event){
@@ -21,10 +76,19 @@ export default class CodeTree extends Component{
 	}
 
 	render(){
-		const { list, style, simple= false, className } = this.props
+		const { style, simple= false, className } = this.props
+		let list = this.state.directory.slice()
+
 		for(let i = 0;i < list.length;i ++){
 			if(list[i].type === 'dir') list.unshift(...list.splice(i,1))
 		}
+
+		if(this.state.loading === true){
+			return <div className={cls("code-tree", className)} style={style}>
+				<Spin/>
+			</div>
+		}
+
 		return(
 			<div className={cls("code-tree", className)} style={style} onClick={::this.clickHandler}>
 				<ul>{

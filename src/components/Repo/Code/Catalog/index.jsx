@@ -9,7 +9,7 @@ import {connect} from "react-redux";
 import CodeTree from "../CodeTree";
 import PathBreadcrumb from "../../../Common/Path"
 import PropTypes from "prop-types"
-
+import DirExplore from "./DirExplore"
 
 const Option = Select.Option
 const ButtonGroup = Button.Group
@@ -29,11 +29,11 @@ export default class extends Component{
 	static contextTypes = {
 		details: PropTypes.object
 	}
-	componentDidMount(){
-		const { repoContentInit } = this.props
-		let [, branch, path] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/)
-		repoContentInit(path, true)
-	}
+	// componentDidMount(){
+	// 	const { repoContentInit } = this.props
+	// 	let [, branch, path] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/)
+	// 	repoContentInit(path, true)
+	// }
 	callbackLink(path){
 		const { repoContentInit } = this.props
 		repoContentInit(path, false)
@@ -42,6 +42,7 @@ export default class extends Component{
 		const { details } = this.context
 		const { code } = this.props
 		const { username, repo } = this.props.match.params
+		let [, branch, path] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/)
 
 		let file = null
 		if(code.file){
@@ -66,17 +67,7 @@ export default class extends Component{
 						<Button>History</Button>
 					</ButtonGroup>
 				</section>
-				<section className="file-content">
-					{(()=> {
-						let fragment = null
-						if (code.detail && code.detail.length > 0) {
-							fragment = code.detail.reverse().map((item, index) => (
-								<CodeTree key={index} list={item.data.data} className="tree" simple={true} callback={::this.callbackLink} />
-							))
-						}
-						return fragment
-					})()}
-				</section>
+				<DirExplore callback={::this.callbackLink} defaultPath={path} repo={repo} owner={username} branch={'master'} />
 				<div>
 					<pre dangerouslySetInnerHTML={{__html: file}} />
 				</div>
