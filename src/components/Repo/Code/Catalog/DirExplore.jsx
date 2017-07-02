@@ -26,7 +26,7 @@ export default class DirExplore extends Component {
 	}
 
 	render() {
-		let { callback, owner, repo } = this.props
+		let { callback, owner, repo, getFile } = this.props
 		let path = this.state.path
 
 		let treePath = [path], i = 1
@@ -41,7 +41,7 @@ export default class DirExplore extends Component {
 				{
 					treePath.reverse().map((item, index) => {
 						if(index > 2) return
-						return <CodeTree key={item} path={item} className="tree" simple={true} callback={::this.pathChanged} owner={owner} repo={repo} />
+						return <CodeTree key={item} path={item} className="tree" simple={true} callback={::this.pathChanged} getFile={getFile} owner={owner} repo={repo} />
 					})
 				}
 			</section>

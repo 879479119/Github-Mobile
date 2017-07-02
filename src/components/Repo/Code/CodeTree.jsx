@@ -45,9 +45,9 @@ export default class CodeTree extends Component{
 			this.setState({
 				directory: result.data.data
 			})
+		}else{
+			this.props.getFile(result.data.data.content)
 		}
-
-		console.info('mounted')
 
 	}
 

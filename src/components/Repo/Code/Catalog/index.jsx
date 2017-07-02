@@ -10,6 +10,8 @@ import CodeTree from "../CodeTree";
 import PathBreadcrumb from "../../../Common/Path"
 import PropTypes from "prop-types"
 import DirExplore from "./DirExplore"
+import CodeStage from "../../../Common/CodeStage"
+
 
 const Option = Select.Option
 const ButtonGroup = Button.Group
@@ -25,19 +27,27 @@ export const API = [
 export default class extends Component{
 	constructor(...props){
 		super(...props)
+		this.state = {
+			file: null
+		}
 	}
 	static contextTypes = {
 		details: PropTypes.object
 	}
-	// componentDidMount(){
-	// 	const { repoContentInit } = this.props
-	// 	let [, branch, path] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/)
-	// 	repoContentInit(path, true)
-	// }
+	componentDidMount(){
+
+	}
 	callbackLink(path){
 		const { repoContentInit } = this.props
 		repoContentInit(path, false)
 	}
+	getFile(content){
+		console.info(content)
+		this.setState({
+			file: content
+		})
+	}
+
 	render = () => {
 		const { details } = this.context
 		const { code } = this.props
@@ -45,8 +55,8 @@ export default class extends Component{
 		let [, branch, path] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/)
 
 		let file = null
-		if(code.file){
-			let buffer = new Buffer(code.file.content, 'base64')
+		if(this.state.file){
+			let buffer = new Buffer(this.state.file, 'base64')
 			file = buffer.toString()
 		}
 
@@ -67,9 +77,9 @@ export default class extends Component{
 						<Button>History</Button>
 					</ButtonGroup>
 				</section>
-				<DirExplore callback={::this.callbackLink} defaultPath={path} repo={repo} owner={username} branch={'master'} />
+				<DirExplore callback={::this.callbackLink} defaultPath={path} repo={repo} owner={username} branch={'master'} getFile={::this.getFile} />
 				<div>
-					<pre dangerouslySetInnerHTML={{__html: file}} />
+					<CodeStage content={file}/>
 				</div>
 			</div>
 		)
