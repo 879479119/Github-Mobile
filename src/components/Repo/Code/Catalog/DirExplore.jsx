@@ -37,7 +37,7 @@ export default class DirExplore extends Component {
 		treePath.splice(3)
 
 		return (
-			<section className="file-content">
+			<section className="file-content" style={{display: 'flex'}}>
 				{
 					treePath.reverse().map((item, index) => {
 						if(index > 2) return

@@ -26,4 +26,57 @@
         float: right;
       }
     }
-  }}
+  }
+}
+
+.file-type{
+  flex: 1;
+  .download{
+    margin: 0 auto;
+    text-align: center;
+  }
+  .bg_black{
+    margin: 20px;
+    background-color: #eee;
+    /* width: 300px; */
+    padding: 20px 30px;
+    /* height: 300px; */
+  }
+  .bg_white{
+    background-color: #fff;
+    width: 200px;
+    height: 240px;
+    padding: 100px 30px;
+    margin: 10px auto;
+    position: relative;
+    text-align: justify;
+    h3{
+      font-size: 30px;
+    }
+    &::before,&::after{
+      content:" ";
+      box-sizing: content-box;
+    }
+    &::before{
+      z-index: 10000;
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      width: 1px;
+      display: block;
+      height: 20px;
+      border-left: 70px solid #eee;
+      border-bottom: 70px solid transparent;
+    }
+    &::after{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-bottom: 50px solid #fff;
+      border-left: 50px solid transparent;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+  }
+}

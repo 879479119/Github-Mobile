@@ -6,13 +6,15 @@ import {Icon, Spin} from "antd";
 import request from "../../../utils/request"
 import formatSize from '../../../utils/formatSize'
 import cls from "classnames"
+import Lang from "../../../utils/languages"
 
 export default class CodeTree extends Component{
 	constructor(...props){
 		super(...props)
 		this.state = {
 			directory: [],
-			loading: true
+			loading: true,
+			fileDetail: undefined
 		}
 	}
 
@@ -46,26 +48,29 @@ export default class CodeTree extends Component{
 				directory: result.data.data
 			})
 		}else{
+			this.setState({
+				fileDetail: result.data.data
+			})
 			this.props.getFile(result.data.data.content)
 		}
 
 	}
 
-	async componentWillReceiveProps(nextProps){
-
-		if(nextProps.path !== this.props.path){
-
-			let result = await this.updatePath(nextProps.path)
-
-			if(result.data.data.length){
-				this.setState({
-					directory: result.data.data
-				})
-			}
-
-			console.info('updated')
-		}
-	}
+	// async componentWillReceiveProps(nextProps){
+	//
+	// 	if(nextProps.path !== this.props.path){
+	//
+	// 		let result = await this.updatePath(nextProps.path)
+	//
+	// 		if(result.data.data.length){
+	// 			this.setState({
+	// 				directory: result.data.data
+	// 			})
+	// 		}
+	//
+	// 		console.info('updated')
+	// 	}
+	// }
 
 	clickHandler(event){
 		let path = ''
@@ -87,6 +92,29 @@ export default class CodeTree extends Component{
 			return <div className={cls("code-tree", className)} style={style}>
 				<Spin/>
 			</div>
+		}
+
+		if(this.state.fileDetail){
+			const data = this.state.fileDetail
+			let lang = '', color = ''
+			try{
+				//FIX: error with regexp
+				lang = data.name.match(/\.(.*?)?$/)[1]
+				color = Lang[color]['color']
+			}catch (E){
+
+			}
+			return(
+				<div className={cls("code-tree", "file-type", className)} style={style}>
+					<section className="bg_black">
+						<div className="bg_white">
+							<h3><span className="icon-lang" style={{background:color}}/>&lt;{lang}/&gt;</h3>
+							<p>{data.name}</p>
+						</div>
+						<p className="download" ><Icon type="download"/>&nbsp;&nbsp;<a download href={data.download_url}>download</a></p>
+					</section>
+				</div>
+			)
 		}
 
 		return(

@@ -42,7 +42,6 @@ export default class extends Component{
 		repoContentInit(path, false)
 	}
 	getFile(content){
-		console.info(content)
 		this.setState({
 			file: content
 		})

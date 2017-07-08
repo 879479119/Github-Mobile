@@ -1,17 +1,17 @@
 import React, {Component, PureComponent} from "react"
 import cls from "classnames"
 import PropTypes from "prop-types"
-import "../../lib/syntaxhighlighter"
-import "../../lib/theme.css"
 
-export default class CodeStage extends Component {
+export default function({...props}) {
+
+	return <CodeStage {...props}/>
+}
+
+class CodeStage extends Component {
 	static propType = {}
 
 	constructor(...props) {
 		super(...props)
-	}
-	componentDidUpdate(){
-		Syntaxhighlighter.default.highlight()
 	}
 	componentDidMount() {
 
@@ -19,7 +19,8 @@ export default class CodeStage extends Component {
 	render() {
 		return (
 			<div key="code" >
-				<pre className="brush: js">{this.props.content}</pre>
+
+				<pre style={{marginTop: 20, padding: 30, background: "#fafafa"}}>{this.props.content}</pre>
 			</div>
 		)
 	}
