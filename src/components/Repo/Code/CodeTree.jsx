@@ -2,9 +2,11 @@ import React, {PureComponent, Component} from "react";
 import PropTypes from "prop-types"
 import {Link} from "react-router-dom";
 import "./CodeTree.scss";
-import {Icon, Spin} from "antd";
+import {Icon, Spin, Tooltip} from "antd";
 import request from "../../../utils/request"
 import formatSize from '../../../utils/formatSize'
+import fromNow from '../../../utils/formatDate'
+import emojizer from '../../../utils/emojizer'
 import cls from "classnames"
 import Lang from "../../../utils/languages"
 
@@ -81,7 +83,7 @@ export default class CodeTree extends Component{
 	}
 
 	render(){
-		const { style, simple= false, className } = this.props
+		const { style, simple= false, className,repo, owner } = this.props
 		let list = this.state.directory.slice()
 
 		for(let i = 0;i < list.length;i ++){
@@ -89,7 +91,7 @@ export default class CodeTree extends Component{
 		}
 
 		if(this.state.loading === true){
-			return <div className={cls("code-tree", className)} style={style}>
+			return <div className={cls("code-tree", className)} style={Object.assign({},style,{width: 300})}>
 				<Spin/>
 			</div>
 		}
@@ -99,16 +101,23 @@ export default class CodeTree extends Component{
 			let lang = '', color = ''
 			try{
 				//FIX: error with regexp
-				lang = data.name.match(/\.(.*?)?$/)[1]
-				color = Lang[color]['color']
+				lang = data.name.replace(/.*\./gi,'')
+				let extensionMap = {
+					js: 'JavaScript',
+					php: 'PHP',
+					rb: 'Ruby',
+					html: 'HTML',
+				}
+				color = Lang[extensionMap[lang]]['color']
+				console.info(color)
 			}catch (E){
-
+				console.info('CANNOT FIND THE COLOR OF THE EXT')
 			}
 			return(
 				<div className={cls("code-tree", "file-type", className)} style={style}>
 					<section className="bg_black">
 						<div className="bg_white">
-							<h3><span className="icon-lang" style={{background:color}}/>&lt;{lang}/&gt;</h3>
+							<h3 style={{color: color}}>&lt;{lang}/&gt;</h3>
 							<p>{data.name}</p>
 						</div>
 						<p className="download" ><Icon type="download"/>&nbsp;&nbsp;<a download href={data.download_url}>download</a></p>
@@ -121,7 +130,7 @@ export default class CodeTree extends Component{
 			<div className={cls("code-tree", className)} style={style} onClick={::this.clickHandler}>
 				<ul>{
 					list.map((item, i)=>{
-						return <Item key={i} item={item} simple={simple} />
+						return <HoverItem key={i} item={item} simple={simple} repo={repo} owner={owner} />
 					})
 				}</ul>
 			</div>
@@ -166,6 +175,67 @@ class Item extends PureComponent{
 				{simple ? null : <Link to={`/commit/${item.sha}`}>{item.sha}</Link>}
 				<em>{item.size !== 0 ? formatSize(item.size) : ''}</em>
 			</li>
+		)
+	}
+}
+
+
+
+class HoverItem extends Item{
+	constructor({...props}){
+		super(...props)
+		this.state = {
+			sent: false,
+			loading: true,
+			list: []
+		}
+	}
+	async handleHover(e){
+		const {item: {name, path}, repo, owner} = this.props
+		if(e === true && this.state.sent === false){
+			let result = await request("/api/repos/getCommits",{
+				owner: owner,
+				repo: repo,
+				path: path
+			})
+
+			this.setState({
+				sent: true,
+			})
+
+			let data = await result.json()
+
+			this.setState({
+				list: data.data.data,
+				loading: false
+			})
+		}
+	}
+	render(){
+		let overlay = ''
+		const {repo, owner} = this.props
+		if(this.state.loading){
+			overlay = <Icon type="loading" />
+		}else if(this.state.sent === true && this.state.list.length > 0){
+			//render the result list
+			overlay = (
+				<ul>
+					{this.state.list.map((item, index)=>
+						<li>
+							<Link to={`/repo/${owner}/${repo}/commit/${item.sha}`}>
+								<span className="ct-message">{emojizer(item.commit.message, false)}</span>
+								<span style={{float: 'right'}}>{fromNow(item.commit.committer.date)}</span>
+							</Link>
+						</li>)}
+				</ul>
+			)
+		}else{
+			//error and reload
+		}
+		return (
+			<Tooltip overlay={overlay} overlayClassName="tooltip-modified" onVisibleChange={::this.handleHover} mouseEnterDelay={0.5}>
+				{super.render()}
+			</Tooltip>
 		)
 	}
 }
