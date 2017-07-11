@@ -39,13 +39,14 @@ function stringify(file) {
 		}
 
 		if(/^-.*/.test(line)){
-			return <tr className="c-del"><td>{++ left}</td><td> </td><td><pre>{line}</pre></td></tr>
+			return <tr className="c-del"><td>{left ++}</td><td> </td><td><pre>{line}</pre></td></tr>
 		}
 
 		if(/^\+.*/.test(line)){
-			return <tr className="c-add"><td> </td><td>{++ right}</td><td><pre>{line}</pre></td></tr>
+			return <tr className="c-add"><td> </td><td>{right ++}</td><td><pre>{line}</pre></td></tr>
 		}
 
+		return <tr className="c-normal"><td>{left ++}</td><td>{right ++}</td><td><pre>{line}</pre></td></tr>
 	})
 	return <table className="commit-compare-table">{domNode}</table>
 }

@@ -1,17 +1,21 @@
 .commit-cell{
-
+  margin: 20px;
+  font-size: 12px;
   .commit-compare-table{
     td{
       width: 50px;
     }
     .c-more{
-
+      background-color: #fafafa;
     }
     .c-del{
-
+      background: rgba(204, 49, 49, 0.42);
     }
     .c-add{
-
+      background: rgba(173, 255, 47, 0.33);
+    }
+    .c-normal{
+      background: rgba(35, 79, 121, 0.33);
     }
   }
 }
