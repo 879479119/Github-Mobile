@@ -24,13 +24,14 @@ import Issue from '../components/Repo/Issue'
 import Code from '../components/Repo/Code'
 import PullRequest from '../components/Repo/PullRequest'
 import Graph from '../components/Repo/Graph'
+import Commit from '../components/Repo/Commit'
 
 import Catalog from '../components/Repo/Code/Catalog'
 import IssueContent from '../components/Repo/Issue/IssueContent'
 
 //the graph parts
 import Contributor from '../components/Repo/Graph/Contributor'
-import Commit from '../components/Repo/Graph/Commit'
+import CommitGraph from '../components/Repo/Graph/Commit'
 import Frequency from '../components/Repo/Graph/Frequency'
 import Punch from '../components/Repo/Graph/Punch'
 import {Route, Switch} from "react-router";
@@ -66,6 +67,7 @@ export default function (props) {
 									<Route path="/repo/:username/:repo" exact={true} component={Code}/>
 									<Route path="/repo/:username/:repo/code" exact={true} component={Code}/>
 									<Route path="/repo/:username/:repo/code/:branch" component={Catalog}/>
+									<Route path="/repo/:username/:repo/commit/:sha" component={Commit}/>
 									<Route path="/repo/:username/:repo/issue">
 										<Switch>
 											<Route path="/repo/:username/:repo/issue" exact={true} component={Issue}/>
@@ -77,7 +79,7 @@ export default function (props) {
 										<Graph>
 											<Switch>
 												<Route path="/repo/:username/:repo/graph/contributor" component={Contributor}/>
-												<Route path="/repo/:username/:repo/graph/commit" component={Commit}/>
+												<Route path="/repo/:username/:repo/graph/commit" component={CommitGraph}/>
 												<Route path="/repo/:username/:repo/graph/frequency" component={Frequency}/>
 												<Route path="/repo/:username/:repo/graph/punch" component={Punch}/>
 												<Route path="/repo/:username/:repo/graph" component={Contributor}/>

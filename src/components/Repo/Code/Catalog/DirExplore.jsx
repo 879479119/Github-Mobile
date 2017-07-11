@@ -41,7 +41,7 @@ export default class DirExplore extends Component {
 				{
 					treePath.reverse().map((item, index) => {
 						if(index > 2) return
-						return <CodeTree key={item} path={item} className="tree" simple={true} callback={::this.pathChanged} getFile={getFile} owner={owner} repo={repo} />
+						return <CodeTree key={index} path={item} className="tree" simple={true} callback={::this.pathChanged} getFile={getFile} owner={owner} repo={repo} />
 					})
 				}
 			</section>
