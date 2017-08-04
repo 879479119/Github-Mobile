@@ -40,3 +40,4 @@ jspm_packages
 server/dist
 config/CDNConfig.js
 /server/store/
+/.DS_Store
