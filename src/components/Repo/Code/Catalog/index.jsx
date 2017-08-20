@@ -24,7 +24,7 @@ export const API = [
 	code: state.repo.code
 }),{ commonFetch, commonRelease, repoContentInit})
 @addDataFetch
-export default class extends Component{
+export default class Catalog extends Component{
 	constructor(...props){
 		super(...props)
 		this.state = {

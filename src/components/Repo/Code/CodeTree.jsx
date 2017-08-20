@@ -20,7 +20,7 @@ export default class CodeTree extends Component{
 		}
 	}
 
-	async updatePath(path){
+	async updatePath(path = ''){
 		const {owner, repo} = this.props
 
 		this.setState({
@@ -28,9 +28,7 @@ export default class CodeTree extends Component{
 		})
 
 		let content = await request("/api/repos/getContent",{
-			owner: owner,
-			repo: repo,
-			path: path
+			owner, repo, path,
 		})
 
 		this.setState({
@@ -55,24 +53,7 @@ export default class CodeTree extends Component{
 			})
 			this.props.getFile(result.data.data.content)
 		}
-
 	}
-
-	// async componentWillReceiveProps(nextProps){
-	//
-	// 	if(nextProps.path !== this.props.path){
-	//
-	// 		let result = await this.updatePath(nextProps.path)
-	//
-	// 		if(result.data.data.length){
-	// 			this.setState({
-	// 				directory: result.data.data
-	// 			})
-	// 		}
-	//
-	// 		console.info('updated')
-	// 	}
-	// }
 
 	clickHandler(event){
 		let path = ''
@@ -85,7 +66,6 @@ export default class CodeTree extends Component{
 	render(){
 		const { style, simple= false, className,repo, owner } = this.props
 		let list = this.state.directory.slice()
-
 		for(let i = 0;i < list.length;i ++){
 			if(list[i].type === 'dir') list.unshift(...list.splice(i,1))
 		}

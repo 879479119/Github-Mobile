@@ -124,7 +124,11 @@ export default class Home extends Component{
 						className="left-menu"
 						style={{ lineHeight: '64px' }}
 					>
-						<Menu.Item key="0"><Search placeholder="Search" style={{width: 200,marginTop:20}} onSearch={::this.searchContent} /></Menu.Item>
+						<Menu.Item key="0">
+							<span style={{width: 200, marginTop:20, display: 'inline-block'}} className="top-search" >
+								<Search placeholder="Search" onSearch={::this.searchContent} style={{ minHeight: '0' }} />
+							</span>
+						</Menu.Item>
 						<Menu.Item key="1">Pull requests</Menu.Item>
 						<Menu.Item key="2">Issues</Menu.Item>
 						<Menu.Item key="3">Gist</Menu.Item>

@@ -28,7 +28,7 @@ export const API = [
 	queue: state.queue
 }),{ commonFetch, commonRelease})
 @addDataFetch
-export default class extends Component{
+export default class Code extends Component{
 	static contextTypes = {
 		details: PropTypes.object
 	}
@@ -47,6 +47,8 @@ export default class extends Component{
 	}
 	render = () => {
 		const { details } = this.context
+		const owner = this.props.match.params.username,
+			repo = this.props.match.params.repo
 
 		let content = this.getData(API[0])
 		let languages = this.getData(API[1])
@@ -60,7 +62,7 @@ export default class extends Component{
 				{(()=> {
 					let fragment
 					if (content.status === 3) {
-						fragment = <CodeTree list={content.result.data.data} style={{display: 'inline-block'}}/>
+						fragment = <CodeTree owner={owner} repo={repo} list={content.result.data.data} style={{display: 'inline-block'}}/>
 					} else if (content.status === 2) {
 						fragment = <p>error</p>
 					} else {

@@ -29,7 +29,7 @@ export default class extends Component{
 		const btn = ['Contributors','Traffic','Commits','Code frequency','Punch card','Network','Members','Dependents']
 		return (
 			<div className="main-body">
-				<div className="ant-btn-group">
+				<div className="ant-btn-group mod-group">
 					{btn.map((item, index) => (
 						<Link
 							className={cls('ant-btn', 'ant-btn-lg', graph === keys[index] ? 'ant-btn-primary' : 'ant-btn-default')}
