@@ -1,0 +1,42 @@
+export default {
+  header: {
+    code: 0,
+    message: '操作成功',
+  },
+  data: [{
+    data: [{
+      port: '3309',
+      datasourceId: 5,
+      name: 'offline event pv uv ',
+      update_at: '2017-07-05 15:19:16.0',
+      host: '10.111.0.173',
+      created_at: '2017-07-05 15:19:16.0',
+      id: 15,
+      type: 'mysql',
+      email: '',
+      table: 'offline_event_pv_uv',
+      sql: 'event_metric',
+      permission: '100',
+      maxPermission: '110',
+    }, {
+      port: '3309',
+      datasourceId: 5,
+      name: 'test',
+      update_at: '2017-07-05 15:19:16.0',
+      host: '10.111.0.173',
+      created_at: '2017-07-05 15:19:16.0',
+      id: 16,
+      type: 'mysql',
+      email: '',
+      table: 'offline_event_pv_uv',
+      sql: 'event_metric',
+      permission: '100',
+      maxPermission: '011',
+    }],
+    page: {
+      pageNo: 1,
+      pageSize: 20,
+      totalCount: 1,
+    },
+  }],
+}

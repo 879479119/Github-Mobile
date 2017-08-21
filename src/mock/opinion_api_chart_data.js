@@ -1,0 +1,1 @@
+export default { header: { code: 0, message: '操作成功' }, data: [{ chartId: '', metaData: [{ id: 'interest', name: 'interest', comment: 'interest', isHide: false, isDim: true, metricsId: '', axis: -1 }, { id: 'uv', name: 'uv', comment: 'uv', isHide: false, isDim: false, metricsId: 'uv', axis: 0 }], data: [['female', 6151061], ['male', 24004900]], tbdata: [], hbdata: [] }] }

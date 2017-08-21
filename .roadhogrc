@@ -1,23 +1,36 @@
 {
   "entry": "src/index.js",
+  "outputPath": "./public/opinion/dist",
+  "publicPath": "/opinion/dist/",
   "env": {
     "development": {
       "extraBabelPlugins": [
         "dva-hmr",
-        "transform-runtime"
+        "transform-runtime",
+        "transform-decorators-legacy",
+        ["import", { "libraryName": "antd", "style": "css" }]
       ]
     },
     "production": {
       "extraBabelPlugins": [
-        "transform-runtime"
+        "transform-runtime",
+        "transform-decorators-legacy",
+        ["import", { "libraryName": "antd", "style": "css" }]
       ]
     }
   },
   "proxy": {
-    "/api": {
-      "target": "http://jsonplaceholder.typicode.com/",
-      "changeOrigin": true,
-      "pathRewrite": { "^/api" : "" }
+    "/permission/auth": {
+      "target": "http://authdev.yidian-inc.com:8371/",
+      "changeOrigin": true
+    },
+    "/v1": {
+      "target": "http://authdev.yidian-inc.com:8371/",
+      "changeOrigin": true
+    },
+    "/opinion/api/chart": {
+      "target": "http://dev.yidian-inc.com:8370/magicbean/v1/chart",
+      "changeOrigin": true
     }
   }
 }

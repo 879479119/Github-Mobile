@@ -11,7 +11,7 @@ const stringify = require('../helper/stringify')
 module.exports = {
 	addFollowingForUser(gname, userInfo){
 		return new Promise(function(resolve, reject){
-			simpleQuery('INSERT INTO t_following (NULL, ? , ? , ?)',
+			simpleQuery('INSERT INTO t_following VALUES (NULL, ? , ? , ?)',
 				...userInfo, (err)=>{
 				if(err)	reject(STDR.databaseError(err))
 				else resolve(100)
@@ -33,7 +33,7 @@ module.exports = {
 			return formatFollowing(gname, item)
 		})
 		let query = `INSERT INTO t_following VALUES ${values.join(',')}`
-
+		log(query)
 		return new Promise(function(resolve, reject){
 			basicQuery(query, (err)=>{
 				if(err)	reject(STDR.databaseError(err))

@@ -1,4 +1,3 @@
-
 {
   "extends": "stylelint-config-standard",
   "rules": {
@@ -23,6 +22,7 @@
     "value-list-max-empty-lines": null,
     "selector-pseudo-class-no-unknown": [true, {
       "ignorePseudoClasses": ["global"]
-    }]
+    }],
+    "no-empty-source": null
   }
 }

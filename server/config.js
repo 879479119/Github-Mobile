@@ -4,7 +4,7 @@ module.exports = {
 	ac: 'b14a6741eb3b4c904f484a6604590f099aa06008',
 	mysql:{
 		connectionLimit : 10,
-		host:"123.207.16.204",
+		host:"120.24.49.153",
 		port:"3306",
 		user:"root",
 		password:"123456",

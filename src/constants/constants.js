@@ -1,0 +1,14 @@
+export const USER_ATTRIBUTE_COMMON = 0
+export const USER_ATTRIBUTE_SUPER = 1
+
+export const PERMISSION_TYPE_DATASOURCE = 'datasource'
+export const PERMISSION_TYPE_MENU = 'menu'
+export const PERMISSION_TYPE_DASHBOARD = 'dashboard'
+export const PERMISSION_TYPE_CHART = 'chart'
+
+export const PERMISSION_CODE = {
+  [PERMISSION_TYPE_DATASOURCE]: '000',
+  [PERMISSION_TYPE_MENU]: '000',
+  [PERMISSION_TYPE_DASHBOARD]: '000',
+  [PERMISSION_TYPE_CHART]: '000',
+}
