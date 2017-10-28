@@ -1,39 +1,37 @@
-import React, {Component} from "react";
-import {Link, withRouter} from "react-router-dom";
-import {connect} from "react-redux";
-import "./index.scss";
-import {commonFetch, commonRelease} from "../../../views/QueueRedux";
-import addDataFetch from "../../../redux/addDataFetch";
-import RepoList from "../../Search/Repo"
-import {Card, Icon, Tooltip} from "antd";
+import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import './index.scss'
+import { commonFetch, commonRelease } from '../../../views/QueueRedux'
+import addDataFetch from '../../../redux/addDataFetch'
+import RepoList from '../../Search/Repo'
+
 export const API = [
-	'/api/activity/getStarredReposForUser',
+  '/api/activity/getStarredReposForUser',
 ]
 
 @withRouter
-@connect(state=>({
-	queue: state.queue
-}),{ commonFetch, commonRelease})
+@connect(state => ({
+  queue: state.queue,
+}), { commonFetch, commonRelease })
 @addDataFetch
-export default class Profile extends Component{
-	componentDidMount(){
-		const { commonFetch } = this.props
-		let username = this.props.match.params.username
+export default class Profile extends Component {
+  componentDidMount() {
+    const { commonFetch: fetch } = this.props
+    const { username } = this.props.match.params
 
-		if(this.getData(API[0]).status === 3){}
-		else commonFetch(API[0], {username})
-	}
-	render = () => {
-		let repos = this.getData(API[0])
+    if (this.getData(API[0]).status !== 3) fetch(API[0], { username })
+  }
 
-		let username = this.props.match.params.username
-		if(repos.status === 3){
-			return (
-				<RepoList result={repos.result.data.data} className="user-repo-list" />
-			)
-		}
-		return (
-			<div>Loading</div>
-		)
-	}
+  render = () => {
+    const repos = this.getData(API[0])
+    if (repos.status === 3) {
+      return (
+        <RepoList result={repos.result.data.data} className="user-repo-list" />
+      )
+    }
+    return (
+      <div>Loading</div>
+    )
+  }
 }

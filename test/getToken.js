@@ -1,4 +1,4 @@
-let fetch = require('node-fetch')
+const fetch = require('node-fetch')
 
 // access_token=b14a6741eb3b4c904f484a6604590f099aa06008&scope=repo&token_type=bearer
 // fetch("http://127.0.0.1:3000").then(res => res.text())
@@ -19,19 +19,19 @@ let fetch = require('node-fetch')
 // 	.then(res=>{console.log(res)})
 // 	.catch(e=>console.log(e))
 
-let GitHubApi = require("github");
+const GitHubApi = require('github')
 
-let github = new GitHubApi({
-	debug: true,
-	protocol: "https",
-	host: "api.github.com", // should be api.github.com for GitHub
-	headers: {
-		"user-agent": "trial" // GitHub is happy with a unique user agent
-	},
-	Promise: require('bluebird'),
-	followRedirects: false, // default: true; there's currently an issue with non-get redirects, so allow ability to disable follow-redirects
-	timeout: 50000
-});
+const github = new GitHubApi({
+  debug: true,
+  protocol: 'https',
+  host: 'api.github.com', // should be api.github.com for GitHub
+  headers: {
+    'user-agent': 'trial', // GitHub is happy with a unique user agent
+  },
+  Promise: require('bluebird'),
+  followRedirects: false, // default: true; there's currently an issue with non-get redirects, so allow ability to disable follow-redirects
+  timeout: 50000,
+})
 
 // github.users.getFollowingForUser({
 // 	username: "879479119"
@@ -40,12 +40,12 @@ let github = new GitHubApi({
 // });
 
 github.authenticate({
-	type: "oauth",
-	token: 'b14a6741eb3b4c904f484a6604590f099aa06008'
-});
+  type: 'oauth',
+  token: 'b14a6741eb3b4c904f484a6604590f099aa06008',
+})
 
 github.users.get({
-},function (err, res) {
-	console.log(res);
-});
+}, (err, res) => {
+  console.log(res)
+})
 

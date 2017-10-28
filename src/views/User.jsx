@@ -1,83 +1,97 @@
-import React, {Component} from "react"
-import {withRouter} from "react-router-dom";
-import {connect} from "react-redux";
-import "./User.scss"
-import {commonFetch, commonRelease} from "./QueueRedux";
-import {userChangeSelection} from "./UserRedux"
-import {changeRouter} from "../layouts/HomeRedux";
+import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { Layout, Menu, Icon, Badge } from 'antd'
+import './User.scss'
+import { commonFetch, commonRelease } from './QueueRedux'
+import { userChangeSelection } from './UserRedux'
+import { changeRouter } from '../layouts/HomeRedux'
 import addDataFetch from '../redux/addDataFetch'
 
-import { Layout, Menu, Icon, Badge } from 'antd'
 const { Content } = Layout
 
 export const API = [
-	'/api/repos/getForUser',
-	'/api/users/getForUser',
+  '/api/repos/getForUser',
+  '/api/users/getForUser',
 ]
 
 @withRouter
-@connect(state=>({
-	queue: state.queue,
-	common: state.common,
-	user: state.user.username
-}),{ commonFetch, commonRelease, userChangeSelection, changeRouter})
+@connect(state => ({
+  queue: state.queue,
+  common: state.common,
+  user: state.user.username,
+}), {
+  commonFetch, commonRelease, userChangeSelection, changeRouter,
+})
 @addDataFetch
-export default class User extends Component{
-	componentDidMount(){
+export default class User extends Component {
+  componentDidMount() {
+    const { userChangeSelection: change, commonFetch: fetch, user } = this.props
+    const { username } = this.props.match.params
 
-		const { userChangeSelection, commonFetch, user } = this.props
-		let username = this.props.match.params.username
+    change(username)
 
-		userChangeSelection(username)
+    for (let i = 0; i < API.length; i++) {
+      if (this.getData(API[i]).status !== 3 && user !== username) fetch(API[i], { username })
+    }
+  }
 
-		for(let i = 0;i < API.length;i ++){
-			if(this.getData(API[i]).status === 3 || user === username){}
-			else commonFetch(API[i], {username})
-		}
-	}
-	menuHandler(e){
-		const {changeRouter} = this.props
-		let username = this.props.match.params.username
-		console.info(`/user/${username}/${e.key}`)
-		changeRouter(`/user/${username}/${e.key}`)
-	}
-	render = () => {
+  menuHandler(e) {
+    const { changeRouter: change } = this.props
+    const { username } = this.props.match.params
+    change(`/user/${username}/${e.key}`)
+  }
 
-		let userInfo = this.getData(API[1])
-		let info = {
-			followers: 0,
-			following: 0,
-			public_repos: 0,
-		}
+  render = () => {
+    const userInfo = this.getData(API[1])
+    let info = {
+      followers: 0,
+      following: 0,
+      public_repos: 0,
+    }
 
-		let selected = this.props.match.params.tab || 'profile'
+    const selected = this.props.match.params.tab || 'profile'
 
-		if(userInfo.status === 3){
-			info = Object.assign(info, userInfo.result.data.data)
-		}
+    if (userInfo.status === 3) {
+      info = Object.assign(info, userInfo.result.data.data)
+    }
 
-		return (
-			<Content style={{ background: '#fff', padding: 24, paddingTop: 0, margin: 0, minHeight: 400 }}>
-				<Menu
-					selectedKeys={[selected]}
-					mode="horizontal"
-				    className="user-header"
-				    onClick={::this.menuHandler}
-				>
-					<Menu.Item key="profile">
-						<Icon type="idcard" />Overview
-					</Menu.Item>
-					<Menu.Item key="repo">
-						<Icon type="database" />Repositories<Badge className="badge" count={info.public_repos} style={{backgroundColor: '#eee'}}/>
-					</Menu.Item>
-					<Menu.Item key="star">
-						<Icon type="star-o" />Stars
-					</Menu.Item>
-					<Menu.Item key="follower">Followers<Badge className="badge" count={info.followers} style={{backgroundColor: '#eee'}}/></Menu.Item>
-					<Menu.Item key="following">Following<Badge className="badge" count={info.following} style={{backgroundColor: '#eee'}}/></Menu.Item>
-				</Menu>
-				{this.props.children}
-			</Content>
-		)
-	}
+    return (
+      <Content style={{
+background: '#fff', padding: 24, paddingTop: 0, margin: 0, minHeight: 400,
+}}
+      >
+        <Menu
+          selectedKeys={[selected]}
+          mode="horizontal"
+          className="user-header"
+          onClick={::this.menuHandler}
+        >
+          <Menu.Item key="profile">
+            <Icon type="idcard" />Overview
+          </Menu.Item>
+          <Menu.Item key="repo">
+            <Icon type="database" />Repositories<Badge
+              className="badge" count={info.public_repos}
+              style={{ backgroundColor: '#eee' }}
+            />
+          </Menu.Item>
+          <Menu.Item key="star">
+            <Icon type="star-o" />Stars
+          </Menu.Item>
+          <Menu.Item key="follower">Followers<Badge
+            className="badge" count={info.followers}
+            style={{ backgroundColor: '#eee' }}
+          />
+          </Menu.Item>
+          <Menu.Item key="following">Following<Badge
+            className="badge" count={info.following}
+            style={{ backgroundColor: '#eee' }}
+          />
+          </Menu.Item>
+        </Menu>
+        {this.props.children}
+      </Content>
+    )
+  }
 }

@@ -1,28 +1,25 @@
-import React from "react"
-import "./LanguageBar.scss"
-import Reflect from "../../../utils/languages"
-import {Tooltip} from "antd"
+import React from 'react'
+import { Tooltip } from 'antd'
+import './LanguageBar.scss'
+import Reflect from '../../../utils/languages'
 
 export default function LanguageBar({ lang, style }) {
-	let bar = [], sum = 0
-	for(let p in lang) {
-		//noinspection JSUnfilteredForInLoop
-		sum += lang[p]
-	}
-	for(let attr in lang){
-		//noinspection JSUnfilteredForInLoop
-		let color = undefined,
-			len = (lang[attr] / sum * 100).toFixed(2) + '%'
-		try{
-			//noinspection JSUnfilteredForInLoop
-			color = Reflect[attr]['color']
-		}catch (e){
-			color = "#eee"
-		}
-		//noinspection JSUnfilteredForInLoop
-		bar.push(<Tooltip key={attr}  overlay={attr+' '+len} placement={'bottom'} style={{display:'inline-block'}}><figure style={{background:color, width:len}} /></Tooltip>)
-	}
-	return(
-		<section style={style} className="lang-bar">{bar}</section>
-	)
+  const bar = []
+  let sum = 0
+  for (const p in lang) { //eslint-disable-line
+    sum += lang[p]
+  }
+  for (const attr in lang) { //eslint-disable-line
+    const len = `${((lang[attr] / sum) * 100).toFixed(2)}%` //eslint-disable-line
+    let color
+    try {
+      color = Reflect[attr].color //eslint-disable-line
+    } catch (e) {
+      color = '#eee'
+    }
+    bar.push(<Tooltip key={attr} overlay={`${attr} ${len}`} placement="bottom" style={{ display: 'inline-block' }}><figure style={{ background: color, width: len }} /></Tooltip>)
+  }
+  return (
+    <section style={style} className="lang-bar">{bar}</section>
+  )
 }

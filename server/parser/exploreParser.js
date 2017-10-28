@@ -8,23 +8,22 @@ const Promise = require('bluebird')
  * @return {Object} the data we crawl
  */
 function getExploreData(html) {
-	let source = html
-	new Promise(function (resolve, reject) {
-		if(html === undefined){
-			fs.readFile("../store/explore.html", "utf8", function (err, data) {
-				if(err) reject("cannot read file: " + err.message)
-				else resolve(source = data)
-			})
-		}else {
-			resolve(source)
-		}
-	}).then(function (source) {
-		let $ = cheerio.load(source)
-		console.log($("body").length)
-	}).catch(function (e) {
-		console.error(e)
-	})
-
+  let source = html
+  new Promise(((resolve, reject) => {
+    if (html === undefined) {
+      fs.readFile('../store/explore.html', 'utf8', (err, data) => {
+        if (err) reject(`cannot read file: ${err.message}`)
+        else resolve(source = data)
+      })
+    } else {
+      resolve(source)
+    }
+  })).then((s) => {
+    const $ = cheerio.load(s)
+    console.log($('body').length)
+  }).catch((e) => {
+    console.error(e)
+  })
 }
 
 module.exports = getExploreData

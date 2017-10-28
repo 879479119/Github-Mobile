@@ -38,6 +38,7 @@ jspm_packages
 
 .idea
 server/dist
+server/config.js
 config/CDNConfig.js
 /server/store/
 /.DS_Store

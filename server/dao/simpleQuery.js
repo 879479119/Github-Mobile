@@ -1,15 +1,14 @@
-let query = function(sql, param, callback){
-
-	global.pool.getConnection(function(err,conn){
-		if(err){
-			callback(err,null,null)
-		}else{
-			conn.query(sql, param, function(err,val,fields){
-				conn.release()
-				callback(err,val,fields)
-			})
-		}
-	})
+const query = function (sql, param, callback) {
+  global.pool.getConnection((err, conn) => {
+    if (err) {
+      callback(err, null, null)
+    } else {
+      conn.query(sql, param, (error, val, fields) => {
+        conn.release()
+        callback(error, val, fields)
+      })
+    }
+  })
 }
 
 module.exports = query

@@ -5,11 +5,11 @@
  */
 
 export function getCookie(name) {
-	if(name === void 0) return document.cookie
+  if (name === void 0) return document.cookie
 
-	let reg = new RegExp(`${name}=(.*)(;|$)`)
-	let result = document.cookie.match(reg)
+  const reg = new RegExp(`${name}=(.*)(;|$)`)
+  const result = document.cookie.match(reg)
 
-	if(result === null) return -1
-	else return result[1]
+  if (result === null) return -1
+  else return result[1]
 }
