@@ -6,7 +6,7 @@ export default function (target) {
   if ('getData' in target.prototype) {
     throw Error('you cannot use the method "getData" in your object working with common fetch the same time')
   }
-  target.prototype.getData = (url) => { // eslint-disable-line
+  target.prototype.getData = function (url) { // eslint-disable-line
     const { queue } = this.props
     let data = {}
     queue.data.forEach((item) => {

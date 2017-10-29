@@ -37,11 +37,11 @@ module.exports = (code) => {
     .then((obj, exist) => {
       if (exist === true) {
         return {
-          gid: obj.res.data.id,
-          gname: obj.res.data.name,
+          gid: obj.rs.data.id,
+          gname: obj.rs.data.name,
           key: obj.token,
         }
       }
-      return DataQuery.addUser(obj.res.data.id, obj.res.data.username, obj.token)
+      return DataQuery.addUser(obj.rs.data.id, obj.rs.data.username, obj.token)
     })
 }

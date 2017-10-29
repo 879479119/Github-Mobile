@@ -19,7 +19,7 @@ export const API = [
 @connect(state => ({
   queue: state.queue,
   common: state.common,
-  user: state.user.username,
+  user: state.user,
 }), {
   commonFetch, commonRelease, userChangeSelection, changeRouter,
 })
@@ -38,7 +38,7 @@ export default class User extends Component {
 
   menuHandler(e) {
     const { changeRouter: change } = this.props
-    const { username } = this.props.match.params
+    const { username = this.props.user.login } = this.props.match.params
     change(`/user/${username}/${e.key}`)
   }
 
@@ -58,8 +58,8 @@ export default class User extends Component {
 
     return (
       <Content style={{
-background: '#fff', padding: 24, paddingTop: 0, margin: 0, minHeight: 400,
-}}
+        background: '#fff', padding: 24, paddingTop: 0, margin: 0, minHeight: 400,
+      }}
       >
         <Menu
           selectedKeys={[selected]}

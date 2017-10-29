@@ -40,7 +40,7 @@ const initialState = {
   route: '/home',
   loginStatus: null,
   language: 'en',
-  name: undefined,
+  name: '',
   following: getItem('following') || [],
   stared: getItem('stared') || [],
 }
@@ -55,7 +55,7 @@ export default function common(state = initialState, action) {
     * register part
     */
     case REG_SUCCESS:
-      window.location = 'http://github.jian-gamestudio.cn/'
+      window.location = 'http://github.jian-gamestudio.cn:8888/'
       return state
     case REG_ERROR:
       window.location = 'https://github.com/login/oauth/authorize?scope=admin&client_id=af4fdd0b77c3a4073f0c'
@@ -74,7 +74,7 @@ export default function common(state = initialState, action) {
       return Object.assign({}, state, { loginStatus: false })
     case LOGIN_SUCCESS:
       message.success('Login success!', 2)
-      return Object.assign({}, state, { loginStatus: true })
+      return Object.assign({}, state, { loginStatus: true, name: action.payload })
     case NETWORK_ERROR:
       message.error('Please check your network', 3)
       return Object.assign({}, state, { loginStatus: null })

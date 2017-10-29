@@ -10,7 +10,7 @@ module.exports = {
     return new Promise(((resolve, reject) => {
       simpleQuery(
         'SELECT gid FROM t_user WHERE gid = ?',
-        [obj.res.data.id],
+        [obj.rs.data.id],
         (err, data) => {
           if (err) reject(STDR.databaseError(err))
           else if (data.length >= 1) {

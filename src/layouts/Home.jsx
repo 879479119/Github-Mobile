@@ -21,6 +21,7 @@ export const API_AUTH_INFO = '/api/users/get'
   route: state.common.route,
   loginStatus: state.common.loginStatus,
   queue: state.queue,
+  user: state.user,
 }), {
   changeRouter, login, changeLanguage, register,
 })
@@ -83,29 +84,7 @@ export default class Home extends Component {
   }
   render = () => {
     const { route, language, changeLanguage: changeLang } = this.props
-    const authInfo = this.getData(API_AUTH_INFO)
-    let user = {
-      avatar_url: '',
-      bio: '',
-      blog: '',
-      company: '@CQUPTBee ',
-      created_at: '2015-06-03T06:35:45Z',
-      email: '',
-      events_url: 'https://api.github.com/users/879479119/events{/privacy}',
-      followers: 24,
-      followers_url: 'https://api.github.com/users/879479119/followers',
-      following: 13,
-      id: 12726506,
-      location: 'Chongqin,China',
-      login: '',
-      name: '',
-      public_gists: 0,
-      public_repos: 18,
-      type: 'User',
-    }
-    if (authInfo.status === 3) {
-      user = Object.assign(user, authInfo.result.data.data)
-    }
+    const { user } = this.props
     return (
       <Layout>
         <Header className="header">

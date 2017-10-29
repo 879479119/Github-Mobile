@@ -22,12 +22,13 @@ export const API = [
 @withRouter
 @connect(state => ({
   queue: state.queue,
+  user: state.user,
 }), { commonFetch, commonRelease })
 @addDataFetch
 export default class Profile extends Component {
   componentDidMount() {
     const { commonFetch: fetch, user } = this.props
-    const { username } = this.props.match.params
+    const { username = this.props.user.login } = this.props.match.params
 
     if (this.getData(API[2]).status !== 3 && user !== username) fetch(API[2], { username })
     if (this.getData(API[3]).status !== 3 && user !== username) fetch(API[3], { username })
@@ -158,7 +159,7 @@ function UserInfo({ info, org }) {
           <p>Location: <span>{info.location}</span></p>
           <div className="org">
             <p>Organization:</p>
-            {org.map((item) => (
+            {org.map(item => (
               <section>
                 <Tooltip overlay={item.login}>
                   <Link to={`/org/${item.login}`}><img src={item.avatar_url} alt="org" /></Link>

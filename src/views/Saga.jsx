@@ -1,11 +1,21 @@
 import { call, put, takeEvery, select } from 'redux-saga/effects'
 import { COMMON_SEARCH, SEARCH_ERROR, SEARCH_LOADING, SEARCH_READY } from './SearchResultRedux'
-import { LOGIN, LOGIN_ERROR, LOGIN_SUCCESS, NETWORK_ERROR, REG, REG_ERROR, REG_SUCCESS, AUTH_FETCH_FOLLOWING, AUTH_FETCH_FOLLOWING_READY, AUTH_FETCH_FOLLOWING_ERROR } from '../layouts/HomeRedux'
-import request, { login, register } from '../utils/request'
+import {
+  LOGIN,
+  LOGIN_ERROR,
+  LOGIN_SUCCESS,
+  NETWORK_ERROR,
+  REG,
+  REG_ERROR,
+  REG_SUCCESS,
+  AUTH_FETCH_FOLLOWING,
+  AUTH_FETCH_FOLLOWING_READY,
+  AUTH_FETCH_FOLLOWING_ERROR,
+} from '../layouts/HomeRedux'
+import request, { login, register, getAuthInfo } from '../utils/request'
 import { COMMON_FETCH, COMMON_ERROR, COMMON_LOADING, COMMON_READY } from './QueueRedux'
 import { REPO_CONTENT_INIT, REPO_CONTENT_READY, REPO_CONTENT_SHOW_FILE, REPO_CONTENT_CHANGE } from './RepoRedux'
-
-import { API_AUTH_INFO } from '../layouts/Home'
+import { USER_GET_AUTH_INFO } from './UserRedux'
 
 /**
  * export the default saga array to take the action we need
@@ -53,8 +63,10 @@ function * loginSaga() {
       yield put({ type: LOGIN_ERROR })
     } else {
       yield put({ type: LOGIN_SUCCESS })
+      const rs = yield call(getAuthInfo)
+      const detail = yield rs.json()
       // once we login, get the detail
-      yield put({ type: COMMON_FETCH, payload: { url: API_AUTH_INFO } })
+      yield put({ type: USER_GET_AUTH_INFO, payload: { ...detail.data.data } })
 
       const following = yield select(s => s.common.following)
 
