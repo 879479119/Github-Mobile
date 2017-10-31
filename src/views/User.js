@@ -2,16 +2,16 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Layout, Menu, Icon, Badge } from 'antd'
-import './User.scss'
+import { pushHistory } from '../layouts/HomeRedux'
 import { commonFetch, commonRelease } from './QueueRedux'
-import { userChangeSelection } from './UserRedux'
-import { changeRouter } from '../layouts/HomeRedux'
+import { fetchRepoForOwner } from './OwnerRedux'
 import addDataFetch from '../redux/addDataFetch'
+import './User.scss'
 
 const { Content } = Layout
 
 export const API = [
-  '/api/repos/getForUser',
+  // '/api/repos/getForUser',
   '/api/users/getForUser',
 ]
 
@@ -21,25 +21,23 @@ export const API = [
   common: state.common,
   user: state.user,
 }), {
-  commonFetch, commonRelease, userChangeSelection, changeRouter,
+  commonFetch, commonRelease, pushHistory, fetchRepoForOwner,
 })
 @addDataFetch
 export default class User extends Component {
   componentDidMount() {
-    const { userChangeSelection: change, commonFetch: fetch, user } = this.props
+    const { commonFetch: fetch, user } = this.props
     const { username } = this.props.match.params
 
-    change(username)
-
+    this.props.fetchRepoForOwner(username)
     for (let i = 0; i < API.length; i++) {
       if (this.getData(API[i]).status !== 3 && user !== username) fetch(API[i], { username })
     }
   }
 
   menuHandler(e) {
-    const { changeRouter: change } = this.props
     const { username = this.props.user.login } = this.props.match.params
-    change(`/user/${username}/${e.key}`)
+    this.props.pushHistory(`/user/${username}/${e.key}`)
   }
 
   render = () => {

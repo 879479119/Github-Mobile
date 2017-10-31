@@ -56,7 +56,7 @@ export default function (props) {
                   <Route path="/user/:username/star" component={StarRepo} />
                   <Route path="/user/:username/follower" component={Follower} />
                   <Route path="/user/:username/following" component={Following} />
-                  <Route path="/:p" render={(e) => { console.info(e); return <p>ERROR</p> }} />
+                  <Route path="/:p" render={() => { return <p>ERROR</p> }} />
                 </Switch>
               </User>
             </Route>

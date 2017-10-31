@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
 import { Button, Icon, Input, Layout, Menu } from 'antd'
 import './Home.scss'
-import { changeLanguage, changeRouter, login, register } from './HomeRedux'
+import { changeLanguage, pushHistory } from './HomeRedux'
+import { login, register } from '../views/UserRedux'
 import AutoBreadcrumb from '../components/Common/AutoBreadcrumb'
 import { getCookie } from '../utils/cookie'
 import addDataFetch from '../redux/addDataFetch'
@@ -12,18 +13,12 @@ const { SubMenu } = Menu
 const { Search } = Input
 const { Header, Sider } = Layout
 
-// the API is called in saga, here is just a key to fetch the value
-export const API_AUTH_INFO = '/api/users/get'
-
 @withRouter
 @connect(state => ({
   language: state.common.language,
-  route: state.common.route,
-  loginStatus: state.common.loginStatus,
-  queue: state.queue,
   user: state.user,
 }), {
-  changeRouter, login, changeLanguage, register,
+  login, changeLanguage, register, pushHistory,
 })
 @addDataFetch
 export default class Home extends Component {
@@ -80,10 +75,10 @@ export default class Home extends Component {
     }
   }
   searchContent(val) {
-    this.props.changeRouter(`/search?query=${encodeURI(val)}`)
+    this.props.pushHistory(`/search?query=${encodeURI(val)}`)
   }
   render = () => {
-    const { route, language, changeLanguage: changeLang } = this.props
+    const { language, changeLanguage: changeLang } = this.props
     const { user } = this.props
     return (
       <Layout>
@@ -151,7 +146,7 @@ export default class Home extends Component {
             </Menu>
           </Sider>
           <Layout style={{ padding: '0 24px 24px' }}>
-            <AutoBreadcrumb location={route} />
+            <AutoBreadcrumb />
             {this.props.children}
           </Layout>
         </Layout>

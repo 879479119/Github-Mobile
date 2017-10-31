@@ -11,11 +11,11 @@ import {
   AUTH_FETCH_FOLLOWING,
   AUTH_FETCH_FOLLOWING_READY,
   AUTH_FETCH_FOLLOWING_ERROR,
-} from '../layouts/HomeRedux'
+  USER_GET_AUTH_INFO,
+} from './UserRedux'
 import request, { login, register, getAuthInfo } from '../utils/request'
 import { COMMON_FETCH, COMMON_ERROR, COMMON_LOADING, COMMON_READY } from './QueueRedux'
 import { REPO_CONTENT_INIT, REPO_CONTENT_READY, REPO_CONTENT_SHOW_FILE, REPO_CONTENT_CHANGE } from './RepoRedux'
-import { USER_GET_AUTH_INFO } from './UserRedux'
 
 /**
  * export the default saga array to take the action we need
@@ -100,15 +100,20 @@ function * registerSaga(action) {
  * @param action
  */
 function * commonFetch(action) {
-  const { url } = action.payload
+  const { url, next } = action.payload
   yield put({ type: COMMON_LOADING, payload: { url } })
   try {
     const res = yield call(request, ...[action.payload.url, action.payload.data])
     const data = yield res.json()
 
     if (data.code >= 20000) {
+      //  error occurs
       yield put({ type: COMMON_ERROR, payload: { url, data } })
+    } else if (next !== undefined) {
+      //  we have specified the reducer
+      yield put({ type: next, payload: { data } })
     } else {
+      //  common fetch
       yield put({ type: COMMON_READY, payload: { url, data } })
     }
   } catch (e) {

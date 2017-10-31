@@ -8,7 +8,7 @@ const prodConfig = require('./config/webpack.prod.config')
 
 const commonConfig = {
   entry: {
-    main: './src/app.jsx',
+    main: './src/app.js',
     vendor: ['react', 'redux', 'react-dom', 'react-router-dom', 'babel-polyfill', 'antd', 'react-motion', 'react-intl'],
   },
   output: {
