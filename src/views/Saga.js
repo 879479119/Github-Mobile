@@ -16,6 +16,7 @@ import {
 import request, { login, register, getAuthInfo } from '../utils/request'
 import { COMMON_FETCH, COMMON_ERROR, COMMON_LOADING, COMMON_READY } from './QueueRedux'
 import { REPO_CONTENT_INIT, REPO_CONTENT_READY, REPO_CONTENT_SHOW_FILE, REPO_CONTENT_CHANGE } from './RepoRedux'
+import { REQUEST_END, REQUEST_START } from '../redux/QueryRedux'
 
 /**
  * export the default saga array to take the action we need
@@ -103,6 +104,9 @@ function * commonFetch(action) {
   const { url, next } = action.payload
   yield put({ type: COMMON_LOADING, payload: { url } })
   try {
+    if (next) {
+      yield put({ type: REQUEST_START, payload: { next } })
+    }
     const res = yield call(request, ...[action.payload.url, action.payload.data])
     const data = yield res.json()
 
@@ -110,6 +114,7 @@ function * commonFetch(action) {
       //  error occurs
       yield put({ type: COMMON_ERROR, payload: { url, data } })
     } else if (next !== undefined) {
+      yield put({ type: REQUEST_END, payload: { next } })
       //  we have specified the reducer
       yield put({ type: next, payload: { data } })
     } else {

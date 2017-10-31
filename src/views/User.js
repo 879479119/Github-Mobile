@@ -3,36 +3,26 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Layout, Menu, Icon, Badge } from 'antd'
 import { pushHistory } from '../layouts/HomeRedux'
-import { commonFetch, commonRelease } from './QueueRedux'
-import { fetchRepoForOwner } from './OwnerRedux'
+import { fetchRepoForOwner, fetchDetailForOwner } from './OwnerRedux'
 import addDataFetch from '../redux/addDataFetch'
 import './User.scss'
 
 const { Content } = Layout
 
-export const API = [
-  // '/api/repos/getForUser',
-  '/api/users/getForUser',
-]
-
 @withRouter
 @connect(state => ({
-  queue: state.queue,
-  common: state.common,
-  user: state.user,
+  loading: state.query.owner,
+  owner: state.owner,
 }), {
-  commonFetch, commonRelease, pushHistory, fetchRepoForOwner,
+  pushHistory, fetchRepoForOwner, fetchDetailForOwner,
 })
 @addDataFetch
 export default class User extends Component {
   componentDidMount() {
-    const { commonFetch: fetch, user } = this.props
     const { username } = this.props.match.params
 
-    this.props.fetchRepoForOwner(username)
-    for (let i = 0; i < API.length; i++) {
-      if (this.getData(API[i]).status !== 3 && user !== username) fetch(API[i], { username })
-    }
+    this.props.fetchRepoForOwner({ username })
+    this.props.fetchDetailForOwner({ username })
   }
 
   menuHandler(e) {
@@ -41,19 +31,14 @@ export default class User extends Component {
   }
 
   render = () => {
-    const userInfo = this.getData(API[1])
-    let info = {
+    const userInfo = this.props.owner.detail
+    const selected = this.props.match.params.tab || 'profile'
+
+    const info = Object.assign({
       followers: 0,
       following: 0,
       public_repos: 0,
-    }
-
-    const selected = this.props.match.params.tab || 'profile'
-
-    if (userInfo.status === 3) {
-      info = Object.assign(info, userInfo.result.data.data)
-    }
-
+    }, userInfo)
     return (
       <Content style={{
         background: '#fff', padding: 24, paddingTop: 0, margin: 0, minHeight: 400,

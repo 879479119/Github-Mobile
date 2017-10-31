@@ -5,4 +5,10 @@ export default {
   user: {
     getForUser: '/api/users/getForUser',
   },
+  org: {
+    getForUser: '/api/orgs/getForUser',
+  },
+  activity: {
+    getEventsForUser: '/api/activity/getEventsForUser',
+  },
 }

@@ -1,133 +1,92 @@
 import React, { Component } from 'react'
 import { withRouter, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Icon, Card, Tooltip } from 'antd'
-import './index.scss'
+import { Icon, Card, Tooltip, Spin } from 'antd'
 import { commonFetch, commonRelease } from '../../../views/QueueRedux'
-import addDataFetch from '../../../redux/addDataFetch'
+import { fetchOrgsForOwner, fetchEventsForOwner, OWNER_REPO_GET } from '../../../views/OwnerRedux'
 import reflect from '../../../utils/languages'
 import emojizer from '../../../utils/emojizer'
 import formatDate from '../../../utils/formatDate'
-
 import RecentEvent from './RecentEvent'
 import Percentage from './Percentage'
-
-export const API = [
-  '/api/repos/getForUser',
-  '/api/users/getForUser',
-  '/api/activity/getEventsForUser',
-  '/api/orgs/getForUser',
-]
+import './index.scss'
 
 @withRouter
 @connect(state => ({
-  queue: state.queue,
-  user: state.user,
-}), { commonFetch, commonRelease })
-@addDataFetch
+  owner: state.owner,
+  loading: state.query.owner,
+}), {
+  commonFetch, commonRelease, fetchOrgsForOwner, fetchEventsForOwner,
+})
 export default class Profile extends Component {
   componentDidMount() {
-    const { commonFetch: fetch, user } = this.props
     const { username = this.props.user.login } = this.props.match.params
-
-    if (this.getData(API[2]).status !== 3 && user !== username) fetch(API[2], { username })
-    if (this.getData(API[3]).status !== 3 && user !== username) fetch(API[3], { username })
+    this.props.fetchOrgsForOwner({ username })
+    this.props.fetchEventsForOwner({ username })
   }
 
   render = () => {
     const { username } = this.props.match.params
-    const repos = this.getData(API[0])
-    const userInfo = this.getData(API[1])
-    const events = this.getData(API[2])
-    const orgs = this.getData(API[3])
-    let content = ''
+    const {
+      repos,
+      detail: userInfo,
+      events,
+      organization: orgs,
+    } = this.props.owner
     const percentage = []
-    let evtData = []
-    let orgData = []
 
-    let user = {
-      avatar_url: '',
-      bio: '',
-      blog: '',
-      company: '',
-      created_at: '2015-06-03T06:35:45Z',
-      email: '767444690@qq.com',
-      followers: 24,
-      following: 13,
-      id: 12726506,
-      location: '',
-      login: '',
-      name: '',
-      public_repos: 18,
-      type: 'User',
-    }
+    // copy
+    const sortedRepos = repos.concat()
 
+    // prepare for the repo part
+    sortedRepos.sort((prev, cur) => {
+      if (prev.stargazers_count > cur.stargazers_count) return -1
+      else return 1
+    })
 
-    if (repos.status === 3) {
-      const arr = repos.result.data.data.concat()
-
-      // prepare for the repo part
-      arr.sort((prev, cur) => {
-        if (prev.stargazers_count > cur.stargazers_count) return -1
-        else return 1
-      })
-      content = arr.splice(0, 6).map((item) => {
-        return (
-          <Card style={{ width: 360 }}>
-            <h5>lll <Link to={`/repo/${username}/${item.name}`}>{item.name}</Link></h5>
-            <p>{emojizer(item.description, false)}</p>
-            <p>
-              {
-                item.language === '' ? '' :
-                <span>
-                  <span
-                    className="icon-lang"
-                    style={{ background: reflect[item.language].color }}
-                  />
-                  {item.language}
-                </span>
-              }
-              <span><Icon type="star" /> {item.stargazers_count} </span>
-              <span><Icon type="usb" /> {item.forks_count} </span>
-            </p>
-          </Card>
-        )
-      })
-
-      // prepare for the percentage part
-      const lang = {}
-      let co = 0
-      arr.forEach((item) => {
-        if (item.language in lang) {
-          percentage[lang[item.language]].count++
-        } else {
-          lang[item.language] = co++
-          percentage.push({
-            name: item.language,
-            count: 1,
-          })
-        }
-      })
-    }
-
-    if (events.status === 3) {
-      evtData = events.result.data.data
-    }
-
-    if (userInfo.status === 3) {
-      user = Object.assign(user, userInfo.result.data.data)
-    }
-
-    if (orgs.status === 3) {
-      orgData = orgs.result.data.data
-    }
-
+    // prepare for the percentage part
+    const lang = {}
+    let co = 0
+    sortedRepos.forEach((item) => {
+      if (item.language in lang) {
+        percentage[lang[item.language]].count++
+      } else {
+        lang[item.language] = co++
+        percentage.push({
+          name: item.language,
+          count: 1,
+        })
+      }
+    })
     return (
       <div className="main-body">
         <div className="main-part">
-          <UserInfo info={user} org={orgData} />
+          <UserInfo info={userInfo} org={orgs} />
           <div className="user-repos">
-            {content}
+            {
+              !this.props.loading[OWNER_REPO_GET] ? sortedRepos.splice(0, 6).map((item) => {
+                return (
+                  <Card style={{ width: 360 }}>
+                    <h5>lll <Link to={`/repo/${username}/${item.name}`}>{item.name}</Link></h5>
+                    <p>{emojizer(item.description, false)}</p>
+                    <p>
+                      {
+                        item.language === '' ? '' :
+                        <span>
+                          <span
+                            className="icon-lang"
+                            style={{ background: reflect[item.language].color }}
+                          />
+                          {item.language}
+                        </span>
+                      }
+                      <span><Icon type="star" /> {item.stargazers_count} </span>
+                      <span><Icon type="usb" /> {item.forks_count} </span>
+                    </p>
+                  </Card>
+                )
+              }) : <Spin />
+            }
             {/* <CommitTable/> */}
           </div>
         </div>
@@ -135,7 +94,7 @@ export default class Profile extends Component {
           <Percentage percentage={percentage}>
             <p className="chart-lang">Language Chart</p>
           </Percentage>
-          <RecentEvent data={evtData} />
+          <RecentEvent data={events} />
         </div>
       </div>
     )
