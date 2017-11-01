@@ -66,7 +66,7 @@ export default class Profile extends Component {
             {
               !this.props.loading[OWNER_REPO_GET] ? sortedRepos.splice(0, 6).map((item) => {
                 return (
-                  <Card style={{ width: 360 }}>
+                  <Card style={{ width: 360 }} key={item.id}>
                     <h5>lll <Link to={`/repo/${username}/${item.name}`}>{item.name}</Link></h5>
                     <p>{emojizer(item.description, false)}</p>
                     <p>
@@ -119,7 +119,7 @@ function UserInfo({ info, org }) {
           <div className="org">
             <p>Organization:</p>
             {org.map(item => (
-              <section>
+              <section key={item.id}>
                 <Tooltip overlay={item.login}>
                   <Link to={`/org/${item.login}`}><img src={item.avatar_url} alt="org" /></Link>
                 </Tooltip>

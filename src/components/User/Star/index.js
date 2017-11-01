@@ -1,37 +1,24 @@
 import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import './index.scss'
-import { commonFetch, commonRelease } from '../../../views/QueueRedux'
-import addDataFetch from '../../../redux/addDataFetch'
+import { withRouter } from 'react-router'
+import { fetchStarForOwner } from '../../../views/OwnerRedux'
 import RepoList from '../../Search/Repo'
-
-export const API = [
-  '/api/activity/getStarredReposForUser',
-]
+import './index.scss'
 
 @withRouter
 @connect(state => ({
-  queue: state.queue,
-}), { commonFetch, commonRelease })
-@addDataFetch
-export default class Profile extends Component {
+  query: state.query,
+  owner: state.owner,
+}), { fetchStarForOwner })
+export default class Star extends Component {
   componentDidMount() {
-    const { commonFetch: fetch } = this.props
     const { username } = this.props.match.params
-
-    if (this.getData(API[0]).status !== 3) fetch(API[0], { username })
+    if (this.props.owner.stars.length === 0) this.props.fetchStarForOwner({ username })
   }
-
   render = () => {
-    const repos = this.getData(API[0])
-    if (repos.status === 3) {
-      return (
-        <RepoList result={repos.result.data.data} className="user-repo-list" />
-      )
-    }
+    const { owner: { stars } } = this.props
     return (
-      <div>Loading</div>
+      <RepoList result={stars} className="user-repo-list" />
     )
   }
 }

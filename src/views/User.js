@@ -13,6 +13,7 @@ const { Content } = Layout
 @connect(state => ({
   loading: state.query.owner,
   owner: state.owner,
+  user: state.user,
 }), {
   pushHistory, fetchRepoForOwner, fetchDetailForOwner,
 })

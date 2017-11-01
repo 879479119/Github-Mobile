@@ -21,7 +21,7 @@ export default class Following extends Component {
     let follow = <Button className="star" key={item.name} size="small" ><Icon type="user" />Follow</Button>
     if (item.type === 'User') {
       for (let i = 0; i < list.length; i++) {
-        if (list[i].following_name === item.name || list[i].following_name === item.login) {
+        if (list[i].login === item.login) {
           follow = <Button className="star" key={item.name} size="small" ><Icon type="user" />UnFollow</Button>
         }
       }
@@ -30,7 +30,7 @@ export default class Following extends Component {
       <li>
         <img src={item.avatar || item.avatar_url} alt="" />
         <h4>
-          <Link to={`/user/${item.name || item.login}/profile`} style={{ fontSize: 16 }}>{item.name || item.login}</Link>
+          <Link to={`/user/${item.login}/profile`} style={{ fontSize: 16 }}>{item.name || item.login}</Link>
           {item.full_name ? `(${item.full_name})` : ''}
           <br />
           <Link to={`/repo/${item.name || item.login}/${item.repo}`}>{item.repo}</Link>

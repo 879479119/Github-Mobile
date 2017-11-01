@@ -1,37 +1,25 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { fetchFollowerForOwner, fetchFollowingForOwner } from '../../../views/OwnerRedux'
 import './index.scss'
-import { commonFetch, commonRelease } from '../../../views/QueueRedux'
-import addDataFetch from '../../../redux/addDataFetch'
 import { List as FollowerList } from '../../Trending/DeveloperList'
-
-export const API = [
-  '/api/users/getFollowersForUser',
-]
 
 @withRouter
 @connect(state => ({
-  queue: state.queue,
-}), { commonFetch, commonRelease })
-@addDataFetch
-export default class Profile extends Component {
+  query: state.query,
+  owner: state.owner,
+}), { fetchFollowerForOwner, fetchFollowingForOwner })
+export default class Star extends Component {
   componentDidMount() {
-    const { commonFetch: fetch } = this.props
     const { username } = this.props.match.params
-
-    if (this.getData(API[0]).status !== 3) fetch(API[0], { username })
+    if (this.props.owner.followers.length === 0) this.props.fetchFollowerForOwner({ username })
+    if (this.props.owner.followings.length === 0) this.props.fetchFollowingForOwner({ username })
   }
-
   render = () => {
-    const followers = this.getData(API[0])
-    if (followers.status === 3) {
-      return (
-        <FollowerList data={followers.result.data.data} simple />
-      )
-    }
+    const { owner: { followers, followings } } = this.props
     return (
-      <div>Loading</div>
+      <FollowerList data={followers} className="user-repo-list" simple list={followings} />
     )
   }
 }

@@ -95,6 +95,7 @@ function ren(props) {
     return (circle) => {
       return (
         <path
+          key={item.color}
           className="path"
           d={item.path}
           fill="transparent"
@@ -109,7 +110,7 @@ function ren(props) {
   const textLabels = text.map((item) => {
     return (opacity) => {
       return (
-        <g className="label" style={{ opacity }} color={opacity}>
+        <g className="label" style={{ opacity }} color={opacity} key={item.text}>
           <rect
             x={item.x - 15}
             y={item.y - 7}
@@ -134,8 +135,8 @@ function ren(props) {
     return (
       <div
         className="percentage" style={{
-width, height, display: 'inline-block', verticalAlign: 'top',
-}}
+          width, height, display: 'inline-block', verticalAlign: 'top',
+        }}
       >
         <Icon type="loading" />
       </div>
@@ -145,8 +146,8 @@ width, height, display: 'inline-block', verticalAlign: 'top',
   return (
     <div
       className="percentage" style={{
-width, height, display: 'inline-block', verticalAlign: 'top',
-}}
+        width, height, display: 'inline-block', verticalAlign: 'top',
+      }}
     >
       {children}
       <svg style={{ width, height }}>
@@ -158,13 +159,12 @@ width, height, display: 'inline-block', verticalAlign: 'top',
               : { h: spring(prevInterpolatedStyles[i - 1].h + path[i].r) }
           })}
         >
-          {
-            interpolatingStyles =>
-              (<g>
-                {interpolatingStyles.map((style, i) =>
-                  pathLabels[i](style.h))}
-               </g>)
-          }
+          {interpolatingStyles => (
+            <g>
+              {interpolatingStyles.map((style, i) =>
+              pathLabels[i](style.h))}
+            </g>
+          )}
         </StaggeredMotion>
         <StaggeredMotion
           defaultStyles={new Array(text.length).fill({ o: 0 })}
@@ -174,13 +174,12 @@ width, height, display: 'inline-block', verticalAlign: 'top',
               : { o: spring(prevInterpolatedStyles[i - 1].o) }
           })}
         >
-          {
-            interpolatingStyles =>
-              (<g>
-                {interpolatingStyles.map((style, i) =>
-                  textLabels[i](style.o))}
-               </g>)
-          }
+          {interpolatingStyles => (
+            <g>
+              {interpolatingStyles.map((style, i) =>
+                textLabels[i](style.o))}
+            </g>
+          )}
         </StaggeredMotion>
       </svg>
     </div>

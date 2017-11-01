@@ -108,7 +108,7 @@ function CreateEvent() {
     render() {
       return list.map((item) => {
         return (
-          <div className="create-repo">
+          <div className="create-repo" key={item.repo_id}>
             <a href="#">{item.name}</a><em style={{ float: 'right' }}>{item.date.split(' ')[0]}</em>
             <p style={{ background: '#f1f1f1' }} dangerouslySetInnerHTML={{ __html: emojizer(item.description) }} />
           </div>
@@ -132,7 +132,7 @@ function ForkEvent() {
     },
     render() {
       return list.map(item => (
-        <p>
+        <p key={item.date}>
           <a href={item.baseUrl}>{item.repo}</a>
           <span>&nbsp;&nbsp;&nbsp;-&gt;&nbsp;&nbsp;&nbsp;</span>
           <a href={item.url}>{item.forkee}</a>
@@ -143,7 +143,7 @@ function ForkEvent() {
   }
 }
 
-export default function (props) {
+export default function RecentEvent(props) {
   const { style, data } = props
   const pushEvent = PushEvent()
   const createEvent = CreateEvent()

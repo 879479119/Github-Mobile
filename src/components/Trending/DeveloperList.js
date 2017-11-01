@@ -50,13 +50,7 @@ function renderList({ data, simple, list }) {
   return (
     <section className="developer-list">
       <ul>
-        {
-          data.map((item) => {
-            return (
-              <Following item={item} simple={simple} list={list} />
-            )
-          })
-        }
+        {data.map(item => <Following key={item.login} item={item} simple={simple} list={list} />)}
       </ul>
     </section>
   )

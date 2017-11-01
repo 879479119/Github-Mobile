@@ -21,7 +21,7 @@ export default function ({ result, className }) {
           array.map((item) => {
             const color = item.language ? LANGUAGES[item.language]['color'] : ''
             return (
-              <li className="repo-item">
+              <li className="repo-item" key={item.id}>
                 <section className="first">
                   {item.fork ? <span><Icon type="usb" />&nbsp;&nbsp;&nbsp;</span> : ''}
                   <Link to={`/repo/${item.owner.login}/${item.name}`}>{item.full_name}</Link>

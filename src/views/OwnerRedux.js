@@ -4,6 +4,7 @@ import { COMMON_FETCH } from './QueueRedux'
 export const OWNER_REPO_GET = 'OWNER_REPO_GET'
 export const OWNER_ORGANIZATION_GET = 'OWNER_ORGANIZATION_GET'
 export const OWNER_DETAIL_GET = 'OWNER_DETAIL_GET'
+export const OWNER_STARS_GET = 'OWNER_STARS_GET'
 export const OWNER_FOLLOWERS_GET = 'OWNER_FOLLOWERS_GET'
 export const OWNER_FOLLOWINGS_GET = 'OWNER_FOLLOWINGS_GET'
 export const OWNER_EVENTS_GET = 'OWNER_EVENTS_GET'
@@ -31,6 +32,7 @@ const initialState = {
   events: [],
   followers: [],
   followings: [],
+  stars: [],
 }
 
 export default function owner(state = initialState, { type, payload }) {
@@ -43,6 +45,12 @@ export default function owner(state = initialState, { type, payload }) {
       return { ...state, events: payload.data.data.data }
     case OWNER_ORGANIZATION_GET:
       return { ...state, organization: payload.data.data.data }
+    case OWNER_STARS_GET:
+      return { ...state, stars: payload.data.data.data }
+    case OWNER_FOLLOWERS_GET:
+      return { ...state, followers: payload.data.data.data }
+    case OWNER_FOLLOWINGS_GET:
+      return { ...state, followings: payload.data.data.data }
     default:
       return state
   }
@@ -68,3 +76,9 @@ export const fetchEventsForOwner = createAction(API.activity.getEventsForUser, O
 export const fetchRepoForOwner = createAction(API.repo.getForUser, OWNER_REPO_GET)
 
 export const fetchDetailForOwner = createAction(API.user.getForUser, OWNER_DETAIL_GET)
+
+export const fetchStarForOwner = createAction(API.activity.getStarredReposForUser, OWNER_STARS_GET)
+
+export const fetchFollowerForOwner = createAction(API.user.getFollowersForUser, OWNER_FOLLOWERS_GET)
+
+export const fetchFollowingForOwner = createAction(API.user.getFollowingForUser, OWNER_FOLLOWINGS_GET)
