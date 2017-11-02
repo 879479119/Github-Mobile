@@ -13,12 +13,14 @@ import './index.scss'
 export default class Star extends Component {
   componentDidMount() {
     const { username } = this.props.match.params
-    if (this.props.owner.stars.length === 0) this.props.fetchStarForOwner({ username })
+    if (this.props.owner.repos.login !== username) {
+      this.props.fetchStarForOwner({ username })
+    }
   }
   render = () => {
     const { owner: { stars } } = this.props
     return (
-      <RepoList result={stars} className="user-repo-list" />
+      <RepoList result={stars.list} className="user-repo-list" />
     )
   }
 }

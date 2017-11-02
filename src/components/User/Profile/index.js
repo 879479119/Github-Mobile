@@ -3,7 +3,7 @@ import { withRouter, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Icon, Card, Tooltip, Spin } from 'antd'
 import { commonFetch, commonRelease } from '../../../views/QueueRedux'
-import { fetchOrgsForOwner, fetchEventsForOwner, OWNER_REPO_GET } from '../../../views/OwnerRedux'
+import { fetchOrgsForOwner, fetchEventsForOwner, OWNER_REPO_GET, fetchRepoForOwner } from '../../../views/OwnerRedux'
 import reflect from '../../../utils/languages'
 import emojizer from '../../../utils/emojizer'
 import formatDate from '../../../utils/formatDate'
@@ -16,13 +16,16 @@ import './index.scss'
   owner: state.owner,
   loading: state.query.owner,
 }), {
-  commonFetch, commonRelease, fetchOrgsForOwner, fetchEventsForOwner,
+  commonFetch, commonRelease, fetchOrgsForOwner, fetchEventsForOwner, fetchRepoForOwner,
 })
 export default class Profile extends Component {
   componentDidMount() {
-    const { username = this.props.user.login } = this.props.match.params
-    this.props.fetchOrgsForOwner({ username })
-    this.props.fetchEventsForOwner({ username })
+    const { username } = this.props.match.params
+    if (this.props.owner.organization.login !== username) {
+      this.props.fetchRepoForOwner({ username })
+      this.props.fetchOrgsForOwner({ username })
+      this.props.fetchEventsForOwner({ username })
+    }
   }
 
   render = () => {
@@ -36,7 +39,7 @@ export default class Profile extends Component {
     const percentage = []
 
     // copy
-    const sortedRepos = repos.concat()
+    const sortedRepos = repos.list.concat()
 
     // prepare for the repo part
     sortedRepos.sort((prev, cur) => {
@@ -61,7 +64,7 @@ export default class Profile extends Component {
     return (
       <div className="main-body">
         <div className="main-part">
-          <UserInfo info={userInfo} org={orgs} />
+          <UserInfo info={userInfo} org={orgs.list} />
           <div className="user-repos">
             {
               !this.props.loading[OWNER_REPO_GET] ? sortedRepos.splice(0, 6).map((item) => {
@@ -94,7 +97,7 @@ export default class Profile extends Component {
           <Percentage percentage={percentage}>
             <p className="chart-lang">Language Chart</p>
           </Percentage>
-          <RecentEvent data={events} />
+          <RecentEvent data={events.list} />
         </div>
       </div>
     )

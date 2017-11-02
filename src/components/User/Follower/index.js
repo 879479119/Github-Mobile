@@ -13,13 +13,15 @@ import { List as FollowerList } from '../../Trending/DeveloperList'
 export default class Star extends Component {
   componentDidMount() {
     const { username } = this.props.match.params
-    if (this.props.owner.followers.length === 0) this.props.fetchFollowerForOwner({ username })
-    if (this.props.owner.followings.length === 0) this.props.fetchFollowingForOwner({ username })
+    if (this.props.owner.followers.login !== username) {
+      this.props.fetchFollowerForOwner({ username })
+      this.props.fetchFollowingForOwner({ username })
+    }
   }
   render = () => {
     const { owner: { followers, followings } } = this.props
     return (
-      <FollowerList data={followers} className="user-repo-list" simple list={followings} />
+      <FollowerList data={followers.list} className="user-repo-list" simple list={followings.list} />
     )
   }
 }

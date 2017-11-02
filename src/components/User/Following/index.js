@@ -13,12 +13,14 @@ import { List as FollowingList } from '../../Trending/DeveloperList'
 export default class Star extends Component {
   componentDidMount() {
     const { username } = this.props.match.params
-    if (this.props.owner.followings.length === 0) this.props.fetchFollowingForOwner({ username })
+    if (this.props.owner.followings.login !== username) {
+      this.props.fetchFollowingForOwner({ username })
+    }
   }
   render = () => {
     const { owner: { followings } } = this.props
     return (
-      <FollowingList data={followings} className="user-repo-list" simple list={followings} />
+      <FollowingList data={followings.list} className="user-repo-list" simple list={followings.list} />
     )
   }
 }

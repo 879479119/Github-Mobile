@@ -10,7 +10,10 @@ export const OWNER_FOLLOWINGS_GET = 'OWNER_FOLLOWINGS_GET'
 export const OWNER_EVENTS_GET = 'OWNER_EVENTS_GET'
 
 const initialState = {
-  repos: [],
+  repos: {
+    login: '',
+    list: [],
+  },
   detail: {
     avatar_url: '',
     bio: '',
@@ -27,30 +30,45 @@ const initialState = {
     public_repos: 18,
     type: 'User',
   },
-  organization: [],
+  organization: {
+    login: '',
+    list: [],
+  },
   type: 'User',
-  events: [],
-  followers: [],
-  followings: [],
-  stars: [],
+  events: {
+    login: '',
+    list: [],
+  },
+  followers: {
+    login: '',
+    list: [],
+  },
+  followings: {
+    login: '',
+    list: [],
+  },
+  stars: {
+    login: '',
+    list: [],
+  },
 }
 
 export default function owner(state = initialState, { type, payload }) {
   switch (type) {
     case OWNER_REPO_GET:
-      return { ...state, repos: payload.data.data.data }
+      return { ...state, repos: { login: payload.login, list: payload.data.data.data } }
     case OWNER_DETAIL_GET:
       return { ...state, detail: { ...state.detail, ...payload.data.data.data } }
     case OWNER_EVENTS_GET:
-      return { ...state, events: payload.data.data.data }
+      return { ...state, events: { login: payload.login, list: payload.data.data.data } }
     case OWNER_ORGANIZATION_GET:
-      return { ...state, organization: payload.data.data.data }
+      return { ...state, organization: { login: payload.login, list: payload.data.data.data } }
     case OWNER_STARS_GET:
-      return { ...state, stars: payload.data.data.data }
+      return { ...state, stars: { login: payload.login, list: payload.data.data.data } }
     case OWNER_FOLLOWERS_GET:
-      return { ...state, followers: payload.data.data.data }
+      return { ...state, followers: { login: payload.login, list: payload.data.data.data } }
     case OWNER_FOLLOWINGS_GET:
-      return { ...state, followings: payload.data.data.data }
+      return { ...state, followings: { login: payload.login, list: payload.data.data.data } }
     default:
       return state
   }

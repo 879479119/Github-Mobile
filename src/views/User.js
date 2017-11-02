@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Layout, Menu, Icon, Badge } from 'antd'
 import { pushHistory } from '../layouts/HomeRedux'
-import { fetchRepoForOwner, fetchDetailForOwner } from './OwnerRedux'
+import { fetchDetailForOwner } from './OwnerRedux'
 import addDataFetch from '../redux/addDataFetch'
 import './User.scss'
 
@@ -15,15 +15,32 @@ const { Content } = Layout
   owner: state.owner,
   user: state.user,
 }), {
-  pushHistory, fetchRepoForOwner, fetchDetailForOwner,
+  pushHistory, fetchDetailForOwner,
 })
 @addDataFetch
 export default class User extends Component {
+  state = {
+    loading: false,
+  }
   componentDidMount() {
     const { username } = this.props.match.params
+    // const { login } = this.props.owner.detail
 
-    this.props.fetchRepoForOwner({ username })
     this.props.fetchDetailForOwner({ username })
+  }
+  componentWillReceiveProps() {
+    const { username } = this.props.match.params
+    const { login } = this.props.owner.detail
+    if (username !== login && this.state.loading === false) {
+      this.props.fetchDetailForOwner({ username })
+      this.setState({
+        loading: true,
+      })
+    } else if (username === login) {
+      this.setState({
+        loading: false,
+      })
+    }
   }
 
   menuHandler(e) {

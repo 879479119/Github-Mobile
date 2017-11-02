@@ -102,6 +102,7 @@ function * registerSaga(action) {
  */
 function * commonFetch(action) {
   const { url, next } = action.payload
+  const username = action.payload.data && action.payload.data.username
   yield put({ type: COMMON_LOADING, payload: { url } })
   try {
     if (next) {
@@ -116,7 +117,7 @@ function * commonFetch(action) {
     } else if (next !== undefined) {
       yield put({ type: REQUEST_END, payload: { next } })
       //  we have specified the reducer
-      yield put({ type: next, payload: { data } })
+      yield put({ type: next, payload: { data, login: username } })
     } else {
       //  common fetch
       yield put({ type: COMMON_READY, payload: { url, data } })
