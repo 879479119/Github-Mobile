@@ -15,7 +15,7 @@ import {
 } from './UserRedux'
 import request, { login, register, getAuthInfo } from '../utils/request'
 import { COMMON_FETCH, COMMON_ERROR, COMMON_LOADING, COMMON_READY } from './QueueRedux'
-import { REPO_CONTENT_INIT, REPO_CONTENT_READY, REPO_CONTENT_SHOW_FILE, REPO_CONTENT_CHANGE } from './RepoRedux'
+// import { REPO_CONTENT_INIT, REPO_CONTENT_READY, REPO_CONTENT_SHOW_FILE, REPO_CONTENT_CHANGE } from './RepoRedux'
 import { REQUEST_END, REQUEST_START } from '../redux/QueryRedux'
 
 /**
@@ -27,8 +27,8 @@ export default [
   takeEvery(REG, registerSaga),
   takeEvery(COMMON_FETCH, commonFetch),
   takeEvery(AUTH_FETCH_FOLLOWING, userSaga),
-  takeEvery(REPO_CONTENT_INIT, codeSaga),
-  takeEvery(REPO_CONTENT_CHANGE, codeSaga),
+  // takeEvery(REPO_CONTENT_INIT, codeSaga),
+  // takeEvery(REPO_CONTENT_CHANGE, codeSaga),
 ]
 
 /**
@@ -144,43 +144,43 @@ function * userSaga() {
     yield put({ type: AUTH_FETCH_FOLLOWING_ERROR })
   }
 }
-
-
-function * codeSaga(action) {
-  try {
-    const repo = yield select(s => s.repo)
-    const data = []
-    /**
-     * get the detail iterator
-     *  we just need the last three contents
-     */
-    let { path } = action.payload
-
-    for (let i = 0; i < 3; i++) {
-      const res = yield call(request, ...['/api/repos/getContent', {
-        owner: repo.owner,
-        repo: repo.repo,
-        path,
-      }])
-      const temp = yield res.json()
-
-      /**
-       * render the file content while starting with a file
-       */
-      if (!Array.isArray(temp.data.data)) {
-        yield put({ type: REPO_CONTENT_SHOW_FILE, payload: { file: temp.data.data } })
-      } else {
-        // when meet the directory, we push it into the array
-        data.push(temp)
-      }
-
-
-      if (path === '') break
-      path = path.replace(/\/([^/]*)$/, '')
-    }
-
-    yield put({ type: REPO_CONTENT_READY, payload: { data } })
-  } catch (e) {
-    yield put({ type: NETWORK_ERROR, payload: {} })
-  }
-}
+//
+//
+// function * codeSaga(action) {
+//   try {
+//     const repo = yield select(s => s.repo)
+//     const data = []
+//     /**
+//      * get the detail iterator
+//      *  we just need the last three contents
+//      */
+//     let { path } = action.payload
+//
+//     for (let i = 0; i < 3; i++) {
+//       const res = yield call(request, ...['/api/repos/getContent', {
+//         owner: repo.owner,
+//         repo: repo.repo,
+//         path,
+//       }])
+//       const temp = yield res.json()
+//
+//       /**
+//        * render the file content while starting with a file
+//        */
+//       if (!Array.isArray(temp.data.data)) {
+//         yield put({ type: REPO_CONTENT_SHOW_FILE, payload: { file: temp.data.data } })
+//       } else {
+//         // when meet the directory, we push it into the array
+//         data.push(temp)
+//       }
+//
+//
+//       if (path === '') break
+//       path = path.replace(/\/([^/]*)$/, '')
+//     }
+//
+//     yield put({ type: REPO_CONTENT_READY, payload: { data } })
+//   } catch (e) {
+//     yield put({ type: NETWORK_ERROR, payload: {} })
+//   }
+// }

@@ -11,15 +11,14 @@ import emojizer from '../../../utils/emojizer'
 import Lang from '../../../utils/languages'
 
 export default class CodeTree extends Component {
-  constructor(...props) {
-    super(...props)
-    this.state = {
-      directory: [],
-      loading: true,
-      fileDetail: undefined,
-    }
+  state = {
+    directory: [],
+    loading: true,
+    fileDetail: undefined,
   }
   async componentDidMount() {
+    const { owner, repo } = this.props
+    if (owner === '') return;
     const { path } = this.props
 
     const result = await this.updatePath(path)
@@ -44,8 +43,7 @@ export default class CodeTree extends Component {
     this.setState({
       loading: false,
     })
-    const ret = await content.json()
-    return ret
+    return await content.json()
   }
   clickHandler(event) {
     let path = ''
@@ -93,7 +91,11 @@ export default class CodeTree extends Component {
               <h3 style={{ color }}>&lt;{lang}/&gt;</h3>
               <p>{data.name}</p>
             </div>
-            <p className="download" ><Icon type="download" />&nbsp;&nbsp;<a download href={data.download_url}>download</a></p>
+            <p className="download" >
+              <Icon type="download" />
+              &nbsp;&nbsp;
+              <a download href={data.download_url}>download</a>
+            </p>
           </section>
         </div>
       )
@@ -132,13 +134,10 @@ class Item extends PureComponent {   // eslint-disable-line
 }
 
 class HoverItem extends Item {
-  constructor({ ...props }) {
-    super(...props)
-    this.state = {
-      sent: false,
-      loading: true,
-      list: [],
-    }
+  state = {
+    sent: false,
+    loading: true,
+    list: [],
   }
   async handleHover(e) {
     const { item: { path }, repo, owner } = this.props
@@ -180,7 +179,12 @@ class HoverItem extends Item {
       // error and reload
     }
     return (
-      <Tooltip overlay={overlay} overlayClassName="tooltip-modified" onVisibleChange={::this.handleHover} mouseEnterDelay={0.5}>
+      <Tooltip
+        overlay={overlay}
+        overlayClassName="tooltip-modified"
+        onVisibleChange={::this.handleHover}
+        mouseEnterDelay={0.5}
+      >
         {super.render()}
       </Tooltip>
     )

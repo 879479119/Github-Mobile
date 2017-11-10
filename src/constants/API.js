@@ -1,6 +1,11 @@
 export default {
   repo: {
+    get: '/api/repos/get',
     getForUser: '/api/repos/getForUser',
+    getContent: '/api/repos/getContent',
+    getLanguages: '/api/repos/getLanguages',
+    getStatsParticipation: '/api/repos/getStatsParticipation',
+    getReadme: '/api/modified/repos/readme',
   },
   user: {
     getForUser: '/api/users/getForUser',

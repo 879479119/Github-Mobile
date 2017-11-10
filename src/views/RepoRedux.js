@@ -1,57 +1,30 @@
-/**
- * change the basic data of the repository
- */
-export const REPO_CHANGE_SELF = 'REPO_CHANGE_SELF'
+import API from '../constants/API'
+import { COMMON_FETCH } from './QueueRedux'
 
-/**
- * graph part, which is always used to store the details
- * @type {string}
- */
 export const GRAPH_COMMIT_SELECT = 'GRAPH_COMMIT_SELECT'
-
-/**
- * code part, dealing with the path
- * @param index
- */
-export const REPO_CONTENT_INIT = 'REPO_CONTENT_INIT'
-export const REPO_CONTENT_CHANGE = 'REPO_CONTENT_CHANGE'
-export const REPO_CONTENT_READY = 'REPO_CONTENT_READY'
-export const REPO_CONTENT_SHOW_FILE = 'REPO_CONTENT_SHOW_FILE'
-
-
-export const repoChangeSelf = detail => dispatch => dispatch({
-  type: REPO_CHANGE_SELF,
-  payload: detail,
-})
-
-export const graphCommitSelect = index => dispatch => dispatch({
-  type: GRAPH_COMMIT_SELECT,
-  payload: { index },
-})
-
-export const repoContentInit = (path, init = false) => (dispatch) => {
-  if (init === true) {
-    dispatch({
-      type: REPO_CONTENT_INIT,
-      payload: { path },
-    })
-  } else {
-    dispatch({
-      type: REPO_CONTENT_CHANGE,
-      payload: { path },
-    })
-  }
-}
-
+export const REPO_CONTENT_GET = 'REPO_CONTENT_GET'
+export const REPO_LANGUAGE_GET = 'REPO_LANGUAGE_GET'
+export const REPO_STATS_GET = 'REPO_STATS_GET'
+export const REPO_README_GET = 'REPO_README_GET'
+export const REPO_DETAIL_GET = 'REPO_DETAIL_GET'
 
 const initialState = {
   owner: '',
-  repo: '',
-  user: {
+  name: '',
+  status: {
     watch: false,
     star: false,
     fork: false,
   },
+  detail: {},
+  language: {
+    belonging: '',
+  },
+  stats: {
+    all: [0],
+  },
+  content: [],
+  readme: '',
   code: {
     branch: 'master',
     path: '',
@@ -69,56 +42,49 @@ const initialState = {
   },
   graph: {
     contributor: [0, 0],
-    commit: 51,
+    commit: 0,
   },
 }
 
 
-export default function repo(state = initialState, action) {
-  switch (action.type) {
-    case REPO_CHANGE_SELF: return Object.assign({}, state, {
-      owner: action.payload.owner,
-      repo: action.payload.repo,
-    })
-    case GRAPH_COMMIT_SELECT: return Object.assign({}, state, {
-      graph: {
-        contributor: state.graph.contributor,
-        commit: action.payload.index,
-      },
-    })
-      // this is the first time when user enter the page
-    case REPO_CONTENT_INIT: return Object.assign({}, state, {
-      code: {
-        branch: 'master',
-        path: action.payload.path,
-        file: undefined,
-      },
-    })
-      // when click the link
-    case REPO_CONTENT_CHANGE: return Object.assign({}, state, {
-      code: {
-        branch: 'master',
-        path: action.payload.path,
-        detail: state.code.detail,
-        file: undefined,
-      },
-    })
-    case REPO_CONTENT_READY: return Object.assign({}, state, {
-      code: {
-        branch: 'master',
-        path: state.code.path,
-        detail: action.payload.data,
-        file: state.code.file,
-      },
-    })
-    case REPO_CONTENT_SHOW_FILE: return Object.assign({}, state, {
-      code: {
-        branch: 'master',
-        path: state.code.path,
-        detail: state.code.detail,
-        file: action.payload.file,
+export default function repo(state = initialState, { type, payload }) {
+  try {
+    const list = payload.data.data.data
+    switch (type) {
+      case GRAPH_COMMIT_SELECT: return { ...state, stats: list }
+      case REPO_CONTENT_GET: return { state, content: list }
+      case REPO_LANGUAGE_GET: return { ...state, language: list }
+      case REPO_STATS_GET: return { ...state, stats: list }
+      case REPO_README_GET: return { ...state, readme: payload.data.data.readme }
+      case REPO_DETAIL_GET: return {
+        ...state,
+        detail: list,
+        owner: list.owner.login,
+        name: list.name,
+      }
+      default: return state
+    }
+  } catch (e) {
+    return state
+  }
+}
+
+
+function createAction(url, next) {
+  return query => (dispatch) => {
+    dispatch({
+      type: COMMON_FETCH,
+      payload: {
+        url,
+        data: query,
+        next,
       },
     })
   }
-  return state
 }
+
+export const fetchContentForRepo = createAction(API.repo.getContent, REPO_CONTENT_GET)
+export const fetchLanguageForRepo = createAction(API.repo.getLanguages, REPO_LANGUAGE_GET)
+export const fetchStatsForRepo = createAction(API.repo.getStatsParticipation, REPO_STATS_GET)
+export const fetchReadmeForRepo = createAction(API.repo.getReadme, REPO_README_GET)
+export const fetchDetailForRepo = createAction(API.repo.get, REPO_DETAIL_GET)

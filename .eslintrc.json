@@ -36,7 +36,8 @@
     "react/jsx-max-props-per-line": [1, { "maximum": 2, "when": "multiline" }],
     "no-mixed-operators": [0],
     "no-case-declarations": [0],
-    "max-len": [2, { "code": 120 }]
+    "max-len": [2, { "code": 120 }],
+    "object-curly-newline": [0]
   },
   "parserOptions": {
     "ecmaFeatures": {

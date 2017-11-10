@@ -4,28 +4,17 @@ import { Icon, Layout, Menu, Button } from 'antd'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import './Repo.scss'
-import { changeRouter } from '../layouts/HomeRedux'
-import { repoChangeSelf } from '../views/RepoRedux'
-import { commonFetch, commonRelease } from './QueueRedux'
-import addDataFetch from '../redux/addDataFetch'
-
+import { pushHistory } from '../layouts/HomeRedux'
+import { fetchDetailForRepo } from './RepoRedux'
 
 const { Content } = Layout
 const ButtonGroup = Button.Group
-const API = [
-  '/api/repos/get',
-]
 
 @withRouter
 @connect(state => ({
-  queue: state.queue,
-  route: state.common.route,
   owner: state.repo.owner,
-  repo: state.repo.repo,
-}), {
-  commonFetch, commonRelease, changeRouter, repoChangeSelf,
-})
-@addDataFetch
+  repo: state.repo,
+}), { fetchDetailForRepo, pushHistory })
 export default class Repo extends Component {
   static childContextTypes = {
     details: PropTypes.object,
@@ -33,32 +22,34 @@ export default class Repo extends Component {
 
   // noinspection JSUnusedGlobalSymbols
   getChildContext() {
-    return { details: this.getData(API[0]) }
+    return { details: this.props.repo }
   }
   // Any problem ?
   componentWillMount() {
-    const { location, repoChangeSelf: change } = this.props
+    const { location } = this.props
     const [, , owner, repo] = location.pathname.split('/')
-    change({
-      owner, repo,
-    })
+    // change({
+    //   owner, repo,
+    // })
   }
 
   componentDidMount() {
-    const { commonFetch: fetch, location } = this.props
+    const { location } = this.props
     const [, , owner, repo] = location.pathname.split('/')
-    fetch(API[0], { owner, repo })
+    if (this.props.repo.name !== repo || this.props.repo.owner !== owner) {
+      this.props.fetchDetailForRepo({ owner, repo })
+    }
   }
 
   menuHandler(e) {
-    const { changeRouter: change, repo, owner } = this.props
+    const { repo, owner } = this.props
     // const map = ['code', 'issue', 'pr', 'project', 'pulse', 'graph']
-    change(`/repo/${owner}/${repo}/${e.key}`)
+    this.props.pushHistory(`/repo/${owner}/${repo.name}/${e.key}`)
   }
 
   render = () => {
     const { location, repo, owner } = this.props
-    const details = this.getData(API[0])
+    const details = repo.detail
 
     const [, , , , tab = 'code'] = location.pathname.split('/')
 
@@ -67,7 +58,10 @@ export default class Repo extends Component {
         background: '#fff', padding: 24, margin: 0, minHeight: 400,
       }}
       >
-        <h2><Link to={`/user/${owner}/profile`}>{owner}</Link>/<Link to={`/repo/${owner}/${repo}`}>{repo}</Link></h2>
+        <h2>
+          <Link to={`/user/${owner}/profile`}>{owner}</Link>
+          /<Link to={`/repo/${owner}/${repo}`}>{repo.name}</Link>
+        </h2>
         <section className="title-panel">
           <ButtonGroup>
             <Button size="small"><Icon type="eye-o" />Watch</Button>
@@ -77,7 +71,8 @@ export default class Repo extends Component {
               height: 22,
               verticalAlign: 'top',
             }}
-            >{details.result ? details.result.data.data.subscribers_count : <Icon type="loading" />}
+            >
+              {details.subscribers_count || <Icon type="loading" />}
             </Button>
           </ButtonGroup>
           <ButtonGroup>
@@ -88,7 +83,8 @@ export default class Repo extends Component {
               height: 22,
               verticalAlign: 'top',
             }}
-            >{details.result ? details.result.data.data.stargazers_count : <Icon type="loading" />}
+            >
+              {details.stargazers_count || <Icon type="loading" />}
             </Button>
           </ButtonGroup>
           <ButtonGroup>
@@ -96,8 +92,8 @@ export default class Repo extends Component {
             <Button
               size="small" type="dashed"
               style={{ height: 22, verticalAlign: 'top' }}
-            >{details.result ? details.result.data.data.forks :
-            <Icon type="loading" />}
+            >
+              {details.forks || <Icon type="loading" />}
             </Button>
           </ButtonGroup>
         </section>

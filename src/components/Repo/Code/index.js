@@ -1,56 +1,52 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
-import { Button, Select, Spin } from 'antd'
+import { Button, Select } from 'antd'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import './index.scss'
-import { commonFetch, commonRelease } from '../../../views/QueueRedux'
-import addDataFetch from '../../../redux/addDataFetch'
+import {
+  fetchContentForRepo,
+  fetchLanguageForRepo,
+  fetchReadmeForRepo,
+  fetchStatsForRepo,
+} from '../../../views/RepoRedux'
 import CodeTree from './CodeTree'
 import User from './User'
 import LanguageBar from './LanguageBar'
 import CommitBar from './CommitBar'
 import formatDate from '../../../utils/formatDate'
+import owner from "../../../views/OwnerRedux";
 
 const { Option } = Select
 const ButtonGroup = Button.Group
-export const API = [
-  '/api/repos/getContent',
-  '/api/repos/getLanguages',
-  '/api/modified/repos/readme',
-  '/api/repos/getStatsParticipation',
-]
 
 @withRouter
 @connect(state => ({
-  queue: state.queue,
-}), { commonFetch, commonRelease })
-@addDataFetch
+  repo: state.repo,
+}), {
+  fetchContentForRepo, fetchLanguageForRepo, fetchReadmeForRepo, fetchStatsForRepo,
+})
 export default class extends Component {
   static contextTypes = {
     details: PropTypes.object,
   }
   componentDidMount() {
-    const { commonFetch: fetchData } = this.props
     const { repo, username: owner } = this.props.match.params
-    for (let i = 0; i < API.length; i++) {
-      // noinspection JSUnfilteredForInLoop
-      if (this.getData(API[i]).status !== 3) {
-        fetchData(API[i], { owner, repo, path: '' })
-      }
+    if (this.props.repo.repo !== repo || this.props.repo.owner !== owner) {
+      this.props.fetchContentForRepo({ owner, repo, path: '/' })
+      this.props.fetchStatsForRepo({ owner, repo })
+      this.props.fetchLanguageForRepo({ owner, repo })
+      this.props.fetchReadmeForRepo({ owner, repo })
     }
   }
   render = () => {
     const { details } = this.context
-    const content = this.getData(API[0])
-    const languages = this.getData(API[1])
-    const readme = this.getData(API[2])
-    const commits = this.getData(API[3])
+    const { content, language, readme, stats: commits } = this.props.repo
     return (
       <div className="main-body">
         <p className="description">{
-          details.result ?
-            details.result.data.data.description :
+          details ?
+            details.description :
             <span style={{
               width: 500,
               background: '#ecf6fd',
@@ -61,18 +57,13 @@ export default class extends Component {
             />
         }
         </p>
-        <LanguageBar lang={languages.result ? languages.result.data.data : {}} />
-        {(() => {
-          let fragment
-          if (content.status === 3) {
-            fragment = <CodeTree list={content.result.data.data} style={{ display: 'inline-block' }} />
-          } else if (content.status === 2) {
-            fragment = <p>error</p>
-          } else {
-            fragment = <section className="loading" style={{ minHeight: 250, textAlign: 'center', display: 'inline-block' }}><Spin style={{ marginTop: 100 }} /></section>
-          }
-          return fragment
-        })()}
+        <LanguageBar lang={language} />
+        <CodeTree
+          owner={details.owner}
+          repo={details.name}
+          list={[content]}
+          style={{ display: 'inline-block' }}
+        />
         <div className="right-part">
           <div className="repo-header">
             <section className="operation">
@@ -91,15 +82,27 @@ export default class extends Component {
               <Button type="primary" style={{ float: 'right' }}>Clone or download</Button>
             </section>
             <section className="timeline">
-              <span>Created: <em>{details.result ? formatDate(details.result.data.data.created_at, true) : '_'}</em></span>
-              <span>Pushed: <em>{details.result ? formatDate(details.result.data.data.pushed_at, true) : '_'}</em></span>
-              <span>Updated: <em>{details.result ? formatDate(details.result.data.data.updated_at, true) : '_'}</em></span>
+              <span>Created:
+                <em>{details ? formatDate(details.created_at, true) : '_'}</em>
+              </span>
+              <span>Pushed:
+                <em>{details ? formatDate(details.pushed_at, true) : '_'}</em>
+              </span>
+              <span>Updated:
+                <em>{details ? formatDate(details.updated_at, true) : '_'}</em>
+              </span>
             </section>
-            <User style={{ position: 'absolute', top: 0, right: 0 }} owner={details.result ? details.result.data.data.owner : {}} />
+            <User
+              style={{ position: 'absolute', top: 0, right: 0 }}
+              owner={details || {}}
+            />
           </div>
-          <CommitBar data={commits.result ? commits.result.data.data : { all: [0] }} />
+          <CommitBar data={commits || { all: [0] }} />
         </div>
-        <article dangerouslySetInnerHTML={{ __html: readme.result ? readme.result.data.readme : 0 }} className="readme" />
+        <article
+          dangerouslySetInnerHTML={{ __html: readme || 0 }}
+          className="readme"
+        />
       </div>
     )
   }

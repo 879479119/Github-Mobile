@@ -8,6 +8,31 @@ router.get('/', (req, res) => {
   res.send('you can use api like: /api/users/get to find your info').end()
 }).get('/:route', (req, res) => {
   res.send('you can use api like: /api/users/get to find your info').end()
+}).post('/modified/:group/:action', (req, respond) => {
+  const { group, action } = req.params
+  const params = req.body || {}
+  if (group === 'repos' && action === 'readme') {
+    fetch(`https://api.github.com/repos/${params.owner}/${params.repo}/readme`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        Accept: 'application/vnd.github.VERSION.html',
+      },
+    })
+      .then(e => e.text())
+      .then((res) => {
+        log(`AUTH API called: Modified ~ ${group} - ${action}`)
+        // let base64 = res.content
+        // let buffer = new Buffer(base64, 'base64')
+        respond.send(STDR.success({ readme: res }))
+      }).catch((err) => {
+        log(err, 1)
+        respond.send(STDR.uncaughtError(err))
+      })
+    return 0
+  }
+
+  respond.send(STDR.argvError('Wrong link'))
 }).post('/:group/:action', (req, respond) => {
   const { group, action } = req.params
   const params = req.body || {}
@@ -37,7 +62,7 @@ router.get('/', (req, res) => {
     log(err, 1)
     respond.send(err)
   })
-}).post('/auth/:group/:action', (req, respond) => {
+}).post('/auth/:group/:action', (req, respond) => { //eslint-disable-line
   const { group, action } = req.params.group
   const params = req.body || {}
   const { gid, key } = req.cookies
@@ -67,32 +92,5 @@ router.get('/', (req, res) => {
     respond.send(err)
   })
 })
-  .post('/modified/:group/:action', (req, respond) => {
-    const { group, action } = req.params.group
-    const params = req.body || {}
-
-    if (group === 'repos' && action === 'readme') {
-      fetch(`https://api.github.com/repos/${params.owner}/${params.repo}/readme`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          Accept: 'application/vnd.github.VERSION.html',
-        },
-      })
-        .then(e => e.text())
-        .then((res) => {
-          log(`AUTH API called: Modified ~ ${group} - ${action}`)
-          // let base64 = res.content
-          // let buffer = new Buffer(base64, 'base64')
-          respond.send(STDR.success({ readme: res }))
-        }).catch((err) => {
-          log(err, 1)
-          respond.send(STDR.uncaughtError(err))
-        })
-      return 0
-    }
-
-    respond.send(STDR.argvError('Wrong link'))
-  })
 
 module.exports = router
