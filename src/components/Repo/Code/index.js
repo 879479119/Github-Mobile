@@ -10,12 +10,12 @@ import {
   fetchReadmeForRepo,
   fetchStatsForRepo,
 } from '../../../views/RepoRedux'
+import { pushHistory } from '../../../layouts/HomeRedux'
 import CodeTree from './CodeTree'
 import User from './User'
 import LanguageBar from './LanguageBar'
 import CommitBar from './CommitBar'
 import formatDate from '../../../utils/formatDate'
-import owner from "../../../views/OwnerRedux";
 
 const { Option } = Select
 const ButtonGroup = Button.Group
@@ -24,7 +24,7 @@ const ButtonGroup = Button.Group
 @connect(state => ({
   repo: state.repo,
 }), {
-  fetchContentForRepo, fetchLanguageForRepo, fetchReadmeForRepo, fetchStatsForRepo,
+  fetchContentForRepo, fetchLanguageForRepo, fetchReadmeForRepo, fetchStatsForRepo, pushHistory,
 })
 export default class extends Component {
   static contextTypes = {
@@ -33,20 +33,26 @@ export default class extends Component {
   componentDidMount() {
     const { repo, username: owner } = this.props.match.params
     if (this.props.repo.repo !== repo || this.props.repo.owner !== owner) {
-      this.props.fetchContentForRepo({ owner, repo, path: '/' })
+      this.props.fetchContentForRepo({ owner, repo, path: '' })
       this.props.fetchStatsForRepo({ owner, repo })
       this.props.fetchLanguageForRepo({ owner, repo })
       this.props.fetchReadmeForRepo({ owner, repo })
     }
   }
+  componentWillReceiveProps() {
+  }
+  changeContentView = (path) => {
+    const { repo, username: owner } = this.props.match.params
+    this.props.pushHistory(`/repo/${owner}/${repo}/code/master${path}`)
+  }
   render = () => {
-    const { details } = this.context
+    const { details: repoProfile } = this.context
     const { content, language, readme, stats: commits } = this.props.repo
     return (
       <div className="main-body">
         <p className="description">{
-          details ?
-            details.description :
+          repoProfile ?
+            repoProfile.detail.description :
             <span style={{
               width: 500,
               background: '#ecf6fd',
@@ -59,9 +65,10 @@ export default class extends Component {
         </p>
         <LanguageBar lang={language} />
         <CodeTree
-          owner={details.owner}
-          repo={details.name}
-          list={[content]}
+          owner={repoProfile.owner}
+          repo={repoProfile.name}
+          list={content.children.map(t => t.detail)}
+          onChange={this.changeContentView}
           style={{ display: 'inline-block' }}
         />
         <div className="right-part">
@@ -83,18 +90,18 @@ export default class extends Component {
             </section>
             <section className="timeline">
               <span>Created:
-                <em>{details ? formatDate(details.created_at, true) : '_'}</em>
+                <em>{repoProfile ? formatDate(repoProfile.detail.created_at, true) : '_'}</em>
               </span>
               <span>Pushed:
-                <em>{details ? formatDate(details.pushed_at, true) : '_'}</em>
+                <em>{repoProfile ? formatDate(repoProfile.detail.pushed_at, true) : '_'}</em>
               </span>
               <span>Updated:
-                <em>{details ? formatDate(details.updated_at, true) : '_'}</em>
+                <em>{repoProfile ? formatDate(repoProfile.detail.updated_at, true) : '_'}</em>
               </span>
             </section>
             <User
               style={{ position: 'absolute', top: 0, right: 0 }}
-              owner={details || {}}
+              owner={repoProfile.detail.owner || {}}
             />
           </div>
           <CommitBar data={commits || { all: [0] }} />

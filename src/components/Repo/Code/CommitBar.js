@@ -20,6 +20,7 @@ export default function CommitBar(props) {
         {
           data.all.map((item, i) =>
             (<rect
+              key={i} // eslint-disable-line
               x={20 + (i * 7)} y={21}
               width={7} height={(item / max) * 70 || 0}
               fill={levels[((item / max) * 2) >>> 0]} opacity={0.8}

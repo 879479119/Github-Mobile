@@ -11,25 +11,28 @@ import emojizer from '../../../utils/emojizer'
 import Lang from '../../../utils/languages'
 
 export default class CodeTree extends Component {
+  static propTypes = {
+    onChange: PropTypes.func.isRequired,
+  }
   state = {
     directory: [],
     loading: true,
     fileDetail: undefined,
   }
-  async componentDidMount() {
-    const { owner, repo } = this.props
-    if (owner === '') return;
-    const { path } = this.props
-
-    const result = await this.updatePath(path)
-
-    if (result.data.data.length) {
-      this.setState({ directory: result.data.data })  // eslint-disable-line
-    } else {
-      this.setState({ fileDetail: result.data.data }) // eslint-disable-line
-      this.props.getFile(result.data.data.content)
-    }
-  }
+  // async componentDidMount() {
+  //   const { owner, repo } = this.props
+  //   if (owner === '') return
+  //   const { path } = this.props
+  //
+  //   const result = await this.updatePath(path)
+  //
+  //   if (result.data.data.length) {
+  //     this.setState({ directory: result.data.data })  // eslint-disable-line
+  //   } else {
+  //     this.setState({ fileDetail: result.data.data }) // eslint-disable-line
+  //     this.props.getFile(result.data.data.content)
+  //   }
+  // }
   async updatePath(path) {
     const { owner, repo } = this.props
     this.setState({
@@ -45,29 +48,27 @@ export default class CodeTree extends Component {
     })
     return await content.json()
   }
-  clickHandler(event) {
+  clickHandler = (event) => {
     let path = ''
     if (event.target.href && (path = event.target.href.replace(/.*code\/master/, ''))) {
-      const { callback } = this.props
-      callback(path)
+      this.props.onChange(path)
     }
   }
   render() {
     const {
       style, simple = false, className, repo, owner,
     } = this.props
-    const list = this.state.directory.slice()
+    const list = this.props.list.slice()
     for (let i = 0; i < list.length; i++) {
       if (list[i].type === 'dir') list.unshift(...list.splice(i, 1))
     }
-    if (this.state.loading === true) {
-      return (
-        <div className={cls('code-tree', className)} style={Object.assign({}, style, { width: 300 })}>
-          <Spin />
-        </div>
-      )
-    }
-    if (this.state.fileDetail) {
+    // return (
+    //   <div className={cls('code-tree', className)} style={Object.assign({}, style, { width: 300 })}>
+    //     <Spin />
+    //   </div>
+    // )
+    if (list[0].url === undefined) return null
+    if (false) {
       const data = this.state.fileDetail
       let lang = ''
       let color = ''
@@ -102,11 +103,18 @@ export default class CodeTree extends Component {
     }
 
     return (
-      <div className={cls('code-tree', className)} style={style} onClick={::this.clickHandler}>
-        <ul>{
-          list.map(item =>
-            <HoverItem item={item} simple={simple} repo={repo} owner={owner} />)
-        }
+      <div className={cls('code-tree', className)} style={style} onClick={this.clickHandler}>
+        <ul>
+          {
+            list.map((item, i) =>
+              (<HoverItem
+                key={i} //eslint-disable-line
+                item={item}
+                simple={simple}
+                repo={repo}
+                owner={owner}
+              />))
+          }
         </ul>
       </div>
     )
