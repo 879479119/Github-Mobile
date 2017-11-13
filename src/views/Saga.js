@@ -1,3 +1,4 @@
+import { find } from 'lodash'
 import { call, put, takeEvery, select } from 'redux-saga/effects'
 import { COMMON_SEARCH, SEARCH_ERROR, SEARCH_LOADING, SEARCH_READY } from './SearchResultRedux'
 import {
@@ -156,36 +157,46 @@ function * codeSaga(action) {
      * get the detail iterator
      *  we just need the last three contents
      */
-    let { path, repo, owner } = action.payload
+    let { path } = action.payload
+    const { repo, owner } = action.payload
 
     for (let i = 0; i < 3; i++) {
       // if (~repoStore.content.path.indexOf(path)) {
       //   path = path.replace(/\/([^/]*)$/, '')
       //   continue // eslint-disable-line
       // }
-      const res = yield call(request, ...[API.repo.getContent, {
-        owner: owner || repoStore.owner,
-        repo: repo || repoStore.name,
-        path,
-      }])
-      const temp = yield res.json()
+      const { children: { length } } = getContent(path, repoStore.content)
+      if (length === 0) {
+        const res = yield call(request, ...[API.repo.getContent, {
+          owner: owner || repoStore.owner,
+          repo: repo || repoStore.name,
+          path,
+        }])
+        const temp = yield res.json()
 
-      /**
-       * render the file content while starting with a file
-       */
-      if (!Array.isArray(temp.data.data)) {
-        yield put({ type: REPO_CONTENT_SHOW_FILE, payload: { path, file: temp.data.data } })
-      } else {
-        // when meet the directory, we push it into the array
-        data.push({ data: temp, path })
+        /**
+         * render the file content while starting with a file
+         */
+        if (!Array.isArray(temp.data.data)) {
+          yield put({ type: REPO_CONTENT_SHOW_FILE, payload: { path, file: temp.data.data } })
+        } else {
+          // when meet the directory, we push it into the array
+          data.push({ data: temp, path })
+        }
+        if (path === '') break
       }
-      if (path === '') break
       path = path.replace(/\/([^/]*)$/, '')
     }
-
     data.reverse()
-    yield put({ type: REPO_CONTENT_READY, payload: { data, path } })
+    yield put({ type: REPO_CONTENT_READY, payload: { data, path: '' } })
   } catch (e) {
     yield put({ type: NETWORK_ERROR, payload: {} })
   }
+}
+
+function getContent(name, context) {
+  const [, p = '', left = ''] = name.match(/^\/?([\w-.$_()]+)(.*)/) || []
+  const child = find(context.children, { path: p })
+  if (child === undefined) return context
+  else return getContent(left, child)
 }

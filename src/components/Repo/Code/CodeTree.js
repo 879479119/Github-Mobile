@@ -14,11 +14,6 @@ export default class CodeTree extends Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
   }
-  state = {
-    directory: [],
-    loading: true,
-    fileDetail: undefined,
-  }
   // async componentDidMount() {
   //   const { owner, repo } = this.props
   //   if (owner === '') return
@@ -33,21 +28,6 @@ export default class CodeTree extends Component {
   //     this.props.getFile(result.data.data.content)
   //   }
   // }
-  async updatePath(path) {
-    const { owner, repo } = this.props
-    this.setState({
-      loading: true,
-    })
-    const content = await request('/api/repos/getContent', {
-      owner,
-      repo,
-      path,
-    })
-    this.setState({
-      loading: false,
-    })
-    return await content.json()
-  }
   clickHandler = (event) => {
     let path = ''
     if (event.target.href && (path = event.target.href.replace(/.*code\/master/, ''))) {
@@ -62,11 +42,13 @@ export default class CodeTree extends Component {
     for (let i = 0; i < list.length; i++) {
       if (list[i].type === 'dir') list.unshift(...list.splice(i, 1))
     }
-    // return (
-    //   <div className={cls('code-tree', className)} style={Object.assign({}, style, { width: 300 })}>
-    //     <Spin />
-    //   </div>
-    // )
+    if (list.length === 0) {
+      return (
+        <div className={cls('code-tree', className)} style={Object.assign({}, style, { width: 300 })}>
+          <Spin />
+        </div>
+      )
+    }
     if (list[0].url === undefined) return null
     if (false) {
       const data = this.state.fileDetail

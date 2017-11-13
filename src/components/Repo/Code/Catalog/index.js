@@ -29,7 +29,7 @@ export default class extends Component {
     const [,, path] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/)
     this.props.changeDirectoryForRepo({ owner, path, repo })
   }
-  onChange(path) {
+  onChange = (path) => {
     // this.props.pushHistory(path)
     this.props.changeDirectoryForRepo({ path })
   }

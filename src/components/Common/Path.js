@@ -16,7 +16,7 @@ export default class Path extends Component {
         <Breadcrumb.Item key="home"><PLink p="">{this.props.repo}</PLink></Breadcrumb.Item>
         {
           crumbs.map(item => (
-            <Breadcrumb.Item ><PLink p={base += `/${item}`}>{item}</PLink></Breadcrumb.Item>
+            <Breadcrumb.Item key={item}><PLink p={base += `/${item}`}>{item}</PLink></Breadcrumb.Item>
           ))
         }
       </Breadcrumb>
