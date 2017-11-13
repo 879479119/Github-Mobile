@@ -99,8 +99,9 @@ export default function repo(state = initialState, { type, payload }) {
       })
       return { ...state, content }
     case REPO_CONTENT_SHOW_FILE:
-      content = { ...state.content, path: payload.path }
-      update(payload.path, content, {}, 'file')
+      content = { ...state.content }
+      const { path: p, file } = payload
+      update(p, content, file, 'file')
       return { ...state, content }
     case REPO_LANGUAGE_GET: return { ...state, language: list }
     case REPO_STATS_GET: return { ...state, stats: list }
@@ -122,17 +123,26 @@ function update(path, tree, array, type) {
     let index = findIndex(dummy.children, { path: t })
     if (index === -1) {
       if (i === routes.length - 1) {
-        index = dummy.children.push({
-          type: 'directory',
-          detail: {},
-          path: t,
-          children: array.map(n => ({
-            type: n.type,
-            detail: n,
-            path: n.name,
+        if (Array.isArray(array)) {
+          index = dummy.children.push({
+            type: 'directory',
+            detail: {},
+            path: t,
+            children: array.map(n => ({
+              type: n.type,
+              detail: n,
+              path: n.name,
+              children: [],
+            })),
+          })
+        } else {
+          index = dummy.children.push({
+            type: 'file',
+            detail: array,
+            path: t,
             children: [],
-          })),
-        })
+          })
+        }
       } else {
         index = dummy.children.push({
           type: 'directory',
@@ -142,19 +152,27 @@ function update(path, tree, array, type) {
         }) - 1
       }
     } else {
-      // if (dummy.children[index].children.length) {
-      // } else if (dummy.children[index].path !== t) {
-
       if (i === routes.length - 1) {
-      // } else {
-        dummy.children[index] = {
-          ...dummy.children[index],
-          children: array.map(n => ({
-            type: n.type,
-            detail: n,
-            path: n.name,
-            children: [],
-          })),
+        if (Array.isArray(array)) {
+          dummy.children[index] = {
+            ...dummy.children[index],
+            children: array.map(n => ({
+              type: n.type,
+              detail: n,
+              path: n.name,
+              children: [],
+            })),
+          }
+        } else {
+          dummy.children[index] = {
+            ...dummy.children[index],
+            children: [{
+              type: 'file',
+              detail: array,
+              path: t,
+              children: [],
+            }],
+          }
         }
       }
     }

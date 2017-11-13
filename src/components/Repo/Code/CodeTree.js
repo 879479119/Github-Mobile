@@ -14,20 +14,9 @@ export default class CodeTree extends Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
   }
-  // async componentDidMount() {
-  //   const { owner, repo } = this.props
-  //   if (owner === '') return
-  //   const { path } = this.props
-  //
-  //   const result = await this.updatePath(path)
-  //
-  //   if (result.data.data.length) {
-  //     this.setState({ directory: result.data.data })  // eslint-disable-line
-  //   } else {
-  //     this.setState({ fileDetail: result.data.data }) // eslint-disable-line
-  //     this.props.getFile(result.data.data.content)
-  //   }
-  // }
+  componentDidMount() {
+    if (this.props.list[0].type === 'file') this.props.getFile(this.props.list[0].content)
+  }
   clickHandler = (event) => {
     let path = ''
     if (event.target.href && (path = event.target.href.replace(/.*code\/master/, ''))) {
@@ -50,8 +39,8 @@ export default class CodeTree extends Component {
       )
     }
     if (list[0].url === undefined) return null
-    if (false) {
-      const data = this.state.fileDetail
+    if (list[0].type === 'file') {
+      const data = list[0]
       let lang = ''
       let color = ''
       try {
@@ -66,6 +55,7 @@ export default class CodeTree extends Component {
         color = Lang[extensionMap[lang]]['color'] // eslint-disable-line
       } catch (E) {
         console.info('CANNOT FIND THE COLOR OF THE EXT')
+        console.info(E)
       }
       return (
         <div className={cls('code-tree', 'file-type', className)} style={style}>
@@ -129,7 +119,7 @@ class HoverItem extends Item {
     loading: true,
     list: [],
   }
-  async handleHover(e) {
+  handleHover = async (e) => {
     const { item: { path }, repo, owner } = this.props
     if (e === true && this.state.sent === false) {
       const result = await request('/api/repos/getCommits', {
@@ -172,8 +162,8 @@ class HoverItem extends Item {
       <Tooltip
         overlay={overlay}
         overlayClassName="tooltip-modified"
-        onVisibleChange={::this.handleHover}
-        mouseEnterDelay={0.5}
+        onVisibleChange={this.handleHover}
+        mouseEnterDelay={1}
       >
         {super.render()}
       </Tooltip>

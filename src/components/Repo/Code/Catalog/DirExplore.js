@@ -20,7 +20,6 @@ export default class DirExplore extends Component {
     let t = content
     const treePath = path.split('/')
     const ret = []
-    console.info(t)
     if (t.children.length !== 0) {
       for (let i = 0; i < treePath.length; i += 1) {
         if (t.path === treePath[i]) {
@@ -31,7 +30,6 @@ export default class DirExplore extends Component {
         }
       }
     }
-    console.info(ret)
     return (
       <section className="file-content" style={{ display: 'flex' }}>
         {

@@ -33,7 +33,7 @@ export default class extends Component {
     // this.props.pushHistory(path)
     this.props.changeDirectoryForRepo({ path })
   }
-  getFile(content) {
+  getFile = (content) => {
     this.setState({
       file: content,
     })
@@ -71,7 +71,7 @@ export default class extends Component {
           repo={repo}
           owner={username}
           branch="master"
-          getFile={::this.getFile}
+          getFile={this.getFile}
         />
         <div>
           <CodeStage content={file} />

@@ -161,10 +161,6 @@ function * codeSaga(action) {
     const { repo, owner } = action.payload
 
     for (let i = 0; i < 3; i++) {
-      // if (~repoStore.content.path.indexOf(path)) {
-      //   path = path.replace(/\/([^/]*)$/, '')
-      //   continue // eslint-disable-line
-      // }
       const { children: { length } } = getContent(path, repoStore.content)
       if (length === 0) {
         const res = yield call(request, ...[API.repo.getContent, {
@@ -177,6 +173,7 @@ function * codeSaga(action) {
         /**
          * render the file content while starting with a file
          */
+        console.info(temp.data.data)
         if (!Array.isArray(temp.data.data)) {
           yield put({ type: REPO_CONTENT_SHOW_FILE, payload: { path, file: temp.data.data } })
         } else {
