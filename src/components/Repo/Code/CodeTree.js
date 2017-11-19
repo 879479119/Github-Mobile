@@ -14,9 +14,6 @@ export default class CodeTree extends Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
   }
-  componentDidMount() {
-    if (this.props.list[0].type === 'file') this.props.getFile(this.props.list[0].content)
-  }
   clickHandler = (event) => {
     let path = ''
     if (event.target.href && (path = event.target.href.replace(/.*code\/master/, ''))) {
@@ -39,7 +36,7 @@ export default class CodeTree extends Component {
       )
     }
     if (list[0].url === undefined) return null
-    if (list[0].type === 'file') {
+    if (list[0].type === 'file' && list[0].content) {
       const data = list[0]
       let lang = ''
       let color = ''

@@ -40,7 +40,7 @@ export default class DirExplore extends Component {
               className="tree"
               simple
               onChange={this.pathChanged}
-              list={item.children.map((p) => p.detail)}
+              list={item.children.map(p => p.detail)}
               getFile={getFile}
               owner={owner}
               repo={repo}
