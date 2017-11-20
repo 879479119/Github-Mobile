@@ -3,8 +3,7 @@
  * @created 2017/11/19
  * @description
  */
-import pathLib from 'path'
-import Profile from "../../components/User/Profile/index";
+const pathLib = require('path')
 
 const DIRECTORY = 'directory'
 const FILE = 'file'
@@ -16,14 +15,16 @@ const TEMPLATE = {
   children: [],
 }
 
-export default class FileSystem {
-  constructor(userOptions) {
+module.exports = class FileSystem {
+  constructor(userOptions = {}) {
     const option = FileSystem.checkOptions(userOptions)
     this.tree = option.tree
+    this.strict = option.strict
   }
   static checkOptions(options) {
     const { tree, baseDirectory } = options
     const ret = {
+      strict: false,
       baseDirectory: '/',
       tree: {
         absolute: '/',
@@ -50,28 +51,58 @@ export default class FileSystem {
   static resolve(root, path) {
     return pathLib.resolve(root, path)
   }
+  static setSerialization(schema) {
+    Object.defineProperty(FileSystem, 'schema', {
+      getter: () => { return schema },
+      writable: false,
+    })
+  }
+  static serialize(stat) {
+    const { schema = {} } = FileSystem
+    if (stat === false) return {}
+    return { path: stat.path, children: stat.children }
+  }
   fileStat(path) {
     if (path === '' || path === '/') return this.tree
     const routes = path.split('/').slice(1)
     let { tree } = this
+    let ret = false
     routes.forEach((route, index) => {
-      for (let i = 0; i < tree.children.length; i += 1) {
-        if (tree.children[i].path === route) {
-          if (index === routes.length) return tree.children[i]
-          tree = tree.children[i]
+      tree.children.forEach((t) => {
+        if (t.path === route) {
+          if (index === routes.length - 1) ret = t
+          return tree = t
         }
-      }
+      })
     })
-    return false
+    return ret
   }
   writeFile(path, detail, children) {
     const routes = path.split('/').slice(1)
     let { tree } = this
+    let update = false
     routes.forEach((route, index) => {
+      if (index === routes.length - 1) {
+        const template = {
+          absolute: '/' + routes.slice(0, index + 1).join('/'), // eslint-disable-line
+          path: route,
+          type: DIRECTORY,
+          detail,
+          children,
+        }
+        tree.children.forEach((t) => {
+          if (t.path === route) {
+            tree = { ...tree, detail, children }
+            update = true
+          }
+        })
+        if (!update) tree.children.push(template)
+        return update
+      }
       for (let i = 0; i < tree.children.length; i += 1) {
         if (tree.children[i].path === route) {
-          if (index === routes.length) tree = { ...tree, detail, children }
           tree = tree.children[i]
+          return
         }
       }
     })
@@ -90,7 +121,7 @@ export default class FileSystem {
         }
       }
       const template = {
-        absolute: '/' + routes.slice(0, index).join('/'), // eslint-disable-line
+        absolute: '/' + routes.slice(0, index + 1).join('/'), // eslint-disable-line
         path: route,
         type: DIRECTORY,
         detail: {},
@@ -108,132 +139,42 @@ export default class FileSystem {
       this.mkdirp(context)
     }
     this.writeFile(path, detail, children)
-
-
-    const routes = path.split('/').slice(1)
-    let dummy = tree
-    routes.forEach((t, i) => {
-      let index = findIndex(dummy.children, { path: t })
-      if (index === -1) {
-        if (i === routes.length - 1) {
-          if (Array.isArray(array)) {
-            index = dummy.children.push({
-              type: 'directory',
-              detail: {},
-              path: t,
-              children: array.map(n => ({
-                type: n.type,
-                detail: n,
-                path: n.name,
-                children: [],
-              })),
-            })
-          } else {
-            index = dummy.children.push({
-              type: 'file',
-              detail: array,
-              path: t,
-              children: [],
-            })
-          }
-        } else {
-          index = dummy.children.push({
-            type: 'directory',
-            detail: {},
-            path: t,
-            children: [],
-          }) - 1
-        }
-      } else {
-        if (i === routes.length - 1) {
-          if (Array.isArray(array)) {
-            dummy.children[index] = {
-              ...dummy.children[index],
-              children: array.map(n => ({
-                type: n.type,
-                detail: n,
-                path: n.name,
-                children: [],
-              })),
-            }
-          } else {
-            dummy.children[index] = {
-              ...dummy.children[index],
-              children: [{
-                type: 'file',
-                detail: array,
-                path: t,
-                children: [],
-              }],
-            }
-          }
-        }
-      }
-      dummy = dummy.children[index]
-    })
   }
-}
-
-function update(path, tree, array, type) {
-  const routes = path.split('/').slice(1)
-  let dummy = tree
-  routes.forEach((t, i) => {
-    let index = findIndex(dummy.children, { path: t })
-    if (index === -1) {
-      if (i === routes.length - 1) {
-        if (Array.isArray(array)) {
-          index = dummy.children.push({
-            type: 'directory',
-            detail: {},
-            path: t,
-            children: array.map(n => ({
-              type: n.type,
-              detail: n,
-              path: n.name,
-              children: [],
-            })),
-          })
-        } else {
-          index = dummy.children.push({
-            type: 'file',
-            detail: array,
-            path: t,
-            children: [],
-          })
-        }
-      } else {
-        index = dummy.children.push({
-          type: 'directory',
-          detail: {},
-          path: t,
-          children: [],
-        }) - 1
+  removeFile(path) {
+    if (path === '' || path === '/') {
+      this.tree = {
+        absolute: '/',
+        path: '',
+        type: DIRECTORY,
+        detail: {},
+        children: [],
       }
-    } else {
-      if (i === routes.length - 1) {
-        if (Array.isArray(array)) {
-          dummy.children[index] = {
-            ...dummy.children[index],
-            children: array.map(n => ({
-              type: n.type,
-              detail: n,
-              path: n.name,
-              children: [],
-            })),
-          }
-        } else {
-          dummy.children[index] = {
-            ...dummy.children[index],
-            children: [{
-              type: 'file',
-              detail: array,
-              path: t,
-              children: [],
-            }],
-          }
-        }
-      }
+      return true
     }
-    dummy = dummy.children[index]
-  })
+    if (this.fileStat(path) === false) return false
+    const routes = path.split('/').slice(1)
+    let { tree } = this
+    routes.forEach((route, index) => {
+      tree.children.forEach((t, i) => {
+        if (t.path === route) {
+          if (index === routes.length - 1) tree.children.splice(i, 1)
+          return tree = t
+        }
+      })
+    })
+    return true
+  }
+  getSerializedList(path) {
+    const routes = path.split('/').slice(1)
+    const ret = []
+    routes.reduce((base, r) => {
+      const stat = this.fileStat(base)
+      if (this.strict && stat === false) {
+        throw Error('you may use mkdirp to make sure that all the parent routes have been initialized in strict mode.')
+      }
+      ret.push(FileSystem.serialize(stat))
+      return base + '/' + r // eslint-disable-line
+    }, '/')
+    return ret
+  }
 }
