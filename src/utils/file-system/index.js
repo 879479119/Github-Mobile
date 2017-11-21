@@ -59,8 +59,13 @@ module.exports = class FileSystem {
   }
   static serialize(stat) {
     const { schema = {} } = FileSystem
-    if (stat === false) return {}
-    return { path: stat.path, children: stat.children }
+    if (stat === false) return { path: '', detail: {}, children: [] }
+    return {
+      path: stat.path,
+      detail: stat.detail,
+      children: stat.children,
+      type: stat.type,
+    }
   }
   fileStat(path) {
     if (path === '' || path === '/') return this.tree
@@ -77,7 +82,7 @@ module.exports = class FileSystem {
     })
     return ret
   }
-  writeFile(path, detail, children) {
+  writeFile(path, detail, type) {
     const routes = path.split('/').slice(1)
     let { tree } = this
     let update = false
@@ -86,13 +91,15 @@ module.exports = class FileSystem {
         const template = {
           absolute: '/' + routes.slice(0, index + 1).join('/'), // eslint-disable-line
           path: route,
-          type: DIRECTORY,
+          type,
           detail,
-          children,
+          children: [],
         }
-        tree.children.forEach((t) => {
+        tree.children.forEach((t, i) => {
           if (t.path === route) {
-            tree = { ...tree, detail, children }
+            // tree = { ...tree, detail, type }
+            t.detail = detail
+            t.type = type
             update = true
           }
         })
@@ -133,12 +140,12 @@ module.exports = class FileSystem {
     })
     return hasAddNewRoute
   }
-  writeFileAnyway(path, detail, children) {
+  writeFileAnyway(path, detail, type) {
     const context = FileSystem.resolve(path, '../')
     if (this.fileStat(context) === false) {
       this.mkdirp(context)
     }
-    this.writeFile(path, detail, children)
+    this.writeFile(path, detail, type)
   }
   removeFile(path) {
     if (path === '' || path === '/') {
@@ -165,16 +172,17 @@ module.exports = class FileSystem {
     return true
   }
   getSerializedList(path) {
-    const routes = path.split('/').slice(1)
+    const routes = path.split('/')
     const ret = []
     routes.reduce((base, r) => {
-      const stat = this.fileStat(base)
+      const dist = base + '/' + r // eslint-disable-line
+      const stat = this.fileStat(dist)
       if (this.strict && stat === false) {
         throw Error('you may use mkdirp to make sure that all the parent routes have been initialized in strict mode.')
       }
       ret.push(FileSystem.serialize(stat))
-      return base + '/' + r // eslint-disable-line
-    }, '/')
+      return dist
+    }, '')
     return ret
   }
 }

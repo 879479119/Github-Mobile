@@ -22,22 +22,16 @@ export default class CodeTree extends Component {
   }
   render() {
     const {
-      style, simple = false, className, repo, owner,
+      style, simple = false, className, repo, owner, isFile, file,
     } = this.props
+
     const list = this.props.list.slice()
     for (let i = 0; i < list.length; i++) {
       if (list[i].type === 'dir') list.unshift(...list.splice(i, 1))
     }
-    if (list.length === 0) {
-      return (
-        <div className={cls('code-tree', className)} style={Object.assign({}, style, { width: 300 })}>
-          <Spin />
-        </div>
-      )
-    }
-    if (list[0].url === undefined) return null
-    if (list[0].type === 'file' && list[0].content) {
-      const data = list[0]
+
+    if (isFile) {
+      const data = file
       let lang = ''
       let color = ''
       try {
@@ -70,6 +64,14 @@ export default class CodeTree extends Component {
         </div>
       )
     }
+    if (list.length === 0) {
+      return (
+        <div className={cls('code-tree', className)} style={Object.assign({}, style, { width: 300 })}>
+          <Spin />
+        </div>
+      )
+    }
+    if (list[0].url === undefined) return null
 
     return (
       <div className={cls('code-tree', className)} style={style} onClick={this.clickHandler}>

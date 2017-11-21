@@ -1,4 +1,4 @@
-import { findIndex } from 'lodash'
+import FileSystem from '../utils/file-system'
 import API from '../constants/API'
 import { COMMON_FETCH } from './QueueRedux'
 
@@ -11,8 +11,9 @@ export const REPO_DETAIL_GET = 'REPO_DETAIL_GET'
 export const REPO_CONTENT_READY = 'REPO_CONTENT_READY'
 export const REPO_CONTENT_SHOW_FILE = 'REPO_CONTENT_SHOW_FILE'
 
-
 export const REPO_CONTENT_CHANGE = 'REPO_CONTENT_CHANGE'
+
+export const fileSystem = new FileSystem({})
 
 const initialState = {
   owner: '',
@@ -31,14 +32,7 @@ const initialState = {
   stats: {
     all: [0],
   },
-  content: {
-    path: '',
-    type: 'directory',
-    detail: {},
-    children: [
-      // { path: 'src', type: 'directory', detail: {}, children: [] },
-    ],
-  },
+  content: fileSystem.tree,
   readme: '',
   code: {
     branch: 'master',
@@ -83,26 +77,15 @@ export default function repo(state = initialState, { type, payload }) {
       content = { path: '', children, detail: {}, type: 'directory' }
       return { ...state, content }
     case REPO_CONTENT_READY:
-      content = { ...state.content, path: payload.path }
-      payload.data.forEach(p => {
-        if (p.path === '') {
-          children = p.data.data.data.map(t => ({
-            path: t.path,
-            type: t.type,
-            detail: t,
-            children: [],
-          }))
-          content = { path: '', children, detail: {}, type: 'directory' }
-        } else {
-          update(p.path, content, p.data.data.data, 'directory')
-        }
+      payload.data.forEach((p) => {
+        p.data.forEach(k => fileSystem.writeFileAnyway('/' + k.path, k, k.type))
       })
-      return { ...state, content }
+      return { ...state, content: fileSystem.tree }
     case REPO_CONTENT_SHOW_FILE:
       content = { ...state.content }
       const { path: p, file } = payload
-      update(p, content, file, 'file')
-      return { ...state, content }
+      fileSystem.writeFileAnyway('/' + p, file, file.type)
+      return { ...state, content: fileSystem.tree }
     case REPO_LANGUAGE_GET: return { ...state, language: list }
     case REPO_STATS_GET: return { ...state, stats: list }
     case REPO_README_GET: return { ...state, readme: payload.data.data.readme }
@@ -114,70 +97,6 @@ export default function repo(state = initialState, { type, payload }) {
     }
     default: return state
   }
-}
-
-function update(path, tree, array, type) {
-  const routes = path.split('/').slice(1)
-  let dummy = tree
-  routes.forEach((t, i) => {
-    let index = findIndex(dummy.children, { path: t })
-    if (index === -1) {
-      if (i === routes.length - 1) {
-        if (Array.isArray(array)) {
-          index = dummy.children.push({
-            type: 'directory',
-            detail: {},
-            path: t,
-            children: array.map(n => ({
-              type: n.type,
-              detail: n,
-              path: n.name,
-              children: [],
-            })),
-          })
-        } else {
-          index = dummy.children.push({
-            type: 'file',
-            detail: array,
-            path: t,
-            children: [],
-          })
-        }
-      } else {
-        index = dummy.children.push({
-          type: 'directory',
-          detail: {},
-          path: t,
-          children: [],
-        }) - 1
-      }
-    } else {
-      if (i === routes.length - 1) {
-        if (Array.isArray(array)) {
-          dummy.children[index] = {
-            ...dummy.children[index],
-            children: array.map(n => ({
-              type: n.type,
-              detail: n,
-              path: n.name,
-              children: [],
-            })),
-          }
-        } else {
-          dummy.children[index] = {
-            ...dummy.children[index],
-            children: [{
-              type: 'file',
-              detail: array,
-              path: t,
-              children: [],
-            }],
-          }
-        }
-      }
-    }
-    dummy = dummy.children[index]
-  })
 }
 
 function createAction(url, next) {

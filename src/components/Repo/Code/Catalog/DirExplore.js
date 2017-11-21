@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { find } from 'lodash'
 import PropTypes from 'prop-types'
 import CodeTree from '../CodeTree'
+
+import { fileSystem } from '../../../../views/RepoRedux'
 
 export default class DirExplore extends Component {
   static propTypes = {
@@ -14,34 +15,23 @@ export default class DirExplore extends Component {
   }
   render() {
     const {
-      owner, repo, getFile, content,
+      owner, repo,
     } = this.props
     const { defaultPath: path } = this.props
-    let t = content
-    const treePath = path.split('/')
-    const ret = []
-    if (t.children.length !== 0) {
-      for (let i = 0; i < treePath.length; i += 1) {
-        if (t.path === treePath[i]) {
-          ret.push(t)
-          if (treePath[i + 1]) {
-            t = find(t.children, { path: treePath[i + 1] })
-          }
-        }
-      }
-    }
+    const ret = fileSystem.getSerializedList(path) || []
     return (
       <section className="file-content" style={{ display: 'flex' }}>
         {
-          ret.slice(-3).map((item) => {
+          ret.slice(-3).map((item, i) => {
             return (<CodeTree
               path={item.path}
-              key={item.path}
+              key={item.path || i}
               className="tree"
               simple
+              isFile={item.type === 'file' && item.children.length === 0}
+              file={item.detail}
               onChange={this.pathChanged}
               list={item.children.map(p => p.detail)}
-              getFile={getFile}
               owner={owner}
               repo={repo}
             />)

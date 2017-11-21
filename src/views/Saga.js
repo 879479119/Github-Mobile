@@ -1,4 +1,3 @@
-import { find } from 'lodash'
 import { call, put, takeEvery, select } from 'redux-saga/effects'
 import { COMMON_SEARCH, SEARCH_ERROR, SEARCH_LOADING, SEARCH_READY } from './SearchResultRedux'
 import {
@@ -16,7 +15,7 @@ import {
 } from './UserRedux'
 import request, { login, register, getAuthInfo } from '../utils/request'
 import { COMMON_FETCH, COMMON_ERROR, COMMON_LOADING, COMMON_READY } from './QueueRedux'
-import { REPO_CONTENT_CHANGE, REPO_CONTENT_SHOW_FILE, REPO_CONTENT_READY } from './RepoRedux'
+import { fileSystem, REPO_CONTENT_CHANGE, REPO_CONTENT_SHOW_FILE, REPO_CONTENT_READY } from './RepoRedux'
 import { REQUEST_END, REQUEST_START } from '../redux/QueryRedux'
 import API from '../constants/API'
 
@@ -161,8 +160,9 @@ function * codeSaga(action) {
     const { repo, owner } = action.payload
 
     for (let i = 0; i < 3; i++) {
-      const { children: { length } } = getContent(path, repoStore.content)
-      if (length === 0) {
+      // const { children: { length } } = getContent(path, repoStore.content)
+      const stat = fileSystem.fileStat(path)
+      if (stat === false || stat.detail.name === undefined) {
         const res = yield call(request, ...[API.repo.getContent, {
           owner: owner || repoStore.owner,
           repo: repo || repoStore.name,
@@ -173,27 +173,26 @@ function * codeSaga(action) {
         /**
          * render the file content while starting with a file
          */
-        console.info(temp.data.data)
         if (!Array.isArray(temp.data.data)) {
           yield put({ type: REPO_CONTENT_SHOW_FILE, payload: { path, file: temp.data.data } })
         } else {
           // when meet the directory, we push it into the array
-          data.push({ data: temp, path })
+          data.push({ data: temp.data.data, path })
         }
         if (path === '') break
       }
       path = path.replace(/\/([^/]*)$/, '')
     }
     data.reverse()
-    yield put({ type: REPO_CONTENT_READY, payload: { data, path: '' } })
+    yield put({ type: REPO_CONTENT_READY, payload: { data, path } })
   } catch (e) {
     yield put({ type: NETWORK_ERROR, payload: {} })
   }
 }
 
-function getContent(name, context) {
-  const [, p = '', left = ''] = name.match(/^\/?([\w-.$_()]+)(.*)/) || []
-  const child = find(context.children, { path: p })
-  if (child === undefined) return context
-  else return getContent(left, child)
-}
+// function getContent(name, context) {
+//   const [, p = '', left = ''] = name.match(/^\/?([\w-.$_()]+)(.*)/) || []
+//   const child = find(context.children, { path: p })
+//   if (child === undefined) return context
+//   else return getContent(left, child)
+// }
