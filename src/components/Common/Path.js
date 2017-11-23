@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom'
 @withRouter
 export default class Path extends Component {
   render() {
-    const [, branch, path] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/)
+    const { branch, path } = this.props
     const crumbs = path.split('/')
     crumbs.shift()
     const _this = this

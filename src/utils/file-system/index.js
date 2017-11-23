@@ -15,7 +15,7 @@ const TEMPLATE = {
   children: [],
 }
 
-module.exports = class FileSystem {
+export default class FileSystem {
   constructor(userOptions = {}) {
     const option = FileSystem.checkOptions(userOptions)
     this.tree = option.tree

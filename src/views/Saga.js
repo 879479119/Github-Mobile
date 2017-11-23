@@ -71,7 +71,7 @@ function * loginSaga() {
       // once we login, get the detail
       yield put({ type: USER_GET_AUTH_INFO, payload: { ...detail.data.data } })
 
-      const following = yield select(s => s.common.following)
+      const following = yield select(s => s.user.followings)
 
       if (following.length === 0) {
         // get the following people of us
@@ -80,6 +80,7 @@ function * loginSaga() {
       // get the stared repos the authorized person need
     }
   } catch (e) {
+    console.info(e)
     yield put({ type: NETWORK_ERROR })
   }
 }
@@ -162,7 +163,7 @@ function * codeSaga(action) {
     for (let i = 0; i < 3; i++) {
       // const { children: { length } } = getContent(path, repoStore.content)
       const stat = fileSystem.fileStat(path)
-      if (stat === false || stat.detail.name === undefined) {
+      if (stat === false || stat.children.length === 0 || stat.children[0].detail.name === undefined) {
         const res = yield call(request, ...[API.repo.getContent, {
           owner: owner || repoStore.owner,
           repo: repo || repoStore.name,
@@ -189,10 +190,3 @@ function * codeSaga(action) {
     yield put({ type: NETWORK_ERROR, payload: {} })
   }
 }
-
-// function getContent(name, context) {
-//   const [, p = '', left = ''] = name.match(/^\/?([\w-.$_()]+)(.*)/) || []
-//   const child = find(context.children, { path: p })
-//   if (child === undefined) return context
-//   else return getContent(left, child)
-// }

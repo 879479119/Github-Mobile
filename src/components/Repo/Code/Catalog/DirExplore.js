@@ -7,7 +7,7 @@ import { fileSystem } from '../../../../views/RepoRedux'
 export default class DirExplore extends Component {
   static propTypes = {
     defaultPath: PropTypes.string.isRequired,
-    content: PropTypes.object.isRequired,
+    // content: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
   }
   pathChanged = (path) => {

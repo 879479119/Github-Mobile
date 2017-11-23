@@ -1,3 +1,4 @@
+import { resolve } from 'path'
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Button, Select } from 'antd'
@@ -5,7 +6,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import './index.scss'
 import { pushHistory } from '../../../../layouts/HomeRedux'
-import { changeDirectoryForRepo } from '../../../../views/RepoRedux'
+import { changeDirectoryForRepo, fileSystem } from '../../../../views/RepoRedux'
 import PathBreadcrumb from '../../../Common/Path'
 import DirExplore from './DirExplore'
 import CodeStage from '../../../Common/CodeStage'
@@ -21,31 +22,30 @@ export default class extends Component {
   static contextTypes = {
     details: PropTypes.object,
   }
-  state = {
-    file: null,
-  }
   componentDidMount() {
     const { username: owner, repo } = this.props.match.params
-    const [,, path] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/)
+    let [,, path] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/)
+    path = resolve('/', path)
     this.props.changeDirectoryForRepo({ owner, path, repo })
   }
   onChange = (path) => {
     // this.props.pushHistory(path)
     this.props.changeDirectoryForRepo({ path })
   }
-  getFile = (content) => {
-    this.setState({
-      file: content,
-    })
-  }
   render = () => {
     const { username, repo } = this.props.match.params
     const { content } = this.props.repo
-    const [,, path] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/)
+    let [, branch, path] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/)
+    path = resolve('/', path)
+    const lastOne = fileSystem.getSerializedList(path).slice(-1)[0]
     let file = null
-    if (this.state.file) {
-      const buffer = new Buffer(this.state.file, 'base64')  //eslint-disable-line
-      file = buffer.toString()
+    let fileLoading = false
+    if (lastOne.type === 'file' && lastOne.children.length === 0) {
+      if (lastOne.detail.content === undefined) fileLoading = true
+      else {
+        const buffer = new Buffer(lastOne.detail.content, 'base64')  //eslint-disable-line
+        file = buffer.toString()
+      }
     }
     return (
       <div className="main-body">
@@ -55,7 +55,7 @@ export default class extends Component {
             <Option value="lucy">Others</Option>
           </Select>
           <section style={{ display: 'inline-block', marginLeft: 20 }}>
-            <PathBreadcrumb user={username} repo={repo} />
+            <PathBreadcrumb user={username} repo={repo} path={path} branch={branch} />
           </section>
           <ButtonGroup style={{ float: 'right' }}>
             <Button>Create new file</Button>
@@ -74,7 +74,10 @@ export default class extends Component {
           getFile={this.getFile}
         />
         <div>
-          <CodeStage content={file} />
+          <CodeStage
+            content={file}
+            loading={fileLoading}
+          />
         </div>
       </div>
     )
