@@ -16,13 +16,13 @@ export default class CodeTree extends Component {
   }
   clickHandler = (event) => {
     let path = ''
-    if (event.target.href && (path = event.target.href.replace(/.*code\/master/, ''))) {
+    if (event.target.href && (path = event.target.href.replace(/.*code\/.*?\//, '/'))) {
       this.props.onChange(path)
     }
   }
   render() {
     const {
-      style, simple = false, className, repo, owner, isFile, file,
+      style, simple = false, className, repo, owner, isFile, file, branch,
     } = this.props
 
     const list = this.props.list.slice()
@@ -46,7 +46,7 @@ export default class CodeTree extends Component {
         color = Lang[extensionMap[lang]]['color'] // eslint-disable-line
       } catch (E) {
         console.info('CANNOT FIND THE COLOR OF THE EXT')
-        console.info(E)
+        // console.info(E)
       }
       return (
         <div className={cls('code-tree', 'file-type', className)} style={style}>
@@ -77,13 +77,14 @@ export default class CodeTree extends Component {
       <div className={cls('code-tree', className)} style={style} onClick={this.clickHandler}>
         <ul>
           {
-            list.map((item) =>
+            list.map(item =>
               (<HoverItem
                 key={item.path} //eslint-disable-line
                 item={item}
                 simple={simple}
                 repo={repo}
                 owner={owner}
+                branch={branch}
               />))
           }
         </ul>
@@ -97,9 +98,9 @@ class Item extends PureComponent {   // eslint-disable-line
     details: PropTypes.object,
   }
   render() {
-    const { item, simple } = this.props
+    const { item, simple, branch = 'master' } = this.props
     // TODO: master temp
-    const f = item.url.match(/repos\/(.+)\?ref/)[1].replace(/contents/, 'code/master')
+    const f = item.url.match(/repos\/(.+)\?ref/)[1].replace(/contents/, `code/${branch}`)
     return (
       <li className={item.type}>
         <Link to={`/repo/${f}`} key={`/repo/${f}`}>

@@ -21,7 +21,8 @@ I will launch this project when there is not too many bugs, and move the backend
 
 ### Run it
 
-Just take look at the package.json :kissing:
++ Change the `host` file to make sure that `github.jian-gamestudio.cn` is pointed to `127.0.0.1`
++ Just take look at the package.json :kissing:
 
 ### Pages already built:
 ![home](https://github.com/879479119/Github-Mobile/raw/master/preview.png)

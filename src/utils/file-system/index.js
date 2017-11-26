@@ -172,8 +172,9 @@ export default class FileSystem {
     return true
   }
   getSerializedList(path) {
-    const routes = path.split('/')
+    let routes = path.split('/')
     const ret = []
+    if (path === '/') routes = ['']
     routes.reduce((base, r) => {
       const dist = base + '/' + r // eslint-disable-line
       const stat = this.fileStat(dist)

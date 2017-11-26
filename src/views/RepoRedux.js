@@ -2,6 +2,8 @@ import FileSystem from '../utils/file-system'
 import API from '../constants/API'
 import { COMMON_FETCH } from './QueueRedux'
 
+export const REPO_RESET_STATE = 'REPO_RESET_STATE'
+
 export const GRAPH_COMMIT_SELECT = 'GRAPH_COMMIT_SELECT'
 export const REPO_CONTENT_GET = 'REPO_CONTENT_GET'
 export const REPO_LANGUAGE_GET = 'REPO_LANGUAGE_GET'
@@ -9,10 +11,12 @@ export const REPO_STATS_GET = 'REPO_STATS_GET'
 export const REPO_README_GET = 'REPO_README_GET'
 export const REPO_DETAIL_GET = 'REPO_DETAIL_GET'
 export const REPO_BRANCH_GET = 'REPO_BRANCH_GET'
+
 export const REPO_CONTENT_READY = 'REPO_CONTENT_READY'
 export const REPO_CONTENT_SHOW_FILE = 'REPO_CONTENT_SHOW_FILE'
 
 export const REPO_CONTENT_CHANGE = 'REPO_CONTENT_CHANGE'
+export const REPO_BRANCH_CHANGE = 'REPO_BRANCH_CHANGE'
 
 export const fileSystem = new FileSystem({})
 
@@ -68,6 +72,7 @@ export default function repo(state = initialState, { type, payload }) {
   let content = {}
   let children = []
   switch (type) {
+    case REPO_RESET_STATE: return { ...initialState, ...payload }
     case GRAPH_COMMIT_SELECT: return { ...state, stats: list }
     case REPO_CONTENT_GET:
       children = list.map(t => ({
@@ -79,7 +84,7 @@ export default function repo(state = initialState, { type, payload }) {
       content = { path: '', children, detail: {}, type: 'directory' }
       return { ...state, content }
     case REPO_BRANCH_GET:
-      return { ...state, branches: list.map((t) => t.name) }
+      return { ...state, branches: list.map(t => t.name) }
     case REPO_CONTENT_READY:
       payload.data.forEach((p) => {
         p.data.forEach(k => fileSystem.writeFileAnyway(`/${k.path}`, k, k.type))
@@ -120,6 +125,14 @@ export const fetchStatsForRepo = createAction(API.repo.getStatsParticipation, RE
 export const fetchReadmeForRepo = createAction(API.repo.getReadme, REPO_README_GET)
 export const fetchDetailForRepo = createAction(API.repo.get, REPO_DETAIL_GET)
 export const fetchBranchesForRepo = createAction(API.repo.getBranches, REPO_BRANCH_GET)
+
+export const changeBranchForRepo = payload => dispatch => dispatch({
+  type: REPO_BRANCH_CHANGE, payload,
+})
+
+export const resetRepository = () => dispatch => dispatch({
+  type: REPO_RESET_STATE,
+})
 
 export const changeDirectoryForRepo = query => dispatch => dispatch({
   type: REPO_CONTENT_CHANGE,

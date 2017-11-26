@@ -1,12 +1,18 @@
 import { resolve } from 'path'
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
-import { Button, Select, Icon } from 'antd'
+import { Button, Select } from 'antd'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import './index.scss'
 import { pushHistory } from '../../../../layouts/HomeRedux'
-import { changeDirectoryForRepo, fetchBranchesForRepo, fileSystem, REPO_BRANCH_GET } from '../../../../views/RepoRedux'
+import {
+  changeDirectoryForRepo,
+  fetchBranchesForRepo,
+  changeBranchForRepo,
+  fileSystem,
+  REPO_BRANCH_GET,
+} from '../../../../views/RepoRedux'
 import PathBreadcrumb from '../../../Common/Path'
 import DirExplore from './DirExplore'
 import CodeStage from '../../../Common/CodeStage'
@@ -18,20 +24,22 @@ const ButtonGroup = Button.Group
 @connect(state => ({
   repo: state.repo,
   query: state.query,
-}), { pushHistory, changeDirectoryForRepo, fetchBranchesForRepo })
+}), { pushHistory, changeDirectoryForRepo, fetchBranchesForRepo, changeBranchForRepo })
 export default class extends Component {
   static contextTypes = {
     details: PropTypes.object,
   }
   componentDidMount() {
     const { username: owner, repo } = this.props.match.params
-    let [,, path] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/)
+    let [,branch, path] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/)
     path = resolve('/', path)
-    this.props.changeDirectoryForRepo({ owner, path, repo })
+    this.props.changeDirectoryForRepo({ owner, path, repo, branch })
   }
   onChange = (path) => {
     // this.props.pushHistory(path)
-    this.props.changeDirectoryForRepo({ path })
+    const { username: owner, repo } = this.props.match.params
+    let [, branch] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/)
+    this.props.changeDirectoryForRepo({ owner, path, repo, branch })
   }
   loadSelections = () => {
     const { username: owner, repo } = this.props.match.params
@@ -40,35 +48,37 @@ export default class extends Component {
     }
   }
   selectBranch = (value) => {
-    console.info(value)
+    this.props.changeBranchForRepo({ branch: value })
   }
   render = () => {
     const { username, repo } = this.props.match.params
     const { content, branches } = this.props.repo
-    const { repo: { REPO_BRANCH_GET: branchIsLoading } } = this.props.query
+    const { repo: { [REPO_BRANCH_GET]: branchIsLoading } } = this.props.query
     let [, branch, path] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/) //eslint-disable-line
     path = resolve('/', path)
     const lastOne = fileSystem.getSerializedList(path).slice(-1)[0]
     let file = null
+    let detail = {}
     let fileLoading = false
     if (lastOne.type === 'file' && lastOne.children.length === 0) {
       if (lastOne.detail.content === undefined) fileLoading = true
       else {
         const buffer = new Buffer(lastOne.detail.content, 'base64')  //eslint-disable-line
         file = buffer.toString()
+        detail = lastOne.detail // eslint-disable-line
       }
     }
     return (
       <div className="main-body">
         <section>
           <Select
-            defaultValue="master"
+            value={branch}
             style={{ width: 120 }}
             onChange={this.selectBranch}
             onFocus={this.loadSelections}
           >
             {branchIsLoading === true ? <Option value="master">Loading...</Option>
-              : branches.map(t => (<Option value={t}>{t}</Option>))}
+              : branches.map(t => (<Option key={t} value={t}>{t}</Option>))}
           </Select>
           <section style={{ display: 'inline-block', marginLeft: 20 }}>
             <PathBreadcrumb user={username} repo={repo} path={path} branch={branch} />
@@ -86,13 +96,14 @@ export default class extends Component {
           content={content}
           repo={repo}
           owner={username}
-          branch="master"
+          branch={branch}
           getFile={this.getFile}
         />
         <div>
           <CodeStage
             content={file}
             loading={fileLoading}
+            detail={detail}
           />
         </div>
       </div>

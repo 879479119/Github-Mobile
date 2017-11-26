@@ -15,7 +15,7 @@ export default class DirExplore extends Component {
   }
   render() {
     const {
-      owner, repo,
+      owner, repo, branch,
     } = this.props
     const { defaultPath: path } = this.props
     const ret = fileSystem.getSerializedList(path) || []
@@ -34,6 +34,7 @@ export default class DirExplore extends Component {
               list={item.children.map(p => p.detail)}
               owner={owner}
               repo={repo}
+              branch={branch}
             />)
           })
         }

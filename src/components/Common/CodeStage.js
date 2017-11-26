@@ -19,6 +19,14 @@ class CodeStage extends Component {
   }
 }
 
-export default function ({ ...props }) {
+export default function (props) {
+  // console.info(props.name)
+  if (/\.gif|png|svg|jpg|jpeg|apng$/i.test(props.detail.name)) {
+    return (
+      <div key="code" >
+        <img src={props.detail.download_url} alt="preview" />
+      </div>
+    )
+  }
   return <CodeStage {...props} />
 }

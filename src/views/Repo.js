@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import './Repo.scss'
 import { pushHistory } from '../layouts/HomeRedux'
-import { fetchDetailForRepo } from './RepoRedux'
+import { fetchDetailForRepo, resetRepository } from './RepoRedux'
 
 const { Content } = Layout
 const ButtonGroup = Button.Group
@@ -14,7 +14,7 @@ const ButtonGroup = Button.Group
 @connect(state => ({
   owner: state.repo.owner,
   repo: state.repo,
-}), { fetchDetailForRepo, pushHistory })
+}), { fetchDetailForRepo, pushHistory, resetRepository })
 export default class Repo extends Component {
   static childContextTypes = {
     details: PropTypes.object,
@@ -37,6 +37,7 @@ export default class Repo extends Component {
     const { location } = this.props
     const [, , owner, repo] = location.pathname.split('/')
     if (this.props.repo.name !== repo || this.props.repo.owner !== owner) {
+      this.props.resetRepository()
       this.props.fetchDetailForRepo({ owner, repo })
     }
   }

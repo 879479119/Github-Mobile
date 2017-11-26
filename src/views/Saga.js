@@ -1,3 +1,4 @@
+import { push as pushHistoryAction } from 'react-router-redux'
 import { call, put, takeEvery, select } from 'redux-saga/effects'
 import { COMMON_SEARCH, SEARCH_ERROR, SEARCH_LOADING, SEARCH_READY } from './SearchResultRedux'
 import {
@@ -15,7 +16,14 @@ import {
 } from './UserRedux'
 import request, { login, register, getAuthInfo } from '../utils/request'
 import { COMMON_FETCH, COMMON_ERROR, COMMON_LOADING, COMMON_READY } from './QueueRedux'
-import { fileSystem, REPO_CONTENT_CHANGE, REPO_CONTENT_SHOW_FILE, REPO_CONTENT_READY } from './RepoRedux'
+import {
+  fileSystem,
+  REPO_CONTENT_CHANGE,
+  REPO_CONTENT_SHOW_FILE,
+  REPO_CONTENT_READY,
+  REPO_BRANCH_CHANGE,
+  REPO_RESET_STATE,
+} from './RepoRedux'
 import { REQUEST_END, REQUEST_START } from '../redux/QueryRedux'
 import API from '../constants/API'
 
@@ -29,6 +37,7 @@ export default [
   takeEvery(COMMON_FETCH, commonFetch),
   takeEvery(AUTH_FETCH_FOLLOWING, userSaga),
   takeEvery(REPO_CONTENT_CHANGE, codeSaga),
+  takeEvery(REPO_BRANCH_CHANGE, branchSaga),
 ]
 
 /**
@@ -146,6 +155,25 @@ function * userSaga() {
   }
 }
 
+/**
+ * select a different branch
+ */
+function * branchSaga({ payload }) {
+  const { name, owner, status, detail } = yield select(s => s.repo)
+  fileSystem.removeFile('/')
+  yield put(pushHistoryAction(`/repo/${owner}/${name}/code/${payload.branch}`))
+  yield put({
+    type: REPO_RESET_STATE,
+    payload: {
+      name, owner, status, detail, branch: payload.branch,
+    },
+  })
+  yield put({
+    type: REPO_CONTENT_CHANGE,
+    payload: { name: owner, repo: name, branch: payload.branch, path: '/' },
+  })
+}
+
 
 function * codeSaga(action) {
   try {
@@ -156,16 +184,18 @@ function * codeSaga(action) {
      *  we just need the last three contents
      */
     let { path } = action.payload
-    const { repo, owner } = action.payload
+    const { repo, owner, branch = 'master' } = action.payload
 
     for (let i = 0; i < 3; i++) {
       // const { children: { length } } = getContent(path, repoStore.content)
+      if (path === '/') path = ''
       const stat = fileSystem.fileStat(path)
       if (stat === false || stat.children.length === 0 || stat.children[0].detail.name === undefined) {
         const res = yield call(request, ...[API.repo.getContent, {
           owner: owner || repoStore.owner,
           repo: repo || repoStore.name,
           path,
+          ref: branch,
         }])
         const temp = yield res.json()
 

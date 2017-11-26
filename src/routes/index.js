@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Switch } from 'react-router'
+import { Route, Switch, Redirect } from 'react-router'
 import { HashRouter } from 'react-router-dom'
 import Internationalization from '../i18n/Internationalization'
 
@@ -47,7 +47,7 @@ export default function (props) {
       <HashRouter history={props.history}>
         <Home>
           <Switch>
-            <Route path="/" exact component={User} />
+            <Redirect path="/" to="/trending" exact />
             <Route path="/user/:username/:tab">
               <User>
                 <Switch>

@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
 import { Button, Icon, Input, Layout, Menu } from 'antd'
-import './Home.scss'
 import { changeLanguage, pushHistory } from './HomeRedux'
 import { login, register } from '../views/UserRedux'
 import AutoBreadcrumb from '../components/Common/AutoBreadcrumb'
 import { getCookie } from '../utils/cookie'
 import addDataFetch from '../redux/addDataFetch'
+import './Home.scss'
 
 const { SubMenu } = Menu
 const { Search } = Input
@@ -74,7 +74,7 @@ export default class Home extends Component {
       window.location = 'https://github.com/login/oauth/authorize?scope=admin&client_id=af4fdd0b77c3a4073f0c'
     }
   }
-  searchContent(val) {
+  searchContent = (val) => {
     this.props.pushHistory(`/search?query=${encodeURI(val)}`)
   }
   render = () => {
@@ -91,7 +91,9 @@ export default class Home extends Component {
             className="left-menu"
             style={{ lineHeight: '64px' }}
           >
-            <Menu.Item key="0"><Search placeholder="Search" style={{ width: 200, marginTop: 20 }} onSearch={::this.searchContent} /></Menu.Item>
+            <Menu.Item key="0">
+              <Search placeholder="Search" style={{ width: 200, marginTop: 20 }} onSearch={this.searchContent} />
+            </Menu.Item>
             <Menu.Item key="1">Pull requests</Menu.Item>
             <Menu.Item key="2">Issues</Menu.Item>
             <Menu.Item key="3">Gist</Menu.Item>
@@ -117,7 +119,9 @@ export default class Home extends Component {
         <Layout style={{ minHeight: 1000 }}>
           <Sider width={200} style={{ background: '#fff', height: '100vh' }}>
             <div className="user-face-main">
-              <img src={user.avatar_url} alt="face" className="uf-pic" />
+              <Link to={`/user/${user.login}/profile`}>
+                <img src={user.avatar_url} alt="face" className="uf-pic" />
+              </Link>
               <h4>{user.name}</h4>
               <h5>{user.login}</h5>
               <p>{user.bio}</p>
@@ -129,7 +133,7 @@ export default class Home extends Component {
               style={{ height: '100%' }}
             >
               <SubMenu key="sub1" title={<span><Icon type="user" />User Center</span>}>
-                <Menu.Item key="1">Repos</Menu.Item>
+                <Menu.Item key="1"><Link to={`/user/${user.login}/repo`}>Repositories</Link></Menu.Item>
                 <Menu.Item key="2">Issues</Menu.Item>
                 <Menu.Item key="3">Pull Requests</Menu.Item>
                 <Menu.Item key="4">Gist</Menu.Item>
