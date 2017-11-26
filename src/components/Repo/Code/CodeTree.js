@@ -77,9 +77,9 @@ export default class CodeTree extends Component {
       <div className={cls('code-tree', className)} style={style} onClick={this.clickHandler}>
         <ul>
           {
-            list.map((item, i) =>
+            list.map((item) =>
               (<HoverItem
-                key={i} //eslint-disable-line
+                key={item.path} //eslint-disable-line
                 item={item}
                 simple={simple}
                 repo={repo}
@@ -146,7 +146,7 @@ class HoverItem extends Item {
       overlay = (
         <ul>
           {this.state.list.map(item => (
-            <li>
+            <li key={item.sha}>
               <Link to={`/repo/${owner}/${repo}/commit/${item.sha}`}>
                 <span className="ct-message">{emojizer(item.commit.message, false)}</span>
                 <span style={{ float: 'right' }}>{formatDate(item.commit.committer.date)}</span>
@@ -162,7 +162,7 @@ class HoverItem extends Item {
         overlay={overlay}
         overlayClassName="tooltip-modified"
         onVisibleChange={this.handleHover}
-        mouseEnterDelay={1}
+        mouseEnterDelay={2}
       >
         {super.render()}
       </Tooltip>

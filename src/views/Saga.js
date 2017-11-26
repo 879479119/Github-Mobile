@@ -29,8 +29,6 @@ export default [
   takeEvery(COMMON_FETCH, commonFetch),
   takeEvery(AUTH_FETCH_FOLLOWING, userSaga),
   takeEvery(REPO_CONTENT_CHANGE, codeSaga),
-  // takeEvery(REPO_CONTENT_INIT, codeSaga),
-  // takeEvery(REPO_CONTENT_CHANGE, codeSaga),
 ]
 
 /**

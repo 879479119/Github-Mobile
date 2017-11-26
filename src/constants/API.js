@@ -6,6 +6,7 @@ export default {
     getLanguages: '/api/repos/getLanguages',
     getStatsParticipation: '/api/repos/getStatsParticipation',
     getReadme: '/api/modified/repos/readme',
+    getBranches: '/api/repos/getBranches',
   },
   user: {
     getForUser: '/api/users/getForUser',

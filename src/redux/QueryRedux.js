@@ -5,14 +5,20 @@ const initialState = {
   owner: {
     loading: false,
   },
+  repo: {
+    loading: false,
+  },
 }
 
 export default function query(state = initialState, { type, payload }) {
+  let domain
   switch (type) {
     case REQUEST_START:
-      return { ...state, owner: { ...state.owner, loading: true, [payload.next]: true } }
+      domain = payload.next.match(/^(owner)*(repo)*/i)[0].toLowerCase()
+      return { ...state, [domain]: { ...state[domain], loading: true, [payload.next]: true } }
     case REQUEST_END:
-      return { ...state, owner: { ...state.owner, loading: false, [payload.next]: false } }
+      domain = payload.next.match(/^(owner)*(repo)*/i)[0].toLowerCase()
+      return { ...state, [domain]: { ...state[domain], loading: false, [payload.next]: false } }
     default:
       return state
   }

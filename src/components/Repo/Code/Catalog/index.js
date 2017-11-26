@@ -1,12 +1,12 @@
 import { resolve } from 'path'
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
-import { Button, Select } from 'antd'
+import { Button, Select, Icon } from 'antd'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import './index.scss'
 import { pushHistory } from '../../../../layouts/HomeRedux'
-import { changeDirectoryForRepo, fileSystem } from '../../../../views/RepoRedux'
+import { changeDirectoryForRepo, fetchBranchesForRepo, fileSystem, REPO_BRANCH_GET } from '../../../../views/RepoRedux'
 import PathBreadcrumb from '../../../Common/Path'
 import DirExplore from './DirExplore'
 import CodeStage from '../../../Common/CodeStage'
@@ -17,7 +17,8 @@ const ButtonGroup = Button.Group
 @withRouter
 @connect(state => ({
   repo: state.repo,
-}), { pushHistory, changeDirectoryForRepo })
+  query: state.query,
+}), { pushHistory, changeDirectoryForRepo, fetchBranchesForRepo })
 export default class extends Component {
   static contextTypes = {
     details: PropTypes.object,
@@ -32,10 +33,20 @@ export default class extends Component {
     // this.props.pushHistory(path)
     this.props.changeDirectoryForRepo({ path })
   }
+  loadSelections = () => {
+    const { username: owner, repo } = this.props.match.params
+    if (this.props.repo.branches.length === 0) {
+      this.props.fetchBranchesForRepo({ owner, repo })
+    }
+  }
+  selectBranch = (value) => {
+    console.info(value)
+  }
   render = () => {
     const { username, repo } = this.props.match.params
-    const { content } = this.props.repo
-    let [, branch, path] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/)
+    const { content, branches } = this.props.repo
+    const { repo: { REPO_BRANCH_GET: branchIsLoading } } = this.props.query
+    let [, branch, path] = this.props.location.pathname.match(/\/code\/([^/]*)(.*)$/) //eslint-disable-line
     path = resolve('/', path)
     const lastOne = fileSystem.getSerializedList(path).slice(-1)[0]
     let file = null
@@ -50,9 +61,14 @@ export default class extends Component {
     return (
       <div className="main-body">
         <section>
-          <Select defaultValue="master" style={{ width: 120 }}>
-            <Option value="master">Master</Option>
-            <Option value="lucy">Others</Option>
+          <Select
+            defaultValue="master"
+            style={{ width: 120 }}
+            onChange={this.selectBranch}
+            onFocus={this.loadSelections}
+          >
+            {branchIsLoading === true ? <Option value="master">Loading...</Option>
+              : branches.map(t => (<Option value={t}>{t}</Option>))}
           </Select>
           <section style={{ display: 'inline-block', marginLeft: 20 }}>
             <PathBreadcrumb user={username} repo={repo} path={path} branch={branch} />

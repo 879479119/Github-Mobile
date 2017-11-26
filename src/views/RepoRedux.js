@@ -8,6 +8,7 @@ export const REPO_LANGUAGE_GET = 'REPO_LANGUAGE_GET'
 export const REPO_STATS_GET = 'REPO_STATS_GET'
 export const REPO_README_GET = 'REPO_README_GET'
 export const REPO_DETAIL_GET = 'REPO_DETAIL_GET'
+export const REPO_BRANCH_GET = 'REPO_BRANCH_GET'
 export const REPO_CONTENT_READY = 'REPO_CONTENT_READY'
 export const REPO_CONTENT_SHOW_FILE = 'REPO_CONTENT_SHOW_FILE'
 
@@ -34,6 +35,7 @@ const initialState = {
   },
   content: fileSystem.tree,
   readme: '',
+  branches: [],
   code: {
     branch: 'master',
     path: '',
@@ -76,15 +78,17 @@ export default function repo(state = initialState, { type, payload }) {
       }))
       content = { path: '', children, detail: {}, type: 'directory' }
       return { ...state, content }
+    case REPO_BRANCH_GET:
+      return { ...state, branches: list.map((t) => t.name) }
     case REPO_CONTENT_READY:
       payload.data.forEach((p) => {
-        p.data.forEach(k => fileSystem.writeFileAnyway('/' + k.path, k, k.type))
+        p.data.forEach(k => fileSystem.writeFileAnyway(`/${k.path}`, k, k.type))
       })
       return { ...state, content: fileSystem.tree }
     case REPO_CONTENT_SHOW_FILE:
       content = { ...state.content }
       const { path: p, file } = payload
-      fileSystem.writeFileAnyway('/' + p, file, file.type)
+      fileSystem.writeFileAnyway(`/${p}`, file, file.type)
       return { ...state, content: fileSystem.tree }
     case REPO_LANGUAGE_GET: return { ...state, language: list }
     case REPO_STATS_GET: return { ...state, stats: list }
@@ -115,6 +119,7 @@ export const fetchLanguageForRepo = createAction(API.repo.getLanguages, REPO_LAN
 export const fetchStatsForRepo = createAction(API.repo.getStatsParticipation, REPO_STATS_GET)
 export const fetchReadmeForRepo = createAction(API.repo.getReadme, REPO_README_GET)
 export const fetchDetailForRepo = createAction(API.repo.get, REPO_DETAIL_GET)
+export const fetchBranchesForRepo = createAction(API.repo.getBranches, REPO_BRANCH_GET)
 
 export const changeDirectoryForRepo = query => dispatch => dispatch({
   type: REPO_CONTENT_CHANGE,
